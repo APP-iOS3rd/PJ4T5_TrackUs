@@ -11,25 +11,15 @@ struct RunningView: View {
     @EnvironmentObject var router: Router
     
     var body: some View {
-        VStack {
-            List(1..<10) { number in
-                NavigationLink("화면이동 테스트 \(number)", value: number)
-                    .navigationDestination(for: Int.self) { number in
-                        self
-                    }
+        Text("러닝뷰")
+        .customNavigation {
+            Text("center View")
+        } left: {
+            Button(action: {router.pop()}) {
+                Text("left View")
             }
-            
-            Button(action: {router.push(to: .report)}, label: {
-                Text("리포트 뷰로")
-            })
-            
-            Button(action: {router.pop()}, label: {
-                Text("이전 화면으로")
-            })
-            
-            Button(action: {router.popToRoot()}, label: {
-                Text("처음 화면으로")
-            })
+        } right: {
+            Text("right View")
         }
     }
 }

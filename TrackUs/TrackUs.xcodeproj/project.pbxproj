@@ -16,6 +16,9 @@
 		823B9ADE2B68109200C9F772 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 823B9ADD2B68109200C9F772 /* FirebaseAppCheck */; };
 		823B9AE22B6818DB00C9F772 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE12B6818DB00C9F772 /* Router.swift */; };
 		823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE32B681A5900C9F772 /* MainTabView.swift */; };
+		823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */; };
+		823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE72B68232600C9F772 /* View+NavigationBar.swift */; };
+		823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE92B68264500C9F772 /* NavigationBackButton.swift */; };
 		82ECF0A02B679FC9002CFD00 /* MyProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF09F2B679FC9002CFD00 /* MyProfileView.swift */; };
 		82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */; };
 		82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */; };
@@ -37,6 +40,9 @@
 		823B9ACF2B6807BF00C9F772 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		823B9AE12B6818DB00C9F772 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		823B9AE32B681A5900C9F772 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarModifier.swift; sourceTree = "<group>"; };
+		823B9AE72B68232600C9F772 /* View+NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationBar.swift"; sourceTree = "<group>"; };
+		823B9AE92B68264500C9F772 /* NavigationBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackButton.swift; sourceTree = "<group>"; };
 		82ECF09F2B679FC9002CFD00 /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
 		82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
@@ -228,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				82ECF0BB2B67A6E9002CFD00 /* Color.swift */,
+				823B9AE72B68232600C9F772 /* View+NavigationBar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -236,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				82ECF0BD2B67A707002CFD00 /* CustomButton.swift */,
+				823B9AE92B68264500C9F772 /* NavigationBackButton.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -244,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */,
+				823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -377,6 +386,9 @@
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
 				82ECF0BE2B67A707002CFD00 /* CustomButton.swift in Sources */,
 				963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */,
+				823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */,
+				823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */,
+				823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */,
 				82ECF0B12B67A0E4002CFD00 /* RunningView.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
 			);
