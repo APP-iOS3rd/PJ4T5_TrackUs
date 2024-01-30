@@ -26,13 +26,14 @@
 		82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B22B67A0F8002CFD00 /* AuthenticationViewModel.swift */; };
 		82ECF0B52B67A101002CFD00 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B42B67A101002CFD00 /* LoginView.swift */; };
 		82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B92B67A64B002CFD00 /* Constants.swift */; };
-		82ECF0BC2B67A6E9002CFD00 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BB2B67A6E9002CFD00 /* Color.swift */; };
+		82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BB2B67A6E9002CFD00 /* Color+.swift */; };
 		82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */; };
 		82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */; };
 		963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */; };
 		963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4062B678EAC00E98BF4 /* ContentView.swift */; };
 		963AE4092B678EAE00E98BF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963AE4082B678EAE00E98BF4 /* Assets.xcassets */; };
 		963AE40C2B678EAE00E98BF4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963AE40B2B678EAE00E98BF4 /* Preview Assets.xcassets */; };
+		987B90BE2B69210B0099C7DA /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987B90BD2B69210B0099C7DA /* Font+.swift */; };
 		988DDC712B684150002248A2 /* NickNameTextFiled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988DDC702B684150002248A2 /* NickNameTextFiled.swift */; };
 		988DDC732B687657002248A2 /* SelectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988DDC722B687657002248A2 /* SelectButton.swift */; };
 		989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989D12D92B681E3C004F41CF /* MainButton.swift */; };
@@ -55,7 +56,7 @@
 		82ECF0B22B67A0F8002CFD00 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		82ECF0B42B67A101002CFD00 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		82ECF0B92B67A64B002CFD00 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		82ECF0BB2B67A6E9002CFD00 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		82ECF0BB2B67A6E9002CFD00 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 		82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPicker.swift; sourceTree = "<group>"; };
 		82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		963AE4012B678EAC00E98BF4 /* TrackUs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackUs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +65,7 @@
 		963AE4082B678EAE00E98BF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		963AE40B2B678EAE00E98BF4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9823023A2B683ACA0041D60B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		987B90BD2B69210B0099C7DA /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
 		988DDC702B684150002248A2 /* NickNameTextFiled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NickNameTextFiled.swift; sourceTree = "<group>"; };
 		988DDC722B687657002248A2 /* SelectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectButton.swift; sourceTree = "<group>"; };
 		989D12D92B681E3C004F41CF /* MainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButton.swift; sourceTree = "<group>"; };
@@ -243,7 +245,8 @@
 		82ECF0B62B67A623002CFD00 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				82ECF0BB2B67A6E9002CFD00 /* Color.swift */,
+				82ECF0BB2B67A6E9002CFD00 /* Color+.swift */,
+				987B90BD2B69210B0099C7DA /* Font+.swift */,
 				823B9AE72B68232600C9F772 /* View+NavigationBar.swift */,
 			);
 			path = Extensions;
@@ -389,11 +392,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				987B90BE2B69210B0099C7DA /* Font+.swift in Sources */,
 				989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */,
 				988DDC712B684150002248A2 /* NickNameTextFiled.swift in Sources */,
 				82ECF0AF2B67A0D0002CFD00 /* RunningViewModel.swift in Sources */,
 				963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */,
-				82ECF0BC2B67A6E9002CFD00 /* Color.swift in Sources */,
+				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
