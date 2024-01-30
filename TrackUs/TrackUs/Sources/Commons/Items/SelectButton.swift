@@ -8,14 +8,54 @@
 import SwiftUI
 
 struct SelectButton: View {
+    private var selected: Bool
     private let image: Image?
     private let text: String
-    private var select: Bool = false
+    private let widthSize: CGFloat
     private let action: () -> Void
     
-    init(image: Image? = nil, text: String, select: Bool ,action: @escaping () -> Void) {
+    // MARK: - SelectButton(기본)
+    // 사용 예시
+    //enum selects{
+    //    case none
+    //    case one
+    //    case two
+    //    case three
+    //}
+    //@State private var selected: selects = .none
+    //SelectButton(text: "첫번째", selected: selected == .one, widthSize: 194){
+    //    selected = .one
+    //}
+    
+    /// SelectButton(기본) - text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
+    init(text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
+        self.image = nil
         self.text = text
+        self.selected = selected
+        self.widthSize = widthSize
+        self.action = action
+    }
+    
+    
+    // MARK: - SelectButton(이미지)
+    // 사용 예시
+    //enum selects{
+    //    case none
+    //    case one
+    //    case two
+    //    case three
+    //}
+    //@State private var selected: selects = .none
+    //SelectButton(image: image,text: "첫번째", selected: selected == .one, widthSize: 194){
+    //    selected = .one
+    //}
+    
+    /// SelectButton(이미지) - image: 삽입 이미지, text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
+    init(image: Image? = nil, text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
         self.image = image
+        self.text = text
+        self.selected = selected
+        self.widthSize = widthSize
         self.action = action
     }
     
@@ -23,7 +63,7 @@ struct SelectButton: View {
     var body: some View {
         
         Button(action: {
-            
+            action()
         }, label: {
             HStack(spacing: 20){
                 if let image = image {
@@ -32,9 +72,15 @@ struct SelectButton: View {
                         .frame(width: 20.0, height: 20.0)
                 }
                 Text(text)
-                    .font(.system(size: 16, weight: .light))
+                    .font(.system(size: 16, weight: selected ? .bold : .light))
+                    .foregroundStyle(selected ? .main : .subGray)
             }
         })
+        .frame(width: widthSize, height: 36)
+        .overlay(
+            Capsule()
+                .stroke(selected ? .main : .subGray, lineWidth: selected ? 2 : 1 )
+        )
     }
 }
 

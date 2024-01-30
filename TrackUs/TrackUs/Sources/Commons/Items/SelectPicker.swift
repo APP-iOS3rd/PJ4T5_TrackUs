@@ -7,22 +7,47 @@
 
 import SwiftUI
 
-/**
- - selectedValueBinding: Double?  반환 받을 받을 변수
- */
 struct SelectPicker: View {
     
-    /**
-     - selectedValueBinding: Double?  반환 받을 받을 변수
-     */
-    /// selectedValueBinding: Double? - 반환 받을 변수 (Binding)
-    @Binding var selectedValueBinding: Double?
-    /// showingSheet: Bool - PickerSheet와 연관 Bool값
+    /// showingSheet: Bool - PickerSheet 띄우기 Bool값 -> SelectPicker 클릭 시 -> true
     @Binding var showingSheet: Bool
+    /// selectedValue: Double? - 반환 받을 변수
+    @State var selectedValue: Double?
     
-    let title: String
-    let unit: String
-    let format: String = "%.0f"
+    private let title: String
+    private let unit: String
+    private let format: String
+    
+    
+    // MARK: - picker 소수점 없는 경우
+    // 사용 예시
+    // @State private var presentWindow: Bool = false
+    // private var selectedValue: Double?
+    //
+    // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "체중", unit: "kg")
+    
+    ///  picker 소수점 없는 경우
+    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String) {
+        self.selectedValue = selectedValue
+        self._showingSheet = showingSheet
+        self.title = title
+        self.unit = unit
+        self.format = "%.0f"
+    }
+    
+    // MARK: - picker 소수점 있는 경우
+    // 사용 예시
+    // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "일일 운동량", unit: "km", format: "1")
+    
+    ///  picker 소수점( 있는 경우 -  format 생략시 (1자리), format: "n" (n자리)
+    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String, format: String = "1") {
+        self.selectedValue = selectedValue
+        self._showingSheet = showingSheet
+        self.title = title
+        self.unit = unit
+        self.format = "%.\(format)f"
+    }
+    
     
     var body: some View {
         ZStack{
@@ -37,11 +62,11 @@ struct SelectPicker: View {
                     showingSheet.toggle()
                 }, label: {
                     HStack{
-                        if let value = selectedValueBinding{
+                        if let value = selectedValue{
                             Text("\(String(format: format, value))\(unit)")
                                 .foregroundStyle(.black)
                         }else{
-                            Text("\(title)을 입력해주세요.")
+                            Text("\(title)을 선택해주세요.")
                                 .foregroundStyle(.subGray)
                         }
                         Spacer()
@@ -62,8 +87,10 @@ struct SelectPicker: View {
 }
 
 struct PickerSheet: View {
+    
     @Binding private var selectedValueBinding: Double?
     @Binding private var check: Bool
+    
     private let title: String
     private let unit: String
     private let format: String = "%.0f"
