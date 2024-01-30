@@ -8,8 +8,19 @@
 import SwiftUI
 
 struct RunningView: View {
+    @EnvironmentObject var router: Router
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("러닝뷰")
+        .customNavigation {
+            Text("center View")
+        } left: {
+            Button(action: {router.pop()}) {
+                Text("left View")
+            }
+        } right: {
+            Text("right View")
+        }
     }
 }
 
