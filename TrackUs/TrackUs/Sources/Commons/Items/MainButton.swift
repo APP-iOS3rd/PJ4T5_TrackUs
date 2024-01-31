@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct MainButton: View {
-    var active: Bool
-    let text: String
-    let cornerRadius: CGFloat = 14
+    private var active: Bool
+    private let text: String
+    private let cornerRadius: CGFloat = 14
     
     // 활성화 버튼 색상 지정 후 설정
-    private let activeBackground: Color = .MainColor
+    private let activeBackground: Color = .gray1
     private let activeFontColor: Color = .white
     
     // 비활성화 버튼 색상 지정 후 설정
-    private let deactiveBackground: Color = .MainColor
-    private let deactiveFontColor: Color = .gray
-    let action: () -> Void
+    private let deactiveBackground: Color = .gray2
+    private let deactiveFontColor: Color = Color(red: 132/255, green: 132/255, blue: 132/255)
+    private let action: () -> Void
     
     
     // MARK: - 기본 버튼
@@ -57,8 +57,6 @@ struct MainButton: View {
         }
         .animation(.easeInOut(duration: 0.1), value: active)
         .disabled(!active)
-//        .frame(maxWidth: .infinity)
-//        .frame(height: 56)
     }
 }
 

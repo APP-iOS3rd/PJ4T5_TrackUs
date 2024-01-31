@@ -9,24 +9,29 @@ import SwiftUI
 import PhotosUI
 
 struct ProfilePicker: View {
-    @State private var selectedPhoto: PhotosPickerItem?
-    @Binding var image: Image?
-    let size: CGFloat = 160
+    @State private var selectedPhoto: PhotosPickerItem? = nil
+    @Binding private var image: Image?
+    private let size: CGFloat
     
-//    /// 사이즈 조절 필요한 경우 (회원가입 이외) - size = 프레임 사이즈(지름)  image:  Binding<Image?>
-//    init(size: CGFloat, image: Binding<Image?>) {
-//        self.size = size
-//        self.selectedPhoto = nil
-//        self.image = image
-//    }
-//    
-//    /// 기본 프로필 이미지 피커 - image:  Binding<Image?>
-//    init(image: Image?) {
-//        self.size = 160
-//        self.selectedPhoto = nil
-//        self.image = image
-//    }
+    // MARK: - 프로필 Picker(기본)
+    // 사용 예시
+    // ProfilePicker(image: $바인딩 이미지 변수<Image?> )
     
+    /// 프로필 Picker(기본) - image:  Binding<Image?>
+    init(image: Binding<Image?>) {
+        self.size = 160
+        self._image = image
+    }
+    
+    // MARK: - 프로필 선택 피커(사이즈 변경)
+    // 사용 예시
+    // ProfilePicker(image: $바인딩 이미지 변수(Image?), size: 지름 크기)
+    
+    /// 프로필 선택 피커(사이즈 변경) - size = 프레임 사이즈(지름)  image:  Binding<Image?>
+    init(image: Binding<Image?>, size: CGFloat) {
+        self.size = size
+        self._image = image
+    }
     
     var body: some View {
         PhotosPicker(selection: $selectedPhoto,
@@ -67,7 +72,7 @@ struct ProfilePicker: View {
                         .symbolRenderingMode(.multicolor)
                         .symbolVariant(.none)
                     // 회색 지정 후 추가 수정
-                        .foregroundColor(.gray)
+                        .foregroundColor(.gray2)
                         .overlay(
                             Circle()
                                 .stroke( .white, lineWidth: 2)
@@ -84,7 +89,3 @@ struct ProfilePicker: View {
                      .padding(.top, 40)
     }
 }
-
-//#Preview {
-//    ProfilePicker()
-//}

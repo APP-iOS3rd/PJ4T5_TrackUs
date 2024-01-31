@@ -8,13 +8,29 @@
 import SwiftUI
 
 struct NickNameTextFiled: View {
-    private let textLiimit = 10
-    private let placeholder : String = "닉네임을 입력해주세요"
+    @Binding private var text : String
+    @Binding private var availability : Bool
     
     @State private var isFocused = false
     @State private var isError : Bool = false
-    @Binding var text : String
-    @Binding var availability : Bool
+    
+    private let textLiimit = 10
+    private let placeholder : String = "닉네임을 입력해주세요"
+    
+    
+    // MARK: - 닉네임 TextFiled
+    // 사용 예시
+    // @State private var nickName: String
+    // @State private var checkNickname: Bool
+    //
+    // NickNameTextFiled(text: $nickName, availability: $checkNickname)
+    
+    /// 닉네임 TextFiled - text: $닉네입 저장 변수(String), availability: $닉네임 기입 여부(Bool)
+    init(text: Binding<String>, availability: Binding<Bool>) {
+        self._text = text
+        self._availability = availability
+    }
+    
     
     var body: some View {
         VStack(alignment: .leading){
@@ -22,6 +38,7 @@ struct NickNameTextFiled: View {
                 TextField(placeholder, text: $text, prompt: Text(placeholder).foregroundColor(.gray))
                     .textInputAutocapitalization(.none)
                     .autocorrectionDisabled(true)
+                    .submitLabel(.continue)
                     .onTapGesture {
                         withAnimation {
                             isFocused = true
@@ -33,8 +50,6 @@ struct NickNameTextFiled: View {
                     .onChange(of: text) { newText in
                         checkText(newText)
                         checkAvailability()
-                        print("-------- Error : \(isError) ---------")
-                        print("-------- text.count : \(text.count) ---------")
                     }
                 
                 // 키보드가 활성화 되어있는지 확인
@@ -57,45 +72,38 @@ struct NickNameTextFiled: View {
                                 .foregroundColor(.gray)
                         }
                         Text("\(text.count)/10")
-                            .foregroundColor(.gray)
+                            .foregroundColor(text.count>10 ? .caution : .gray)
                             .font(Font.system(size: 12, weight: .light))
                     }
                 }
             }
             .padding(EdgeInsets(top: 14, leading: 10, bottom: 14, trailing: 10))
             .background(Capsule()
-                        // 회색 지정 후 수정 ‼️‼️
-                .foregroundStyle(isFocused ? .main : .gray)
+                .foregroundStyle(isError ? .caution : (isFocused ? .main : .gray2))
                 .animation(.easeInOut(duration: 0.15), value: isFocused)
                 .frame(height: 1), alignment: .bottom
             )
         }
         HStack{
-            Text("∙ 영문 및 한글 2~10자리(특수문자, 공백 금지)")
+            Text("∙ 영문 및 한글 2~10자리(특수문자, 공백 제외)")
                 .font(Font.system(size: 11, weight: .regular))
                 .foregroundStyle(isError ? .red : .gray)
+                .padding(.top, 8)
                 .animation(.easeInOut(duration: 0.15), value: isError)
             Spacer()
         }
     }
     
+    // 2~10글자, 공백, 특수문자 유무 확인
     private func checkText(_ newText: String) {
         let specialCharacters = CharacterSet(charactersIn: "!?@#$%^&*()_+=-<>,.;|/:[]{}")
         
-        if newText.count > textLiimit || newText.contains(" ") || newText.rangeOfCharacter(from: specialCharacters) != nil {
-            //text = String(text.prefix(text.count - 1))
+        if newText.count > textLiimit || newText.count < 2 || newText.contains(" ") || newText.rangeOfCharacter(from: specialCharacters) != nil {
             return isError = true
         }else {
             return isError = false
             
         }
-        
-        // 텍스트에 특수문자가 들어가면 안됨
-//        if let _ = newText.rangeOfCharacter(from: specialCharacters) {
-//            text = String(text.prefix(text.count - 1))
-//            return isError = true
-//        }
-//        return isError = false
     }
     
     // 버튼 활성화 여부
@@ -116,7 +124,7 @@ struct CheckString: View {
         HStack{
             Image(systemName: !condition ? "checkmark" : "xmark")
                 .frame(width: 15)
-                .foregroundStyle(!condition ? .green : .red)
+                .foregroundStyle(!condition ? .green : .caution)
             Text(checkString)
                 .foregroundStyle(!condition ? .white : .gray)
                 .font(Font.system(size: 15, weight: .regular))
