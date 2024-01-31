@@ -13,11 +13,11 @@ struct MainButton: View {
     private let cornerRadius: CGFloat = 14
     
     // 활성화 버튼 색상 지정 후 설정
-    private let activeBackground: Color = .MainColor
+    private let activeBackground: Color = .gray1
     private let activeFontColor: Color = .white
     
     // 비활성화 버튼 색상 지정 후 설정
-    private let deactiveBackground: Color = .LightGray
+    private let deactiveBackground: Color = .gray2
     private let deactiveFontColor: Color = Color(red: 132/255, green: 132/255, blue: 132/255)
     private let action: () -> Void
     

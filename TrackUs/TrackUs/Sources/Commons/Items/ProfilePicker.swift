@@ -72,7 +72,7 @@ struct ProfilePicker: View {
                         .symbolRenderingMode(.multicolor)
                         .symbolVariant(.none)
                     // 회색 지정 후 추가 수정
-                        .foregroundColor(.gray)
+                        .foregroundColor(.gray2)
                         .overlay(
                             Circle()
                                 .stroke( .white, lineWidth: 2)

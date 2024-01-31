@@ -46,8 +46,8 @@ enum CustomFontStyle {
 extension View {
     /**
      # 사용 예시
-     - customTextStyle(.Gray2_R12)
-     - customTextStyle(style: .Gray2_R12)
+     - .customTextStyle(.Gray2_R12)
+     - .customTextStyle(style: .Gray2_R12)
      
      # case 명칭 규칙
      - Color_WeightSize

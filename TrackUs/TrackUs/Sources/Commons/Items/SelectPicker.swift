@@ -7,6 +7,35 @@
 
 import SwiftUI
 
+// SelectPicker, PickerSheet 한 세트로 사용
+
+/* 전체 코드 간단 예시
+ struct ContentView: View {
+     @State var text: String = ""
+     @State var value: Double?
+     @State var check: Bool = false
+     @State private var pickercheck: Bool = false
+     
+     var body: some View {
+         VStack {
+             SelectPicker(selectedValueBinding: $value, showingSheet: $pickercheck, title: "체중", unit: "kg")
+         }
+         .padding()
+         .overlay(alignment: .center) {
+             if pickercheck {
+                 PickerSheet(selectedValueBinding: $value, check: $pickercheck, title: "체중", unit: "kg", rangeFrom: 20, rangeThrough: 150, rangeBy: 1, selectedValue: 70)
+                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                     .background(!pickercheck ? Color.white : Color.black.opacity(0.45))
+                     .edgesIgnoringSafeArea(.all)
+             }
+         }
+         .animation(.easeOut(duration: 0.5), value: pickercheck)
+     }
+ }
+ */
+
+
+// MARK: - SelectPicker : Picker 선택부분
 struct SelectPicker: View {
     
     /// showingSheet: Bool - PickerSheet 띄우기 Bool값 -> SelectPicker 클릭 시 -> true
@@ -67,7 +96,7 @@ struct SelectPicker: View {
                                 .foregroundStyle(.black)
                         }else{
                             Text("\(title)을 선택해주세요.")
-                                .foregroundStyle(.subGray)
+                                .foregroundStyle(.gray2)
                         }
                         Spacer()
                         Image(.pickerLogo)
@@ -86,6 +115,8 @@ struct SelectPicker: View {
     }
 }
 
+
+// MARK: -  PickerSheet : Picker 선택 창 부분
 struct PickerSheet: View {
     
     @Binding private var selectedValueBinding: Double?
@@ -97,6 +128,19 @@ struct PickerSheet: View {
     // stride(from: 20, through: 220, by: 10).map { $0 }
     private let rangeValues: [Double]
     @State private var selectedValue: Double
+    
+    /*
+     가장 상단에 있는 view에 추가
+     .overlay(alignment: .center) {
+                 if pickercheck {
+                     PickerSheet(selectedValueBinding: $value, check: $pickercheck, title: "체중", unit: "kg", rangeFrom: 20, rangeThrough: 150, rangeBy: 1, selectedValue: 70)
+                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                         .background(!pickercheck ? Color.white : Color.black.opacity(0.45))
+                         .edgesIgnoringSafeArea(.all)
+                 }
+             }
+             .animation(.easeOut(duration: 0.5), value: pickercheck)
+     */
     
     /// selectedValueBinding: 반환 받을 변수, check: picker띄우기 여부(Bool), title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값
     init(selectedValueBinding: Binding<Double?>, check: Binding<Bool>, title: String, unit: String, rangeFrom: Double, rangeThrough: Double, rangeBy: Double, selectedValue: Double) {

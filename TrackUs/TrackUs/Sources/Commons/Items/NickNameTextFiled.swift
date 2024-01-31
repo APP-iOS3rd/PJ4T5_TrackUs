@@ -72,15 +72,14 @@ struct NickNameTextFiled: View {
                                 .foregroundColor(.gray)
                         }
                         Text("\(text.count)/10")
-                            .foregroundColor(.gray)
+                            .foregroundColor(text.count>10 ? .caution : .gray)
                             .font(Font.system(size: 12, weight: .light))
                     }
                 }
             }
             .padding(EdgeInsets(top: 14, leading: 10, bottom: 14, trailing: 10))
             .background(Capsule()
-                        // 회색 지정 후 수정 ‼️‼️
-                .foregroundStyle(isError ? .red : (isFocused ? .main : .gray))
+                .foregroundStyle(isError ? .caution : (isFocused ? .main : .gray2))
                 .animation(.easeInOut(duration: 0.15), value: isFocused)
                 .frame(height: 1), alignment: .bottom
             )
@@ -95,7 +94,7 @@ struct NickNameTextFiled: View {
         }
     }
     
-    // 2~10글자, 공백, 특수문자 여부 확인
+    // 2~10글자, 공백, 특수문자 유무 확인
     private func checkText(_ newText: String) {
         let specialCharacters = CharacterSet(charactersIn: "!?@#$%^&*()_+=-<>,.;|/:[]{}")
         
@@ -125,7 +124,7 @@ struct CheckString: View {
         HStack{
             Image(systemName: !condition ? "checkmark" : "xmark")
                 .frame(width: 15)
-                .foregroundStyle(!condition ? .green : .red)
+                .foregroundStyle(!condition ? .green : .caution)
             Text(checkString)
                 .foregroundStyle(!condition ? .white : .gray)
                 .font(Font.system(size: 15, weight: .regular))

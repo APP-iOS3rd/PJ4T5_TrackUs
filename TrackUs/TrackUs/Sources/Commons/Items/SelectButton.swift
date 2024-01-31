@@ -72,14 +72,14 @@ struct SelectButton: View {
                         .frame(width: 20.0, height: 20.0)
                 }
                 Text(text)
-                    .font(.system(size: 16, weight: selected ? .bold : .light))
+                    .font(.system(size: 16, weight: .light))
                     .foregroundStyle(selected ? .main : .gray2)
             }
         })
         .frame(width: widthSize, height: 36)
         .overlay(
             Capsule()
-                .stroke(selected ? .main : .gray2, lineWidth: selected ? 2 : 1 )
+                .stroke(selected ? .main : .gray2, lineWidth: 1 )
         )
     }
 }
