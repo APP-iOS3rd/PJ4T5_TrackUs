@@ -17,12 +17,12 @@ struct MainTabView: View {
                     .tabItem {
                         Label("러닝", systemImage: "figure.run")
                     }
-                
+                    
                 ReportView()
                     .tabItem {
                         Label("리포트", systemImage: "chart.bar")
                     }
-                
+                    
                 MyProfileView()
                     .tabItem {
                         Label("마이프로필", systemImage: "person.circle")

@@ -12,7 +12,7 @@ struct CustomNavigationBarModifier<C, L, R>: ViewModifier where C: View, L: View
     let left: (() -> L)?
     let right: (() -> R)?
     
-    init(center: (() -> C)?, left: (()-> L)?, right: (()-> R)?) {
+    init(center: (() -> C)?, left: (()-> L)? = {EmptyView()}, right: (()-> R)? = {EmptyView()}) {
         self.center = center
         self.left = left
         self.right = right
@@ -36,7 +36,7 @@ struct CustomNavigationBarModifier<C, L, R>: ViewModifier where C: View, L: View
                     Spacer()
                 }
             }
-        
+            
             Spacer()
             
             content
