@@ -23,7 +23,7 @@ struct ProfileEditView: View {
                     .customFontStyle(.gray1_R16)
                 TextField("닉네임을 입력하세요", text: $nickname)
                     .padding(.horizontal)
-                    .frame(maxWidth: .infinity) // TextField의 넓이를 최대로 조정
+                    .frame(maxWidth: .infinity)
                     .overlay(
                         RoundedRectangle(cornerRadius: 3)
                             .stroke(Color.gray3, lineWidth: 1)

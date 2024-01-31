@@ -13,7 +13,7 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             TabView {
-                Settings()
+                Withdrawal()
                     .tabItem {
                         Label("러닝", systemImage: "figure.run")
                     }
