@@ -39,7 +39,7 @@ struct MyProfileView: View {
                 Text("마이페이지")
                     .customFontStyle(.gray1_SB16)
             } right: {
-                NavigationLink(destination: ProfileEditView()) {
+                NavigationLink(destination: Settings()) {
                     Image(systemName: "gear")
                         .foregroundColor(Color.gray1)
                 }
