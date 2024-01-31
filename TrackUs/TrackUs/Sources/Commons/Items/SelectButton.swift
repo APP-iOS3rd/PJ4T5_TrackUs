@@ -28,7 +28,7 @@ struct SelectButton: View {
     //}
     
     /// SelectButton(기본) - text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
-    init(text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
+    init(text: String, selected: Bool, widthSize: CGFloat = .infinity, action: @escaping () -> Void) {
         self.image = nil
         self.text = text
         self.selected = selected
@@ -51,7 +51,7 @@ struct SelectButton: View {
     //}
     
     /// SelectButton(이미지) - image: 삽입 이미지, text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
-    init(image: Image? = nil, text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
+    init(image: Image? = nil, text: String, selected: Bool, widthSize: CGFloat = .infinity, action: @escaping () -> Void) {
         self.image = image
         self.text = text
         self.selected = selected
@@ -76,7 +76,8 @@ struct SelectButton: View {
                     .foregroundStyle(selected ? .main : .gray2)
             }
         })
-        .frame(width: widthSize, height: 36)
+        .frame(maxWidth: widthSize, maxHeight: 36)
+        //.frame(width: widthSize, height: 36)
         .overlay(
             Capsule()
                 .stroke(selected ? .main : .gray2, lineWidth: 1 )

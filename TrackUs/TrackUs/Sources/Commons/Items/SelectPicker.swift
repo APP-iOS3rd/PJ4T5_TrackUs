@@ -41,7 +41,7 @@ struct SelectPicker: View {
     /// showingSheet: Bool - PickerSheet 띄우기 Bool값 -> SelectPicker 클릭 시 -> true
     @Binding var showingSheet: Bool
     /// selectedValue: Double? - 반환 받을 변수
-    @State var selectedValue: Double?
+    @Binding var selectedValue: Double?
     
     private let title: String
     private let unit: String
@@ -56,8 +56,8 @@ struct SelectPicker: View {
     // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "체중", unit: "kg")
     
     ///  picker 소수점 없는 경우
-    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String) {
-        self.selectedValue = selectedValue
+    init(selectedValue: Binding<Double?>, showingSheet: Binding<Bool>, title: String, unit: String) {
+        self._selectedValue = selectedValue
         self._showingSheet = showingSheet
         self.title = title
         self.unit = unit
@@ -69,8 +69,8 @@ struct SelectPicker: View {
     // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "일일 운동량", unit: "km", format: "1")
     
     ///  picker 소수점( 있는 경우 -  format 생략시 (1자리), format: "n" (n자리)
-    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String, format: String = "1") {
-        self.selectedValue = selectedValue
+    init(selectedValue: Binding<Double?>, showingSheet: Binding<Bool>, title: String, unit: String, format: String = "1") {
+        self._selectedValue = selectedValue
         self._showingSheet = showingSheet
         self.title = title
         self.unit = unit
@@ -80,12 +80,12 @@ struct SelectPicker: View {
     
     var body: some View {
         ZStack{
-            VStack(alignment: .leading){
+            VStack(alignment: .leading, spacing: 8){
                 HStack(spacing:0){
                     Text(title)
-                        .font(.system(size: 16, weight: .regular))
+                        .customFontStyle(.gray1_R16)
                     Text("(\(unit))")
-                        .font(.system(size: 12, weight: .regular))
+                        .customFontStyle(.gray1_R16)
                 }
                 Button(action: {
                     showingSheet.toggle()
@@ -107,9 +107,12 @@ struct SelectPicker: View {
                 })
                 .padding(EdgeInsets(top: 14, leading: 10, bottom: 14, trailing: 10))
                 .background(Capsule()
-                            // 회색 지정 후 수정 ‼️‼️
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.gray2)
                     .frame(height: 1), alignment: .bottom)
+                
+                .sheet(isPresented: $showingSheet) {
+                    PickerSheet2(selectedValueBinding: $selectedValue, title: "테스트용", unit: "km", rangeFrom: 20, rangeThrough: 100, rangeBy: 1, selectedValue: 50)
+                }
             }
         }
     }
@@ -199,7 +202,61 @@ struct PickerSheet: View {
     }
 }
 
+struct PickerSheet2: View {
+    @Environment(\.dismiss) var dismiss
+    
+    @Binding private var selectedValueBinding: Double?
+    
+    private let title: String
+    private let unit: String
+    private let format: String = "%.0f"
+    // stride(from: 20, through: 220, by: 10).map { $0 }
+    private let rangeValues: [Double]
+    @State private var selectedValue: Double?
+    
+    /// selectedValueBinding: 반환 받을 변수, check: picker띄우기 여부(Bool), title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값
+    init(selectedValueBinding: Binding<Double?>, title: String, unit: String, rangeFrom: Double, rangeThrough: Double, rangeBy: Double, selectedValue: Double) {
+        self._selectedValueBinding = selectedValueBinding
+        self.title = title
+        self.unit = unit
+        self.rangeValues = stride(from: rangeFrom, through: rangeThrough, by: rangeBy).map { $0 }
+        self.selectedValue = selectedValue
+    }
+    
+    var body: some View {            VStack{
+        Text(title)
+            .customFontStyle(.gray1_B20)
+        Picker(title, selection: $selectedValue) {
+            ForEach(rangeValues, id: \.self) { value in
+                Text("\(String(format: format, value)) \(unit)")
+                    .tag(value)
+            }
+        }
+        .customFontStyle(.gray1_M16)
+        .pickerStyle(WheelPickerStyle())
+        .presentationDetents([.height(300)])
+        HStack(spacing: 8){
+            Button("취소") {
+                dismiss()
+            }
+            .fontWeight(.semibold)
+            .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+            .overlay(
+                Capsule()
+                    .stroke( .main, lineWidth: 1)
+            )
+            Button("확인") {
+                selectedValueBinding = selectedValue
+                dismiss()
+            }
+            .frame(width: 212, height: 40)
+            .fontWeight(.semibold)
+            .foregroundColor(.white)
+            .background(.main)
+            .clipShape(Capsule())
+        }
+    }
+    .padding(20)
+    }
+}
 
-//#Preview {
-//    SelectPicker()
-//}

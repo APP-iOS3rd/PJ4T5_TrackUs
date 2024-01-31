@@ -8,11 +8,26 @@
 import SwiftUI
 
 struct ProfileImageView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    @Binding private var signUpFlow: SignUpFlow
+    @State private var image: Image?
+    @State private var availability: Bool = false
+    
+    init(signUpFlow: Binding<SignUpFlow>) {
+        self._signUpFlow = signUpFlow
     }
-}
-
-#Preview {
-    ProfileImageView()
+    
+    var body: some View {
+        VStack(spacing: 40){
+            Description(title: "프로필 사진 등록", detail: "다른 러너들에게 자신을 잘 나타낼 수 있는 프로필 이미지를 설정해주세요.")
+            
+            ProfilePicker(image: $image)
+            
+            Spacer()
+            
+            MainButton(active: image != nil, buttonText: "다음으로") {
+                signUpFlow = .physical
+            }
+        }
+        
+    }
 }

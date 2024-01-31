@@ -41,6 +41,13 @@
 		989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989D12D92B681E3C004F41CF /* MainButton.swift */; };
 		989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989D12DD2B68237E004F41CF /* ProfilePicker.swift */; };
 		98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2ED2B6A191A009382B1 /* SignUpView.swift */; };
+		98F1C2F02B6A2342009382B1 /* NickNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2EF2B6A2342009382B1 /* NickNameView.swift */; };
+		98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2F12B6A2374009382B1 /* ProfileImageView.swift */; };
+		98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2F32B6A2386009382B1 /* PhysicalView.swift */; };
+		98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2F52B6A23A5009382B1 /* AgeGenderView.swift */; };
+		98F1C2F82B6A23AF009382B1 /* RunningStyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2F72B6A23AF009382B1 /* RunningStyleView.swift */; };
+		98F1C2FA2B6A23BC009382B1 /* DailyGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2F92B6A23BC009382B1 /* DailyGoalView.swift */; };
+		98F1C2FC2B6A242B009382B1 /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F1C2FB2B6A242B009382B1 /* Description.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +81,13 @@
 		989D12D92B681E3C004F41CF /* MainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButton.swift; sourceTree = "<group>"; };
 		989D12DD2B68237E004F41CF /* ProfilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePicker.swift; sourceTree = "<group>"; };
 		98F1C2ED2B6A191A009382B1 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		98F1C2EF2B6A2342009382B1 /* NickNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NickNameView.swift; sourceTree = "<group>"; };
+		98F1C2F12B6A2374009382B1 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		98F1C2F32B6A2386009382B1 /* PhysicalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalView.swift; sourceTree = "<group>"; };
+		98F1C2F52B6A23A5009382B1 /* AgeGenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeGenderView.swift; sourceTree = "<group>"; };
+		98F1C2F72B6A23AF009382B1 /* RunningStyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningStyleView.swift; sourceTree = "<group>"; };
+		98F1C2F92B6A23BC009382B1 /* DailyGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyGoalView.swift; sourceTree = "<group>"; };
+		98F1C2FB2B6A242B009382B1 /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +248,13 @@
 			children = (
 				82ECF0B42B67A101002CFD00 /* LoginView.swift */,
 				98F1C2ED2B6A191A009382B1 /* SignUpView.swift */,
+				98F1C2EF2B6A2342009382B1 /* NickNameView.swift */,
+				98F1C2F12B6A2374009382B1 /* ProfileImageView.swift */,
+				98F1C2F32B6A2386009382B1 /* PhysicalView.swift */,
+				98F1C2F52B6A23A5009382B1 /* AgeGenderView.swift */,
+				98F1C2F72B6A23AF009382B1 /* RunningStyleView.swift */,
+				98F1C2F92B6A23BC009382B1 /* DailyGoalView.swift */,
+				98F1C2FB2B6A242B009382B1 /* Description.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -405,19 +426,26 @@
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
+				98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */,
 				823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */,
 				82ECF0B52B67A101002CFD00 /* LoginView.swift in Sources */,
 				82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */,
 				823B9AE22B6818DB00C9F772 /* Router.swift in Sources */,
 				82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */,
 				82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */,
+				98F1C2FC2B6A242B009382B1 /* Description.swift in Sources */,
+				98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
+				98F1C2F02B6A2342009382B1 /* NickNameView.swift in Sources */,
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
+				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
 				8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */,
 				82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */,
 				963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */,
+				98F1C2F82B6A23AF009382B1 /* RunningStyleView.swift in Sources */,
 				823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */,
 				823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */,
+				98F1C2FA2B6A23BC009382B1 /* DailyGoalView.swift in Sources */,
 				823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */,
 				82ECF0B12B67A0E4002CFD00 /* RunningView.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
@@ -570,7 +598,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -600,7 +628,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

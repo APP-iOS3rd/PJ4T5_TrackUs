@@ -27,6 +27,10 @@ struct MainTabView: View {
                     .tabItem {
                         Label("마이프로필", systemImage: "person.circle")
                     }
+                SignUpView()
+                    .tabItem {
+                        Label("회원가입", systemImage: "figure.run")
+                    }
             }
         }
     }

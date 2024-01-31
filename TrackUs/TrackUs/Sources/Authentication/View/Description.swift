@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct Description: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    private let title: String
+    private let detail: String
+    
+    init(title: String, detail: String) {
+        self.title = title
+        self.detail = detail
     }
-}
-
-#Preview {
-    Description()
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8){
+            Text(title)
+                .customFontStyle(.gray1_B24)
+            Text(detail)
+                .customFontStyle(.gray2_L16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
 }
