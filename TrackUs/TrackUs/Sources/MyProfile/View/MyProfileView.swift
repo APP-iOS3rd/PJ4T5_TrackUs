@@ -2,7 +2,7 @@
 //  MyProfileView.swift
 //  TrackUs
 //
-//  Created by SeokKi Kwon on 2024/01/29.
+//  Created by 석기권 on 2024/01/30.
 //
 
 import SwiftUI

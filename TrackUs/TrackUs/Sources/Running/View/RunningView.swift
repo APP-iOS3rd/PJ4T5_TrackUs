@@ -11,16 +11,14 @@ struct RunningView: View {
     @EnvironmentObject var router: Router
     
     var body: some View {
-        Text("러닝뷰")
-        .customNavigation {
-            Text("center View")
-        } left: {
-            Button(action: {router.pop()}) {
-                Text("left View")
+        Text("러닝 뷰")
+            .customNavigation {
+                Text("dd")
+            } right: {
+                Text("dd")
             }
-        } right: {
-            Text("right View")
-        }
+
+
     }
 }
 

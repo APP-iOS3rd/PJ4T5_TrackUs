@@ -14,7 +14,7 @@ struct NavigationBackButton: View {
         Button(action: {
             router.pop()
         }) {
-            Image("")
+            Image("BackLogo")
         }
     }
 }
