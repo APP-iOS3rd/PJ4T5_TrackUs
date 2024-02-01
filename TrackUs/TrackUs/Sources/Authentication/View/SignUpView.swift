@@ -17,6 +17,8 @@ enum SignUpFlow {
 }
 
 struct SignUpView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var viewModel: LoginViewModel
     @State private var signUpFlow: SignUpFlow = .nickname
     
     var body: some View {
@@ -46,23 +48,24 @@ struct SignUpView: View {
             Button(action: {
                 backButton()
             }) {
-                Image("BackLogo")
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.gray1)
             }
         } right: {
-            //if signUpFlow != .nickname{
-                Button(action: {
-                    skipButton()
-                }) {
-                    Text("건너뛰기")
-                        .customFontStyle(.gray1_R12)
-                }
-            //}
+            Button(action: {
+                skipButton()
+                router.popToRoot()
+            }) {
+                Text(signUpFlow != .nickname ? "건너뛰기" : "")
+                    .customFontStyle(.gray1_R12)
+            }
         }
     }
     func backButton(){
         switch signUpFlow {
         case .nickname:
-            return
+            // 테스트용
+            viewModel.authenticationState = .unauthenticated
         case .profile:
             signUpFlow = .nickname
         case .physical:
@@ -90,7 +93,8 @@ struct SignUpView: View {
         case .runningStyle:
             signUpFlow = .daily
         case .daily:
-            return
+            // 테스트용
+            viewModel.authenticationState = .authenticated
         }
     }
     

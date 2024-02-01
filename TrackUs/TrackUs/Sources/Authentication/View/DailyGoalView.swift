@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DailyGoalView: View {
+    @EnvironmentObject private var viewModel: LoginViewModel
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경
@@ -44,7 +45,7 @@ struct DailyGoalView: View {
                     .animation(.easeIn(duration: 0.3), value: isProfilePublic)
                 }
                 MainButton(active: goal != nil, buttonText: "다음으로") {
-                    
+                    viewModel.authenticationState = .authenticated
                 }
             }
         }

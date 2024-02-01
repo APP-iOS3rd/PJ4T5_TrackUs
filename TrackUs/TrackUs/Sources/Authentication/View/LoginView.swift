@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var viewModel: LoginViewModel
 //    let robotoMedium = "Roboto-Medium" // 구글 글꼴
     
     var body: some View {
@@ -46,9 +48,57 @@ struct LoginView: View {
                 Spacer() // 그림
                 
                 VStack(alignment: .leading) {
+                    // ======================== 테스트용 버튼 ========================
+                    HStack(spacing: 10){
+                        Button(action: {
+                            // 테스트용 코드
+                            viewModel.authenticationState = .authenticated
+                            router.popToRoot()
+                        }, label: {
+                            HStack(alignment: .center) {
+                                Text("로그인 (Test용)")
+                                    .font(.system(size: 18))
+                            }
+                            
+                        })
+                        .foregroundStyle(.black)
+                        .frame(width: 185, height: 56)
+                        .padding(.horizontal, -16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .inset(by: 0.5)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 12)
+                        Button(action: {
+                            // 테스트용 코드
+                            viewModel.authenticationState = .signUpcating
+                            router.popToRoot()
+                        }, label: {
+                            HStack(alignment: .center) {
+                                Text("회원가입 (Test용)")
+                                    .font(.system(size: 18))
+                            }
+                            
+                        })
+                        .foregroundStyle(.black)
+                        .frame(width: 185, height: 56)
+                        .padding(.horizontal, -16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .inset(by: 0.5)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 12)
+                    }
+                    // ======================== 테스트용 버튼 ========================
+                    
                     Button(action: {
                         // 애플 로그인 기능
-                        
                     }, label: {
                         HStack(alignment: .center) {
                             // 애플 로고
