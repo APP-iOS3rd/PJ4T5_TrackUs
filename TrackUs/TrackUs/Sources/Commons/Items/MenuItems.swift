@@ -20,7 +20,7 @@ struct MenuItems<Content>: View where Content: View {
         VStack(spacing: 20) {
             HStack {
                 Text(sectionTitle)
-                    .customFontStyle(.gray1_R16)
+                    .customFontStyle(.gray1_SB16)
                 Spacer()
             }
             
