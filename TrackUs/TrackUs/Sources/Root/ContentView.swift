@@ -11,8 +11,7 @@ struct ContentView: View {
     let isMainView = true
     var body: some View {
         if isMainView {
-//            MainTabView()
-            LoginView()
+            MainTabView()
         } else {
             LoginView()
         }
