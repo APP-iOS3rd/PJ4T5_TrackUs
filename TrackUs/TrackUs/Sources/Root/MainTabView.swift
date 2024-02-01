@@ -10,72 +10,62 @@ import SwiftUI
 struct MainTabView: View {
     @EnvironmentObject var router: Router
     @State private var selectedTab: Tab = .running
-
+    
     enum Tab {
         case running, recruitment, chatting, report, profile
     }
-
+    
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.shadowColor = .divider
+        appearance.backgroundColor = UIColor.white
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             TabView(selection: $selectedTab) {
                 RunningView()
                     .tabItem {
-                        if selectedTab == .running {
-                            Image("Running.fill")
-                        } else {
-                            Image("Running")
-                        }
+                        Image("Running")
+                            .renderingMode(.template)
                         Text("러닝")
                     }
                     .tag(Tab.running)
                 
                 RecruitmentView()
                     .tabItem {
-                        if selectedTab == .recruitment {
-                            Image("Recruitment.fill")
-                        } else {
-                            Image("Recruitment")
-                        }
+                        Image("Recruitment")
+                            .renderingMode(.template)
                         Text("모집")
                     }
                     .tag(Tab.recruitment)
                 
                 ChattingView()
                     .tabItem {
-                        if selectedTab == .chatting {
-                            Image("Chatting.fill")
-                        } else {
-                            Image("Chatting")
-                        }
+                        Image("Chatting")
+                            .renderingMode(.template)
                         Text("채팅")
                     }
                     .tag(Tab.chatting)
                 
                 ReportView()
                     .tabItem {
-                        if selectedTab == .report {
-                            Image("Report.fill")
-                        } else {
-                            Image("Report")
-                        }
+                        Image("Report")
+                            .renderingMode(.template)
                         Text("리포트")
                     }
                     .tag(Tab.report)
                 
                 MyProfileView()
                     .tabItem {
-                        if selectedTab == .profile {
-                            Image("Profile.fill")
-                        } else {
-                            Image("Profile")
-                        }
+                        Image("Profile")
+                            .renderingMode(.template)
                         Text("프로필")
                     }
                     .tag(Tab.profile)
             }
-            .onAppear {
-                selectedTab = .running
-            }
+            
         }
     }
 }
