@@ -260,24 +260,27 @@ struct PickerSheet2: View {
         .pickerStyle(WheelPickerStyle())
         .presentationDetents([.height(300)])
         HStack(spacing: 8){
-            Button("취소") {
+            Button {
                 dismiss()
+            } label: {
+                Text("취소")
+                    .customFontStyle(.main_R16)
+                    .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+                    .overlay(
+                        Capsule()
+                            .stroke( .main, lineWidth: 1)
+                    )
             }
-            .fontWeight(.semibold)
-            .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
-            .overlay(
-                Capsule()
-                    .stroke( .main, lineWidth: 1)
-            )
-            Button("확인") {
+            Button {
                 selectedValueBinding = selectedValue
                 dismiss()
+            } label: {
+                Text("확인")
+                    .customFontStyle(.white_B16)
+                    .frame(width: 212, height: 40)
+                    .background(.main)
+                    .clipShape(Capsule())
             }
-            .frame(width: 212, height: 40)
-            .fontWeight(.semibold)
-            .foregroundColor(.white)
-            .background(.main)
-            .clipShape(Capsule())
         }
     }
     .padding(20)

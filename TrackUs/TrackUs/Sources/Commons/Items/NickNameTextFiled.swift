@@ -72,7 +72,9 @@ struct NickNameTextFiled: View {
                                 .foregroundColor(.gray2)
                         }
                         Text("\(text.count)/10")
+                            .frame(width: 30)
                             .customFontStyle(text.count > 10 ? .caution_L12 : .gray2_L12)
+                            .animation(.easeInOut(duration: 0.15), value: text.count>10)
                     }
                 }
             }
@@ -86,13 +88,13 @@ struct NickNameTextFiled: View {
         HStack{
             Text("∙ 특수문자, 공백 제외 2~10자리")
                 .customFontStyle(isError ? .caution_L12 : .gray2_L12)
-                .animation(.easeInOut(duration: 0.15), value: isError)
             Spacer()
             if isError{
                 Text("닉네임을 다시 확인해주세요.")
                     .customFontStyle(.caution_L12)
             }
         }
+        .animation(.easeInOut(duration: 0.15), value: isError)
     }
     
     // 2~10글자, 공백, 특수문자 유무 확인

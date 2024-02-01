@@ -17,10 +17,11 @@ struct ProfileImageView: View {
     }
     
     var body: some View {
-        VStack(spacing: 40){
+        VStack{
             Description(title: "프로필 사진 등록", detail: "다른 러너들에게 자신을 잘 나타낼 수 있는 프로필 이미지를 설정해주세요.")
             
             ProfilePicker(image: $image)
+                .offset(y: 40)
             
             Spacer()
             

@@ -135,7 +135,7 @@ extension View {
             // Main_Regular
         case .main_R16:
             font = Font.system(size: 16, weight: .regular)
-            color = .white
+            color = .main
             
             // MARK: - Caution
         case .caution_R16:

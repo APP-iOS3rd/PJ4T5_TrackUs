@@ -19,8 +19,9 @@ struct NickNameView: View {
     }
     
     var body: some View {
-        VStack(spacing: 40){
+        VStack(spacing: 0){
             Description(title: "닉네임 설정", detail: "다른 러너들에게 자신을 잘 나타낼 수 있는 닉네임을 설정해주세요.")
+                .padding(.bottom, 40)
             VStack(alignment: .leading, spacing: 7){
                 Text("닉네임")
                     .customFontStyle(.gray1_M16)

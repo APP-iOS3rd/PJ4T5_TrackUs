@@ -30,10 +30,10 @@ struct AgeGenderView: View {
                     Text("성별")
                         .customFontStyle(.gray1_R16)
                     HStack(spacing: 15){
-                        SelectButton(image: Image(.maleLogo),text: "남성", selected: selectedGender == true, widthSize: 92){
+                        SelectButton(image: [Image(.maleMain), Image(.maleGray1)],text: "남성", selected: selectedGender == true, widthSize: 92){
                             selectedGender = true
                         }
-                        SelectButton(image: Image(.femaleLogo),text: "여성", selected: selectedGender == false, widthSize: 92){
+                        SelectButton(image: [Image(.femaleMain), Image(.femaleGray1)],text: "여성", selected: selectedGender == false, widthSize: 92){
                             selectedGender = false
                         }
                     }
