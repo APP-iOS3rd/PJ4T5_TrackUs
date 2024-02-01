@@ -23,6 +23,7 @@ struct ProfileEditView: View {
                     .customFontStyle(.gray1_R16)
                 TextField("닉네임을 입력하세요", text: $nickname)
                     .padding(.horizontal)
+                    .padding(.vertical, 10)
                     .frame(maxWidth: .infinity)
                     .overlay(
                         RoundedRectangle(cornerRadius: 3)
@@ -43,8 +44,11 @@ struct ProfileEditView: View {
             Text("프로필 변경")
                 .customFontStyle(.gray1_SB16)
         } left: {
-            NavigationBackButton()
+            NavigationLink(destination: MyProfileView()) {
+                NavigationBackButton()
+            }
         }
+        
     }
     
     var saveButton: some View {
@@ -81,11 +85,13 @@ struct ListItems: View {
                 Picker(selection: $height, label: Text("신장")) {
                     ForEach(100..<200) {
                         Text("\($0) cm")
-                            .foregroundColor(Color.gray1)
+                            .multilineTextAlignment(.leading)
                     }
                 }
+                .labelsHidden()
                 .pickerStyle(DefaultPickerStyle())
-                .frame(width: 100)
+                .frame(width: 150)
+                .accentColor(.gray1)
                 .customFontStyle(.gray1_R16)
             }
             .padding(.horizontal)
@@ -97,10 +103,14 @@ struct ListItems: View {
                 Picker(selection: $weight, label: Text("체중")) {
                     ForEach(30..<200) {
                         Text("\($0) kg")
-                            .foregroundColor(Color.gray1)
+                            .multilineTextAlignment(.trailing)
+                            
                     }
                 }
-                .frame(width: 100)
+                .labelsHidden()
+                .pickerStyle(DefaultPickerStyle())
+                .frame(width: 150)
+                .accentColor(.gray1)
                 .customFontStyle(.gray1_R16)
             }
             .padding(.horizontal)
@@ -117,10 +127,13 @@ struct ListItems: View {
                 Picker(selection: $runningStyleIndex, label: Text("러닝 스타일")) {
                     ForEach(0..<3) { index in
                         Text(["가벼운 러닝", "무거운 러닝", "전문 러닝"][index])
+                            .multilineTextAlignment(.trailing)
                     }
                 }
-                .frame(width: 150)
+                .labelsHidden()
                 .pickerStyle(DefaultPickerStyle())
+                .frame(width: 150)
+                .accentColor(.gray1)
                 .customFontStyle(.gray1_R16)
             }
             .padding(.horizontal)
@@ -132,10 +145,13 @@ struct ListItems: View {
                 Picker(selection: $dailyGoalIndex, label: Text("일일목표")) {
                     ForEach(1..<100) {
                         Text("\($0) km")
+                            .multilineTextAlignment(.trailing)
                     }
                 }
-                .frame(width: 100)
+                .labelsHidden()
                 .pickerStyle(DefaultPickerStyle())
+                .frame(width: 150)
+                .accentColor(.gray1)
                 .customFontStyle(.gray1_R16)
             }
             .padding(.horizontal)

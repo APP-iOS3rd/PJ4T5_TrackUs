@@ -102,6 +102,7 @@ struct Withdrawal: View {
                             isEditing = true
                         }
                 }
+
                 HStack {
                     Text("안내 사항 확인 후 탈퇴에 동의합니다.")
                         .customFontStyle(.gray1_R16)
@@ -120,7 +121,7 @@ struct Withdrawal: View {
                 .alert(isPresented: $showWithdrawalAlert) {
                     Alert(
                         title: Text("알림"),
-                        message: Text("정말 탈퇴를 진행하시겠습니까? 울 서비스의 모든 데이터가 삭제됩니다."),
+                        message: Text("정말 탈퇴를 진행하시겠습니까?\n트랙어스 서비스의 모든 데이터가 삭제됩니다."),
                         primaryButton: .cancel(),
                         secondaryButton: .destructive(Text("ok"), action: {
                             // 회원 탈퇴 동작 추가

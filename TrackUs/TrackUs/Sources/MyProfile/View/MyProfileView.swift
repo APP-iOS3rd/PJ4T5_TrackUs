@@ -21,32 +21,38 @@ struct MyProfileView: View {
                 ProfilePicker(image: $selectedImage)
                     .frame(width: 116, height: 116)
                     .padding()
-                HStack {
+                    .padding(.bottom, 24)
+                HStack(spacing: 0) {
                     Text("TrackUs님")
                         .customFontStyle(.gray1_SB16)
-                        .padding()
+                        .padding(.trailing, 4)
                     NavigationLink(destination: ProfileEditView()) {
                         Image(systemName: "chevron.right")
                             .foregroundColor(Color.gray1)
                     }
+                    
                 }
-                .padding()
                 Text("170cm · 70kg · 20대")
                     .customFontStyle(.gray2_R16)
+                    .padding(.bottom, 8)
                 ListItems()
             }
             .customNavigation {
                 Text("마이페이지")
                     .customFontStyle(.gray1_SB16)
             } right: {
-                NavigationLink(destination: Settings()) {
+                NavigationLink(value: "") {
                     Image(systemName: "gear")
                         .foregroundColor(Color.gray1)
                 }
+                .navigationDestination(for: String.self) { _ in
+                    Settings()
+                }
             }
         }
-        
     }
+        
+
     
     struct ListItems: View {
         var body: some View {
