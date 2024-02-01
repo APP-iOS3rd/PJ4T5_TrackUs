@@ -43,14 +43,14 @@ struct ProfilePicker: View {
                 if let image = self.image {
                     image
                         .resizable()
-                        .frame(width: size, height: size)
                         .scaledToFill()
+                        .frame(width: size, height: size)
                         .clipShape(Circle())
                 }else{
                     Image(.profileDefault)
                         .resizable()
                         .frame(width: size, height: size)
-                        .scaledToFit()
+                        //.scaledToFit()
                         .clipShape(Circle())
                 }
                 Image(systemName: "camera.circle.fill")
@@ -72,10 +72,8 @@ struct ProfilePicker: View {
             Button {
                 showPicker.toggle()
             } label: {
-                Text("앨범에서 사진 선택2")
+                Text("앨범에서 사진 선택")
             }
-
-            Button("Option 2") { }
             if image != nil {
                 Button("기본 이미지 설정", role: .destructive) {
                     self.image = nil
