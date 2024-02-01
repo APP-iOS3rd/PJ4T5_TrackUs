@@ -92,6 +92,7 @@ struct ProfileEditView: View {
                                 }
                                 .accentColor(.gray1)
                                 .padding(.horizontal, -8)
+                                
                             }
                             
                             HStack {
@@ -137,9 +138,7 @@ struct ProfileEditView: View {
                 Text("프로필 변경")
                     .customFontStyle(.gray1_SB16)
             } left: {
-                NavigationLink(destination: MyProfileView()) {
-                    NavigationBackButton()
-                }
+                NavigationBackButton()
             }
             MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
