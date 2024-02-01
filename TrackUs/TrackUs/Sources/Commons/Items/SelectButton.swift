@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SelectButton: View {
     private var selected: Bool
-    private let image: Image?
+    private let image: [Image]?
     private let text: String
     private let widthSize: CGFloat
     private let action: () -> Void
@@ -28,7 +28,7 @@ struct SelectButton: View {
     //}
     
     /// SelectButton(기본) - text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
-    init(text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
+    init(text: String, selected: Bool, widthSize: CGFloat = .infinity, action: @escaping () -> Void) {
         self.image = nil
         self.text = text
         self.selected = selected
@@ -51,7 +51,7 @@ struct SelectButton: View {
     //}
     
     /// SelectButton(이미지) - image: 삽입 이미지, text: 문구, selected: 선택여부(Bool), widthSize: 가로 크기, action: 실행코드
-    init(image: Image? = nil, text: String, selected: Bool, widthSize: CGFloat, action: @escaping () -> Void) {
+    init(image: [Image]? = nil, text: String, selected: Bool, widthSize: CGFloat = .infinity, action: @escaping () -> Void) {
         self.image = image
         self.text = text
         self.selected = selected
@@ -67,16 +67,16 @@ struct SelectButton: View {
         }, label: {
             HStack(spacing: 20){
                 if let image = image {
-                    image
+                    image[selected ? 0 : 1]
                         .resizable()
                         .frame(width: 20.0, height: 20.0)
                 }
                 Text(text)
-                    .font(.system(size: 16, weight: .light))
-                    .foregroundStyle(selected ? .main : .gray2)
+                    .customFontStyle(selected ? .main_B16 : .gray2_L16)
             }
         })
-        .frame(width: widthSize, height: 36)
+        .frame(maxWidth: widthSize, maxHeight: 36)
+        //.frame(width: widthSize, height: 36)
         .overlay(
             Capsule()
                 .stroke(selected ? .main : .gray2, lineWidth: 1 )

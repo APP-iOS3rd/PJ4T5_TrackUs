@@ -12,13 +12,6 @@ struct MainButton: View {
     private let text: String
     private let cornerRadius: CGFloat = 14
     
-    // 활성화 버튼 색상 지정 후 설정
-    private let activeBackground: Color = .gray1
-    private let activeFontColor: Color = .white
-    
-    // 비활성화 버튼 색상 지정 후 설정
-    private let deactiveBackground: Color = .gray2
-    private let deactiveFontColor: Color = Color(red: 132/255, green: 132/255, blue: 132/255)
     private let action: () -> Void
     
     
@@ -47,12 +40,11 @@ struct MainButton: View {
     var body: some View {
         Button(action: action) {
             HStack (spacing: 0) {
-                    Text(text)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, minHeight: 56)
+                Text(text)
+                    .customFontStyle(active ? .white_B16 : .gray1_B16)
+                    .frame(maxWidth: .infinity, minHeight: 56)
             }
-            .foregroundColor(active ? activeFontColor : deactiveFontColor)
-            .background(active ? activeBackground : deactiveBackground)
+            .background(active ? .main : .gray3)
             .clipShape(Capsule())
         }
         .animation(.easeInOut(duration: 0.1), value: active)

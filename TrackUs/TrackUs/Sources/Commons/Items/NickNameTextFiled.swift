@@ -69,11 +69,12 @@ struct NickNameTextFiled: View {
                             Image(systemName: "multiply.circle.fill")
                                 .resizable()
                                 .frame(width: 10, height: 10)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.gray2)
                         }
                         Text("\(text.count)/10")
-                            .foregroundColor(text.count>10 ? .caution : .gray)
-                            .font(Font.system(size: 12, weight: .light))
+                            .frame(width: 30)
+                            .customFontStyle(text.count > 10 ? .caution_L12 : .gray2_L12)
+                            .animation(.easeInOut(duration: 0.15), value: text.count>10)
                     }
                 }
             }
@@ -85,13 +86,15 @@ struct NickNameTextFiled: View {
             )
         }
         HStack{
-            Text("∙ 영문 및 한글 2~10자리(특수문자, 공백 제외)")
-                .font(Font.system(size: 11, weight: .regular))
-                .foregroundStyle(isError ? .red : .gray)
-                .padding(.top, 8)
-                .animation(.easeInOut(duration: 0.15), value: isError)
+            Text("∙ 특수문자, 공백 제외 2~10자리")
+                .customFontStyle(isError ? .caution_L12 : .gray2_L12)
             Spacer()
+            if isError{
+                Text("닉네임을 다시 확인해주세요.")
+                    .customFontStyle(.caution_L12)
+            }
         }
+        .animation(.easeInOut(duration: 0.15), value: isError)
     }
     
     // 2~10글자, 공백, 특수문자 유무 확인

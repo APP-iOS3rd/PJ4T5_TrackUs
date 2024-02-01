@@ -9,7 +9,9 @@ import SwiftUI
 import PhotosUI
 
 struct ProfilePicker: View {
+    @State private var showingConfirmationDialog: Bool = false
     @State private var selectedPhoto: PhotosPickerItem? = nil
+    @State private var showPicker = false
     @Binding private var image: Image?
     private let size: CGFloat
     
@@ -34,56 +36,53 @@ struct ProfilePicker: View {
     }
     
     var body: some View {
-        PhotosPicker(selection: $selectedPhoto,
-                     matching: .images,
-                     photoLibrary: .shared()) {
-            if let image = self.image {
-                ZStack{
+        Button {
+            showingConfirmationDialog.toggle()
+        } label: {
+            ZStack{
+                if let image = self.image {
                     image
                         .resizable()
-                        .frame(width: size, height: size)
                         .scaledToFill()
+                        .frame(width: size, height: size)
                         .clipShape(Circle())
-                    Button(action: {
-                        self.image = nil
-                    }, label: {
-                        Image(systemName: "minus.circle.fill")
-                            .symbolRenderingMode(.multicolor)
-                            .font(.system(size: 30))
-                            .foregroundColor(.accentColor)
-                    })
-                    .overlay(
-                        Circle()
-                            .stroke( .white, lineWidth: 2)
-                    )
-                    .offset(x: 56, y: 56)
-                }
-                
-                
-            } else {
-                ZStack{
+                }else{
                     Image(.profileDefault)
                         .resizable()
                         .frame(width: size, height: size)
-                        .scaledToFit()
+                        //.scaledToFit()
                         .clipShape(Circle())
-                    Image(.camera)
-                        .symbolRenderingMode(.multicolor)
-                        .symbolVariant(.none)
-                    // 회색 지정 후 추가 수정
-                        .foregroundColor(.gray2)
-                        .overlay(
-                            Circle()
-                                .stroke( .white, lineWidth: 2)
-                        )
-                        .offset(x: size / 3, y: size / 3)
+                }
+                Image(systemName: "camera.circle.fill")
+                    .resizable()
+                    .frame(width: 32*size/160, height: 32*size/160)
+                    .symbolRenderingMode(.multicolor)
+                    .symbolVariant(.none)
+                    .foregroundColor(.gray2)
+                    .overlay(
+                        Circle()
+                            .stroke( .white, lineWidth: 2*size/160)
+                    )
+                    .offset(x: 56*size/160, y: 56*size/160)
+            }
+        }.confirmationDialog(Text("프로필 사진 설정"),
+                             isPresented: $showingConfirmationDialog,
+                             titleVisibility: .automatic) {
+            Button {
+                showPicker.toggle()
+            } label: {
+                Text("앨범에서 사진 선택")
+            }
+            if image != nil {
+                Button("기본 이미지 설정", role: .destructive) {
+                    self.image = nil
+                    self.selectedPhoto = nil
                 }
             }
         }
-        // 비동기 처리 - 이미지 로딩때문에 다른 부분 실행 안되는 부분 방지
-                     .task(id: selectedPhoto) {
-                         image = try? await selectedPhoto?.loadTransferable(type: Image.self)
-                     }
-                     .animation(.easeInOut, value: image)
+                             .photosPicker(isPresented: $showPicker, selection: $selectedPhoto)
+                             .task(id: selectedPhoto) {
+                                 image = try? await selectedPhoto?.loadTransferable(type: Image.self)
+                             }
     }
 }

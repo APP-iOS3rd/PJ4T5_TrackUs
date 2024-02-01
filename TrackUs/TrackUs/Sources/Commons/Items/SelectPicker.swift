@@ -34,69 +34,89 @@ import SwiftUI
  }
  */
 
+enum PickerType {
+    case height
+    case weight
+    case age
+    case dailyGoal
+}
 
 // MARK: - SelectPicker : Picker 선택부분
 struct SelectPicker: View {
     
     /// showingSheet: Bool - PickerSheet 띄우기 Bool값 -> SelectPicker 클릭 시 -> true
-    @Binding var showingSheet: Bool
+    //@Binding var showingSheet: Bool
     /// selectedValue: Double? - 반환 받을 변수
-    @State var selectedValue: Double?
+    @Binding var selectedValue: Double?
     
-    private let title: String
-    private let unit: String
-    private let format: String
+    private let pickerType: PickerType
+    private var title: String
+    private var unit: String
+    private var format: String
+    private var rangeValues: [Double]
+    
+    @State private var startValue: Double // picker 시작값
+    @State private var pickerPresented: Bool = false
     
     
-    // MARK: - picker 소수점 없는 경우
+    // MARK: - picker
     // 사용 예시
     // @State private var presentWindow: Bool = false
     // private var selectedValue: Double?
     //
     // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "체중", unit: "kg")
     
-    ///  picker 소수점 없는 경우
-    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String) {
-        self.selectedValue = selectedValue
-        self._showingSheet = showingSheet
-        self.title = title
-        self.unit = unit
-        self.format = "%.0f"
+    ///  picker - selectedValue 반환 받을 값, pickerType : picker 종류
+    init(selectedValue: Binding<Double?>, pickerType: PickerType) {
+        self._selectedValue = selectedValue
+        self.pickerType = pickerType
+        switch pickerType {
+        case .height:
+            self.title = "키"
+            self.unit = "cm"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 100, through: 250, by: 1).map { $0 }
+            self.startValue = 160
+        case .weight:
+            self.title = "체중"
+            self.unit = "kg"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 30, through: 200, by: 1).map { $0 }
+            self.startValue = 50
+        case .age:
+            self.title = "나이대"
+            self.unit = "대"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 10, through: 60, by: 10).map { $0 }
+            self.startValue = 30
+        case .dailyGoal:
+            self.title = "일일 운동량"
+            self.unit = "km"
+            self.format = "%.1f"
+            self.rangeValues = stride(from: 0, through: 40, by: 0.1).map { $0 }
+            self.startValue = 1
+        }
     }
-    
-    // MARK: - picker 소수점 있는 경우
-    // 사용 예시
-    // SelectPicker(selectedValueBinding: selectedValue, showingSheet: $presentWindow, title: "일일 운동량", unit: "km", format: "1")
-    
-    ///  picker 소수점( 있는 경우 -  format 생략시 (1자리), format: "n" (n자리)
-    init(selectedValue: Double? = nil, showingSheet: Binding<Bool>, title: String, unit: String, format: String = "1") {
-        self.selectedValue = selectedValue
-        self._showingSheet = showingSheet
-        self.title = title
-        self.unit = unit
-        self.format = "%.\(format)f"
-    }
-    
     
     var body: some View {
         ZStack{
-            VStack(alignment: .leading){
+            VStack(alignment: .leading, spacing: 8){
                 HStack(spacing:0){
                     Text(title)
-                        .font(.system(size: 16, weight: .regular))
+                        .customFontStyle(.gray1_R16)
                     Text("(\(unit))")
-                        .font(.system(size: 12, weight: .regular))
+                        .customFontStyle(.gray1_R12)
                 }
                 Button(action: {
-                    showingSheet.toggle()
+                    pickerPresented.toggle()
                 }, label: {
                     HStack{
                         if let value = selectedValue{
                             Text("\(String(format: format, value))\(unit)")
-                                .foregroundStyle(.black)
+                                .customFontStyle(.gray1_M16)
                         }else{
                             Text("\(title)을 선택해주세요.")
-                                .foregroundStyle(.gray2)
+                                .customFontStyle(.gray2_L16)
                         }
                         Spacer()
                         Image(.pickerLogo)
@@ -107,11 +127,18 @@ struct SelectPicker: View {
                 })
                 .padding(EdgeInsets(top: 14, leading: 10, bottom: 14, trailing: 10))
                 .background(Capsule()
-                            // 회색 지정 후 수정 ‼️‼️
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.gray2)
                     .frame(height: 1), alignment: .bottom)
+                
+                .sheet(isPresented: $pickerPresented) {
+                    PickerSheet2(selectedValueBinding: $selectedValue, title: title, unit: unit, format: format, rangeValues: rangeValues, selectedValue: $startValue)
+                }
             }
         }
+    }
+    
+    func pickerSetting(){
+        
     }
 }
 
@@ -199,7 +226,64 @@ struct PickerSheet: View {
     }
 }
 
+struct PickerSheet2: View {
+    @Environment(\.dismiss) var dismiss
+    @Binding private var selectedValueBinding: Double?
+    @Binding private var selectedValue: Double
+    
+    private let title: String
+    private let unit: String
+    private let format: String
+    private let rangeValues: [Double]
+    
+    /// selectedValueBinding: 반환 받을 변수, check: picker띄우기 여부(Bool), title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값
+    init(selectedValueBinding: Binding<Double?>, title: String, unit: String, format: String, rangeValues: [Double], selectedValue: Binding<Double>) {
+        self._selectedValueBinding = selectedValueBinding
+        self.title = title
+        self.unit = unit
+        self.format = format
+        self.rangeValues = rangeValues
+        self._selectedValue = selectedValue
+    }
+    
+    var body: some View {            
+        VStack{
+        Text("\(title) 입력")
+            .customFontStyle(.gray1_B20)
+        Picker(title, selection: $selectedValue) {
+            ForEach(rangeValues, id: \.self) { value in
+                Text("\(String(format: format, value)) \(unit)")
+                    .tag(value)
+            }
+        }
+        .customFontStyle(.gray1_M16)
+        .pickerStyle(WheelPickerStyle())
+        .presentationDetents([.height(300)])
+        HStack(spacing: 8){
+            Button {
+                dismiss()
+            } label: {
+                Text("취소")
+                    .customFontStyle(.main_R16)
+                    .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+                    .overlay(
+                        Capsule()
+                            .stroke( .main, lineWidth: 1)
+                    )
+            }
+            Button {
+                selectedValueBinding = selectedValue
+                dismiss()
+            } label: {
+                Text("확인")
+                    .customFontStyle(.white_B16)
+                    .frame(width: 212, height: 40)
+                    .background(.main)
+                    .clipShape(Capsule())
+            }
+        }
+    }
+    .padding(20)
+    }
+}
 
-//#Preview {
-//    SelectPicker()
-//}
