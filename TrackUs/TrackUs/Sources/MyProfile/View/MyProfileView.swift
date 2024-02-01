@@ -76,7 +76,7 @@ struct MyProfileView: View {
                 Divider()
                     .background(.divider)
                 
-                MenuItems(sectionTitle: "트랙어스 응원하기 ") {
+                MenuItems(sectionTitle: "트랙어스 응원하기") {
                     NavigationLink(value: "PremiumPaymentView") {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
                     }
@@ -100,8 +100,7 @@ struct MyProfileView: View {
             case "RunningRecordView":
                 RunningRecordView()
             case "TermsOfService":
-                WebView(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
-                    .edgesIgnoringSafeArea(.all)
+                WebViewSurport(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
                     .customNavigation {
                         NavigationText(title: "서비스 이용약관")
                     } left: {
@@ -116,8 +115,7 @@ struct MyProfileView: View {
             case "TeamIntroView":
                 TeamIntroView()
             case "OpenSourceLicense":
-                WebView(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL )
-                    .edgesIgnoringSafeArea(.all)
+                WebViewSurport(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL)
                     .customNavigation {
                         NavigationText(title: "오픈소스/라이센스")
                     } left: {
@@ -125,8 +123,7 @@ struct MyProfileView: View {
                     }
                 
             case "ServiceRequest":
-                WebView(url: Constants.WebViewUrl.SERVICE_REQUEST_URL )
-                    .edgesIgnoringSafeArea(.bottom)
+                WebViewSurport(url: Constants.WebViewUrl.SERVICE_REQUEST_URL)
                     .customNavigation {
                         NavigationText(title: "문의하기")
                     } left: {

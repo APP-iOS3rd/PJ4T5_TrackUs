@@ -29,7 +29,7 @@ struct SettingsView: View {
                     NavigationLink(value: "WithdrawalView") {
                         HStack {
                             Text("회원탈퇴")
-                                .customFontStyle(.caution_R17)
+                                .customFontStyle(.caution_R16)
                             Spacer()
                         }
                     }

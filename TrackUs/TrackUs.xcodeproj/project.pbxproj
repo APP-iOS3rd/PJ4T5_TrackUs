@@ -20,6 +20,7 @@
 		823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */; };
 		823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE72B68232600C9F772 /* View+NavigationBar.swift */; };
 		823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE92B68264500C9F772 /* NavigationBackButton.swift */; };
+		829FF7732B6BAAF800C1ED4E /* View+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829FF7722B6BAAF800C1ED4E /* View+Keyboard.swift */; };
 		82AB28AC2B6B2B3800D7734D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82AB28AB2B6B2B3800D7734D /* GoogleService-Info.plist */; };
 		82AB28B12B6B4DC200D7734D /* MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28B02B6B4DC200D7734D /* MenuItems.swift */; };
 		82AB28B32B6B4F0E00D7734D /* RunningRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28B22B6B4F0E00D7734D /* RunningRecordView.swift */; };
@@ -62,7 +63,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		618427882B6A1F3800C10E99 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8224637C2B68E7F6008D3DAA /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
 		823B9ACF2B6807BF00C9F772 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		823B9AE12B6818DB00C9F772 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -70,6 +70,7 @@
 		823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarModifier.swift; sourceTree = "<group>"; };
 		823B9AE72B68232600C9F772 /* View+NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationBar.swift"; sourceTree = "<group>"; };
 		823B9AE92B68264500C9F772 /* NavigationBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackButton.swift; sourceTree = "<group>"; };
+		829FF7722B6BAAF800C1ED4E /* View+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Keyboard.swift"; sourceTree = "<group>"; };
 		82AB28AB2B6B2B3800D7734D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		82AB28AD2B6B2B4D00D7734D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		82AB28B02B6B4DC200D7734D /* MenuItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItems.swift; sourceTree = "<group>"; };
@@ -133,7 +134,6 @@
 		6184278B2B6B6FAE00C10E99 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				6184278E2B6B7AE100C10E99 /* Roboto-Medium.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -314,6 +314,7 @@
 				82ECF0BB2B67A6E9002CFD00 /* Color+.swift */,
 				987B90BD2B69210B0099C7DA /* Font+.swift */,
 				823B9AE72B68232600C9F772 /* View+NavigationBar.swift */,
+				829FF7722B6BAAF800C1ED4E /* View+Keyboard.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -447,7 +448,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6184278F2B6B7AE100C10E99 /* Roboto-Medium.ttf in Resources */,
 				963AE40C2B678EAE00E98BF4 /* Preview Assets.xcassets in Resources */,
 				963AE4092B678EAE00E98BF4 /* Assets.xcassets in Resources */,
 				82AB28AC2B6B2B3800D7734D /* GoogleService-Info.plist in Resources */,
@@ -500,6 +500,7 @@
 				98F1C2F82B6A23AF009382B1 /* RunningStyleView.swift in Sources */,
 				823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */,
 				823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */,
+				829FF7732B6BAAF800C1ED4E /* View+Keyboard.swift in Sources */,
 				98F1C2FA2B6A23BC009382B1 /* DailyGoalView.swift in Sources */,
 				823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */,
 				82AB28C12B6B5B6600D7734D /* TeamIntroView.swift in Sources */,
@@ -641,7 +642,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TrackUs/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -655,7 +656,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -671,7 +672,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TrackUs/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -685,7 +686,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
