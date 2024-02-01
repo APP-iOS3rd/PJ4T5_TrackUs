@@ -56,7 +56,7 @@ struct ProfileEditView: View {
                                     }
                                 }
                                 .accentColor(.gray1)
-                                    .padding(.horizontal, -8)
+                                .padding(.horizontal, -8)
                             }
                             
                             HStack {
@@ -144,7 +144,9 @@ struct ProfileEditView: View {
             MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
         }
-        
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
     
     func modifyButtonTapped() {}

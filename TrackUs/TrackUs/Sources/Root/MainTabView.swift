@@ -9,25 +9,63 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var router: Router
+    @State private var selectedTab: Tab = .running
+    
+    enum Tab {
+        case running, recruitment, chatting, report, profile
+    }
+    
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.shadowColor = .divider
+        appearance.backgroundColor = UIColor.white
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            TabView {
+            TabView(selection: $selectedTab) {
                 RunningView()
                     .tabItem {
-                        Label("러닝", systemImage: "figure.run")
+                        Image("Running")
+                            .renderingMode(.template)
+                        Text("러닝")
                     }
-                    
+                    .tag(Tab.running)
+                
+                RecruitmentView()
+                    .tabItem {
+                        Image("Recruitment")
+                            .renderingMode(.template)
+                        Text("모집")
+                    }
+                    .tag(Tab.recruitment)
+                
+                ChattingView()
+                    .tabItem {
+                        Image("Chatting")
+                            .renderingMode(.template)
+                        Text("채팅")
+                    }
+                    .tag(Tab.chatting)
+                
                 ReportView()
                     .tabItem {
-                        Label("리포트", systemImage: "chart.bar")
+                        Image("Report")
+                            .renderingMode(.template)
+                        Text("리포트")
                     }
-                    
+                    .tag(Tab.report)
+                
                 MyProfileView()
                     .tabItem {
-                        Label("마이프로필", systemImage: "person.circle")
+                        Image("Profile")
+                            .renderingMode(.template)
+                        Text("프로필")
                     }
+                    .tag(Tab.profile)
             }
+            
         }
     }
 }

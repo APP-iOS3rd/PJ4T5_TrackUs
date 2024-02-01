@@ -58,7 +58,6 @@ struct ProfilePicker: View {
                     .frame(width: 32*size/160, height: 32*size/160)
                     .symbolRenderingMode(.multicolor)
                     .symbolVariant(.none)
-                // 회색 지정 후 추가 수정
                     .foregroundColor(.gray2)
                     .overlay(
                         Circle()

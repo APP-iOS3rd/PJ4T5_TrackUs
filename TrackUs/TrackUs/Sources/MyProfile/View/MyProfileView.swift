@@ -11,6 +11,7 @@ import SwiftUI
 
 struct MyProfileView: View {
     @State private var selectedImage: Image?
+    @State private var isShownFullScreenCover: Bool = false
     
     var body: some View {
         VStack {
@@ -40,7 +41,10 @@ struct MyProfileView: View {
                 .padding(.bottom, 32)
                 
                 // MARK: - 리스트
-                MenuItems(sectionTitle: "운동") {
+                MenuItems {
+                    Text("운동")
+                        .customFontStyle(.gray1_SB16)
+                } content: {
                     NavigationLink(value: "RunningRecordView") {
                         MenuItem(title: "러닝기록", image: .init(.chevronRight))
                     }
@@ -49,7 +53,10 @@ struct MyProfileView: View {
                 Divider()
                     .background(.divider)
                 
-                MenuItems(sectionTitle: "서비스") {
+                MenuItems {
+                    Text("서비스")
+                        .customFontStyle(.gray1_SB16)
+                } content: {
                     NavigationLink(value: "TermsOfService") {
                         MenuItem(title: "이용약관", image: .init(.chevronRight))
                     }
@@ -57,30 +64,43 @@ struct MyProfileView: View {
                     NavigationLink(value: "OpenSourceLicense") {
                         MenuItem(title: "오픈소스/라이센스", image: .init(.chevronRight))
                     }
-                    
                 }
                 
                 Divider()
                     .background(.divider)
                 
-                MenuItems(sectionTitle: "고객지원") {
+                MenuItems {
+                    Text("고객지원")
+                        .customFontStyle(.gray1_SB16)
+                } content: {
                     NavigationLink(value: "FAQView") {
                         MenuItem(title: "자주묻는 질문 Q&A", image: .init(.chevronRight))
                     }
                     NavigationLink(value: "ServiceRequest") {
                         MenuItem(title: "문의하기", image: .init(.chevronRight))
                     }
-                    
                 }
                 
                 Divider()
                     .background(.divider)
                 
-                MenuItems(sectionTitle: "트랙어스 응원하기 ") {
-                    NavigationLink(value: "PremiumPaymentView") {
+                MenuItems {
+                    HStack(spacing: 6) {
+                        Text("트랙어스 응원하기")
+                            .customFontStyle(.gray1_SB16)
+                        Image(.star)
+                    }
+                } content: {
+                    Button {
+                        isShownFullScreenCover.toggle()
+                    } label: {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
                     }
+                    .fullScreenCover(isPresented: $isShownFullScreenCover, content: {
+                        PremiumPaymentView(isShownFullScreenCover: $isShownFullScreenCover)
+                    })
                 }
+                .padding(.bottom, 60)
             }
         }
         .customNavigation {
@@ -100,15 +120,12 @@ struct MyProfileView: View {
             case "RunningRecordView":
                 RunningRecordView()
             case "TermsOfService":
-                WebView(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
-                    .edgesIgnoringSafeArea(.all)
+                WebViewSurport(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
                     .customNavigation {
                         NavigationText(title: "서비스 이용약관")
                     } left: {
                         NavigationBackButton()
                     }
-            case "PremiumPaymentView":
-                PremiumPaymentView()
             case "FAQView":
                 FAQView()
             case "WithdrawalView":
@@ -116,8 +133,7 @@ struct MyProfileView: View {
             case "TeamIntroView":
                 TeamIntroView()
             case "OpenSourceLicense":
-                WebView(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL )
-                    .edgesIgnoringSafeArea(.all)
+                WebViewSurport(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL)
                     .customNavigation {
                         NavigationText(title: "오픈소스/라이센스")
                     } left: {
@@ -125,8 +141,7 @@ struct MyProfileView: View {
                     }
                 
             case "ServiceRequest":
-                WebView(url: Constants.WebViewUrl.SERVICE_REQUEST_URL )
-                    .edgesIgnoringSafeArea(.bottom)
+                WebViewSurport(url: Constants.WebViewUrl.SERVICE_REQUEST_URL)
                     .customNavigation {
                         NavigationText(title: "문의하기")
                     } left: {

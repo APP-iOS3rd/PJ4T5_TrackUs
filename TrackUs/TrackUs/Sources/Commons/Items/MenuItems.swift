@@ -7,23 +7,21 @@
 
 import SwiftUI
 
-struct MenuItems<Content>: View where Content: View {
-    let sectionTitle: String
+struct MenuItems<Section, Content>: View where Content: View, Section: View {
+    let section: () -> Section
     let content: () -> Content
     
-    init(sectionTitle: String, @ViewBuilder content: @escaping () -> Content) {
-        self.sectionTitle = sectionTitle
+    init(@ViewBuilder section: @escaping () -> Section, @ViewBuilder content: @escaping () -> Content) {
+        self.section = section
         self.content = content
     }
     
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                Text(sectionTitle)
-                    .customFontStyle(.gray1_SB16)
+                section()
                 Spacer()
             }
-            
             
             VStack(spacing: 20) {
                 content()
