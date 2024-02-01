@@ -26,7 +26,7 @@ struct CustomNavigationBarModifier<C, L, R>: ViewModifier where C: View, L: View
                     Spacer()
                     right?()
                 }
-                .frame(height: 56)
+                .frame(height: 47)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                 
