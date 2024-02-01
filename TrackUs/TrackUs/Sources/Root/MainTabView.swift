@@ -9,28 +9,72 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var router: Router
-    
+    @State private var selectedTab: Tab = .running
+
+    enum Tab {
+        case running, recruitment, chatting, report, profile
+    }
+
     var body: some View {
         NavigationStack(path: $router.path) {
-            TabView {
+            TabView(selection: $selectedTab) {
                 RunningView()
                     .tabItem {
-                        Label("러닝", systemImage: "figure.run")
+                        if selectedTab == .running {
+                            Image("Running.fill")
+                        } else {
+                            Image("Running")
+                        }
+                        Text("러닝")
                     }
-                    
+                    .tag(Tab.running)
+                
+                RecruitmentView()
+                    .tabItem {
+                        if selectedTab == .recruitment {
+                            Image("Recruitment.fill")
+                        } else {
+                            Image("Recruitment")
+                        }
+                        Text("모집")
+                    }
+                    .tag(Tab.recruitment)
+                
+                ChattingView()
+                    .tabItem {
+                        if selectedTab == .chatting {
+                            Image("Chatting.fill")
+                        } else {
+                            Image("Chatting")
+                        }
+                        Text("채팅")
+                    }
+                    .tag(Tab.chatting)
+                
                 ReportView()
                     .tabItem {
-                        Label("리포트", systemImage: "chart.bar")
+                        if selectedTab == .report {
+                            Image("Report.fill")
+                        } else {
+                            Image("Report")
+                        }
+                        Text("리포트")
                     }
-                    
+                    .tag(Tab.report)
+                
                 MyProfileView()
                     .tabItem {
-                        Label("마이프로필", systemImage: "person.circle")
+                        if selectedTab == .profile {
+                            Image("Profile.fill")
+                        } else {
+                            Image("Profile")
+                        }
+                        Text("프로필")
                     }
-                SignUpView()
-                    .tabItem {
-                        Label("회원가입(테스트용)", systemImage: "figure.run")
-                    }
+                    .tag(Tab.profile)
+            }
+            .onAppear {
+                selectedTab = .running
             }
         }
     }

@@ -15,8 +15,10 @@ enum CustomFontStyle {
     case gray1_B16
     
     // Gray1_SemiBold
+    case gray1_SB20
     case gray1_SB16
-    
+    case gray1_SB17
+
     // Gray1_Medium
     case gray1_M16
 
@@ -49,7 +51,7 @@ enum CustomFontStyle {
     // MARK: - Caution
     // Caution_Regular
     case caution_R16
-    
+    case caution_R17
     // Caution_Lihgt
     case caution_L12
 }
@@ -84,6 +86,12 @@ extension View {
             // Gray1_SemiBold
         case .gray1_SB16:
             font = Font.system(size: 16, weight: .semibold)
+            color = .gray1
+        case .gray1_SB17:
+            font = Font.system(size: 17, weight: .semibold)
+            color = .gray1
+        case .gray1_SB20:
+            font = Font.system(size: 20, weight: .semibold)
             color = .gray1
             
             // Gray1_Medium
@@ -140,6 +148,9 @@ extension View {
             // MARK: - Caution
         case .caution_R16:
             font = Font.system(size: 16, weight: .regular)
+            color = .caution
+        case .caution_R17:
+            font = Font.system(size: 17, weight: .regular)
             color = .caution
         case .caution_L12:
             font = Font.system(size: 12, weight: .light)
