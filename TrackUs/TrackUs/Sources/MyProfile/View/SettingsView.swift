@@ -11,7 +11,10 @@ struct SettingsView: View {
     var body: some View {
         VStack {
             ScrollView {
-                MenuItems(sectionTitle: "앱 정보") {
+                MenuItems {
+                    Text("앱 정보")
+                        .customFontStyle(.gray1_SB16)
+                } content: {
                     MenuItem(title: "버전정보", label: "v.1.0.0")
                     NavigationLink(value: "TeamIntroView") {
                         MenuItem(title: "팀 트랙어스", image: .init(.chevronRight))
@@ -20,8 +23,10 @@ struct SettingsView: View {
                 
                 Divider()
                     .background(.divider)
-                
-                MenuItems(sectionTitle: "계정 관련") {
+                MenuItems {
+                    Text("계정 관련")
+                        .customFontStyle(.gray1_SB16)
+                } content: {
                     Button(action: logoutButtonTapped) {
                         MenuItem(title: "로그아웃")
                     }
@@ -29,7 +34,7 @@ struct SettingsView: View {
                     NavigationLink(value: "WithdrawalView") {
                         HStack {
                             Text("회원탈퇴")
-                                .customFontStyle(.caution_R16)
+                                .customFontStyle(.gray1_SB16)
                             Spacer()
                         }
                     }

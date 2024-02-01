@@ -20,7 +20,7 @@ final class Router: ObservableObject {
             String(describing: self)
         }
     }
-    
+
     @Published var path = NavigationPath()
     
     func push(to destination: Destination) {

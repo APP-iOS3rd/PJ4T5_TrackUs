@@ -8,17 +8,23 @@
 import SwiftUI
 
 struct PremiumPaymentView: View {
+    @Binding var isShownFullScreenCover: Bool
+    
     var body: some View {
         Text("프리미엄 결제화면 개발중")
             .customNavigation {
-                NavigationText(title: "프리미엄 결제")
+                EmptyView()
             } left: {
-                NavigationBackButton()
+                Button(action: {
+                    isShownFullScreenCover.toggle()
+                }, label: {
+                    Image(systemName: "xmark")
+                        .foregroundStyle(.gray1)
+                })
             }
-
     }
 }
 
 #Preview {
-    PremiumPaymentView()
+    PremiumPaymentView(isShownFullScreenCover: .constant(true))
 }
