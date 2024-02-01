@@ -30,7 +30,7 @@ struct ProfileEditView: View {
                         // 닉네임
                         VStack(alignment: .leading, spacing: 20) {
                             Text("닉네임")
-                                .customFontStyle(.gray1_SB20)
+                                .customFontStyle(.gray1_B20)
                             TextField("TrackUs", text: $nickname)
                                 .padding(.leading, 16)
                                 .foregroundColor(.gray1)
@@ -43,7 +43,7 @@ struct ProfileEditView: View {
                         // 신체정보
                         VStack(alignment: .leading, spacing: 20) {
                             Text("신체정보")
-                                .customFontStyle(.gray1_SB20)
+                                .customFontStyle(.gray1_B20)
                             
                             HStack {
                                 Text("신장")
@@ -56,7 +56,7 @@ struct ProfileEditView: View {
                                     }
                                 }
                                 .accentColor(.gray1)
-                                    .padding(.horizontal, -8)
+                                .padding(.horizontal, -8)
                             }
                             
                             HStack {
@@ -78,7 +78,7 @@ struct ProfileEditView: View {
                         // 운동정보
                         VStack(alignment: .leading, spacing: 20) {
                             Text("운동정보")
-                                .customFontStyle(.gray1_SB20)
+                                .customFontStyle(.gray1_B20)
                             
                             HStack {
                                 Text("러닝스타일")
@@ -114,7 +114,7 @@ struct ProfileEditView: View {
                         // 사용자 관련
                         VStack(alignment: .leading, spacing: 20) {
                             Text("사용자 관련")
-                                .customFontStyle(.gray1_SB20)
+                                .customFontStyle(.gray1_B20)
                             
                             HStack {
                                 Text("프로필 공개 여부")
@@ -144,7 +144,9 @@ struct ProfileEditView: View {
             MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
         }
-        
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
     
     func modifyButtonTapped() {}
