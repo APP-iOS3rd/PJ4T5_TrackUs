@@ -29,7 +29,7 @@ struct MainTabView: View {
                     }
                 SignUpView()
                     .tabItem {
-                        Label("회원가입", systemImage: "figure.run")
+                        Label("회원가입(테스트용)", systemImage: "figure.run")
                     }
             }
         }
