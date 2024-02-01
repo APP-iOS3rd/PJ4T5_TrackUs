@@ -10,99 +10,138 @@
 import SwiftUI
 
 struct MyProfileView: View {
-    @EnvironmentObject var router: Router
-    @State private var nickName: String = ""
-    @State private var checkNickname: Bool = false
-    @State private var selectedImage: Image? = nil
+    @State private var selectedImage: Image?
     
     var body: some View {
-        ScrollView{
-            VStack {
-                ProfilePicker(image: $selectedImage)
-                    .frame(width: 116, height: 116)
-                    .padding()
-                    .padding(.bottom, 24)
-                HStack(spacing: 0) {
-                    Text("TrackUs님")
-                        .customFontStyle(.gray1_SB16)
-                        .padding(.trailing, 4)
-                    NavigationLink(destination: ProfileEditView()) {
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(Color.gray1)
+        VStack {
+            ScrollView{
+                // MARK: - 프로필 헤더
+                VStack {
+                    Image(.profileDefault)
+                        .resizable()
+                        .frame(width: 116, height: 116)
+                        .padding(.vertical, 12)
+                        .clipShape(Circle())
+                    
+                    NavigationLink(value: "ProfileEditView") {
+                        HStack(spacing: 6) {
+                            Text("TrackUs님")
+                                .customFontStyle(.gray1_SB16)
+                            
+                            Image(.chevronRight)
+                        }
+                    }
+                    
+                    HStack {
+                        Text("170cm · 70kg · 20대")
+                            .customFontStyle(.gray2_R16)
+                    }
+                }
+                .padding(.bottom, 32)
+                
+                // MARK: - 리스트
+                MenuItems(sectionTitle: "운동") {
+                    NavigationLink(value: "RunningRecordView") {
+                        MenuItem(title: "러닝기록", image: .init(.chevronRight))
+                    }
+                }
+                
+                Divider()
+                    .background(.divider)
+                
+                MenuItems(sectionTitle: "서비스") {
+                    NavigationLink(value: "TermsOfService") {
+                        MenuItem(title: "이용약관", image: .init(.chevronRight))
+                    }
+                    
+                    NavigationLink(value: "OpenSourceLicense") {
+                        MenuItem(title: "오픈소스/라이센스", image: .init(.chevronRight))
                     }
                     
                 }
-                Text("170cm · 70kg · 20대")
-                    .customFontStyle(.gray2_R16)
-                    .padding(.bottom, 8)
-                ListItems()
-            }
-            .customNavigation {
-                Text("마이페이지")
-                    .customFontStyle(.gray1_SB16)
-            } right: {
-                NavigationLink(value: "") {
-                    Image(systemName: "gear")
-                        .foregroundColor(Color.gray1)
+                
+                Divider()
+                    .background(.divider)
+                
+                MenuItems(sectionTitle: "고객지원") {
+                    NavigationLink(value: "FAQView") {
+                        MenuItem(title: "자주묻는 질문 Q&A", image: .init(.chevronRight))
+                    }
+                    NavigationLink(value: "ServiceRequest") {
+                        MenuItem(title: "문의하기", image: .init(.chevronRight))
+                    }
+                    
                 }
-                .navigationDestination(for: String.self) { _ in
-                    Settings()
+                
+                Divider()
+                    .background(.divider)
+                
+                MenuItems(sectionTitle: "트랙어스 응원하기 ") {
+                    NavigationLink(value: "PremiumPaymentView") {
+                        MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
+                    }
                 }
-            }
-        }
-    }
-        
-
-    
-    struct ListItems: View {
-        var body: some View {
-            VStack(alignment: .leading, spacing: Constants.ViewLayout.VIEW_STANDARD_VERTICAL_SPACING) {
-                Text("운동")
-                    .customFontStyle(.gray1_SB17)
-                    .padding(.leading)
-                ListSettingsItem(title: "러닝기록")
-                Divider()
-                    .background(Color.Gray3)
-                Text("서비스")
-                    .customFontStyle(.gray1_SB16)
-                    .padding(.leading)
-                ListSettingsItem(title: "이용약관")
-                ListSettingsItem(title: "오픈소스/라이센스")
-                Divider()
-                    .background(Color.Gray3)
-                Text("고객지원")
-                    .customFontStyle(.gray1_SB16)
-                    .padding(.leading)
-                ListSettingsItem(title: "자주묻는 질문 Q&A")
-                ListSettingsItem(title: "문의하기")
-                Divider()
-                    .background(Color.Gray3)
-                Text("트랙어스 응원하기")
-                    .customFontStyle(.gray1_SB16)
-                    .padding(.leading)
-                ListSettingsItem(title: "프리미엄 결제하기")
             }
         }
-    }
-    
-    struct ListSettingsItem: View {
-        var title: String
-        
-        var body: some View {
-            NavigationLink(destination: ExerciseView()) {
-                HStack {
-                    Text(title)
-                        .customFontStyle(.gray1_R16)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(Color.gray1)
-                }
-                .padding(.horizontal)
+        .customNavigation {
+            NavigationText(title: "마이페이지")
+        } right: {
+            NavigationLink(value: "SettingsView") {
+                Image(.settingLogo)
+                    .foregroundColor(Color.gray1)
+            }
+        }
+        .navigationDestination(for: String.self) { screenName in
+            switch screenName {
+            case "ProfileEditView":
+                ProfileEditView()
+            case "SettingsView":
+                SettingsView()
+            case "RunningRecordView":
+                RunningRecordView()
+            case "TermsOfService":
+                WebView(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
+                    .edgesIgnoringSafeArea(.all)
+                    .customNavigation {
+                        NavigationText(title: "서비스 이용약관")
+                    } left: {
+                        NavigationBackButton()
+                    }
+            case "PremiumPaymentView":
+                PremiumPaymentView()
+            case "FAQView":
+                FAQView()
+            case "WithdrawalView":
+                Withdrawal()
+            case "TeamIntroView":
+                TeamIntroView()
+            case "OpenSourceLicense":
+                WebView(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL )
+                    .edgesIgnoringSafeArea(.all)
+                    .customNavigation {
+                        NavigationText(title: "오픈소스/라이센스")
+                    } left: {
+                        NavigationBackButton()
+                    }
+                
+            case "ServiceRequest":
+                WebView(url: Constants.WebViewUrl.SERVICE_REQUEST_URL )
+                    .edgesIgnoringSafeArea(.bottom)
+                    .customNavigation {
+                        NavigationText(title: "문의하기")
+                    } left: {
+                        NavigationBackButton()
+                    }
+                
+            default:
+                EmptyView()
             }
         }
     }
 }
-    
+
+
+
 
 #Preview {
     MyProfileView()

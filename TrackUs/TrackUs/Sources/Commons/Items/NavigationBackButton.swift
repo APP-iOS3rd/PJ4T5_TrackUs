@@ -14,7 +14,8 @@ struct NavigationBackButton: View {
         Button(action: {
             router.pop()
         }) {
-            Image("BackLogo")
+            Image(systemName: "chevron.left")
+                .foregroundColor(.gray1)
         }
     }
 }

@@ -59,16 +59,15 @@ struct ProfilePicker: View {
                     .offset(x: 56, y: 56)
                 }
                 
-            }else{
+                
+            } else {
                 ZStack{
                     Image(.profileDefault)
                         .resizable()
                         .frame(width: size, height: size)
                         .scaledToFit()
                         .clipShape(Circle())
-                    Image(systemName: "camera.circle.fill")
-                        .resizable()
-                        .frame(width: 32, height: 32)
+                    Image(.camera)
                         .symbolRenderingMode(.multicolor)
                         .symbolVariant(.none)
                     // 회색 지정 후 추가 수정
@@ -77,7 +76,7 @@ struct ProfilePicker: View {
                             Circle()
                                 .stroke( .white, lineWidth: 2)
                         )
-                        .offset(x: 56, y: 56)
+                        .offset(x: size / 3, y: size / 3)
                 }
             }
         }
@@ -86,6 +85,5 @@ struct ProfilePicker: View {
                          image = try? await selectedPhoto?.loadTransferable(type: Image.self)
                      }
                      .animation(.easeInOut, value: image)
-                     .padding(.top, 40)
     }
 }
