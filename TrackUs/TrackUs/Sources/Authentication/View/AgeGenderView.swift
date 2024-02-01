@@ -25,7 +25,7 @@ struct AgeGenderView: View {
             Description(title: "연령대 및 성별", detail: "연령대 정보를 선택하면 더욱 정확한 러닝 데이터 및 칼로리 소모량을 측정할 수 있습니다.")
             
             VStack(alignment: .leading, spacing: 26){
-                SelectPicker(selectedValue: $selectedAge, showingSheet: $AgePicker, title: "연령대", unit: "10대")
+                SelectPicker(selectedValue: $selectedAge, pickerType: .age)
                 VStack(alignment: .leading, spacing: 20){
                     Text("성별")
                         .customFontStyle(.gray1_R16)

@@ -22,7 +22,7 @@ struct DailyGoalView: View {
     var body: some View {
         VStack(spacing: 40){
             Description(title: "일일 운동량", detail: "하루에 정해진 운동량을 설정하고 꾸준히 뛸 수 있는 이유를 만들어 주세요.")
-            SelectPicker(selectedValue: $goal, showingSheet: $goalPicker, title: "키", unit: "cm")
+            SelectPicker(selectedValue: $goal, pickerType: .dailyGoal)
             
             Spacer()
             VStack{
