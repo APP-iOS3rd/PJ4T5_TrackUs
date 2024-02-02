@@ -10,11 +10,10 @@ import SwiftUI
 @main
 struct TrackUsApp: App {
     var body: some Scene {
-        @StateObject var router = Router()
         
         WindowGroup {
             ContentView()
-                .environmentObject(router)
+                .environmentObject(Router())
         }
     }
 }
