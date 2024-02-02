@@ -7,15 +7,22 @@
 
 import SwiftUI
 
+enum RunnningOption: String, CaseIterable, Identifiable {
+    case record = "기록갱신", diet = "다이어트"
+    var id: Self { self }
+}
+
 struct ProfileEditView: View {
-    private let runningOptions = ["기록갱신", "다이어트"]
-    @State private var runningOption = "기록갱신"
+    private let runningOptions: [RunnningOption] = [.record, .diet]
+    @State private var runningOption: RunnningOption = .record
     @State private var selectedImage: Image? = nil
     @State private var nickname: String = ""
     @State private var height: Int = 170
     @State private var weight: Int = 65
-    @State private var dailyGoalIndex: Int = 0
+    @State private var goalMinValue: Double = 0.1
+    @State private var goalMaxValue: Double = 40.0
     @State private var isProfilePublic: Bool = true
+    
     
     var body: some View {
         VStack {
@@ -40,7 +47,11 @@ struct ProfileEditView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 3).stroke(Color.border))
                         }
                         
-                        // 신체정보
+                        /**
+                         신체정보 옵션
+                         신장 120-250(단위 1)
+                         체중 30-200(단위 1)
+                         */
                         VStack(alignment: .leading, spacing: 20) {
                             Text("신체정보")
                                 .customFontStyle(.gray1_B20)
@@ -50,7 +61,7 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 Picker(selection: $height, label: Text("신장")) {
-                                    ForEach(120..<250) {
+                                    ForEach(120..<250, id: \.self) {
                                         Text("\($0) cm")
                                             .multilineTextAlignment(.leading)
                                     }
@@ -64,7 +75,7 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 Picker(selection: $weight, label: Text("신장")) {
-                                    ForEach(30..<200) {
+                                    ForEach(30..<200, id: \.self) {
                                         Text("\($0) kg")
                                             .multilineTextAlignment(.leading)
                                     }
@@ -75,7 +86,11 @@ struct ProfileEditView: View {
                         }
                         .padding(.vertical, 14)
                         
-                        // 운동정보
+                        /**
+                         운동정보 옵션
+                         러닝스타일 - 기록갱신/다이어트
+                         일일목표 - 0.0-40.0 (0.1 km)
+                         */
                         VStack(alignment: .leading, spacing: 20) {
                             Text("운동정보")
                                 .customFontStyle(.gray1_B20)
@@ -85,8 +100,9 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 Picker(selection: $runningOption, label: Text("러닝 스타일")) {
-                                    ForEach(runningOptions, id: \.self) { option in
-                                        Text(option)
+                                    ForEach(runningOptions) { option in
+                                        Text(option.rawValue)
+                                        
                                             .multilineTextAlignment(.leading)
                                     }
                                 }
@@ -99,9 +115,9 @@ struct ProfileEditView: View {
                                 Text("일일목표")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $dailyGoalIndex, label: Text("일일목표")) {
-                                    ForEach(1..<100) {
-                                        Text("\($0) km")
+                                Picker(selection: $goalMinValue, label: Text("일일목표")) {
+                                    ForEach(Array(stride(from: goalMinValue, through: goalMaxValue, by: 0.1)), id: \.self) {
+                                        Text("\($0, specifier: "%.1f") km")
                                             .multilineTextAlignment(.leading)
                                     }
                                 }
@@ -135,8 +151,7 @@ struct ProfileEditView: View {
                 .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
             }
             .customNavigation {
-                Text("프로필 변경")
-                    .customFontStyle(.gray1_SB16)
+                NavigationText(title: "프로필 변경")
             } left: {
                 NavigationBackButton()
             }
