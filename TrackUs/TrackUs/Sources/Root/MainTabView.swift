@@ -40,6 +40,7 @@ struct MainTabView: View {
                         Text("모집")
                     }
                     .tag(Tab.recruitment)
+                 
                 
                 ChattingView()
                     .tabItem {
@@ -48,6 +49,7 @@ struct MainTabView: View {
                         Text("채팅")
                     }
                     .tag(Tab.chatting)
+                  
                 
                 ReportView()
                     .tabItem {
@@ -56,6 +58,7 @@ struct MainTabView: View {
                         Text("리포트")
                     }
                     .tag(Tab.report)
+                  
                 
                 MyProfileView()
                     .tabItem {
@@ -65,9 +68,13 @@ struct MainTabView: View {
                     }
                     .tag(Tab.profile)
             }
-            
+            .onChange(of: selectedTab) { _ in
+                HapticManager.instance.impact(style: .light)
+            }
         }
     }
+    
+  
 }
 
 #Preview {
