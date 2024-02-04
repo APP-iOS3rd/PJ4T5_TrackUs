@@ -9,17 +9,24 @@ import SwiftUI
 
 struct RunningLiveView: View {
     @StateObject private var countVM = CountViewModel()
-
+    @GestureState private var press = false
+    @State private var isPause = false
+    @State private var isShowingMessage = false
+    @State private var isShowingResultView = false
+    
+    
     var body: some View {
         ZStack {
+            NavigationLink(destination: RunningResultView().navigationBarBackButtonHidden(true), isActive: $isShowingResultView) {
+                                           EmptyView()
+                                       }
             MapBoxMapView()
             
             Color.black
-                .opacity(countVM.isHidden ? 0.0 : countVM.backgroundOpacity)
-                .edgesIgnoringSafeArea(.all)
-
+                .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)
+            
             VStack {
-                if !countVM.isHidden {
+                if countVM.isHidden {
                     Text("\(countVM.countdown)")
                         .font(.system(size: 128))
                         .italic()
@@ -28,17 +35,188 @@ struct RunningLiveView: View {
                         .onAppear {
                             countVM.startCountdown()
                         }
-
+                    
                     Text("잠시후 러닝이 시작됩니다!")
                         .customFontStyle(.white_SB20)
                 }
                 else {
-                    Text("HIHI")
+                    // 운동상태
+                    VStack(spacing: 16) {
+                        HStack {
+                            Image(.shose)
+                            Text("현재까지 거리")
+                                .customFontStyle(.gray1_M16)
+                            Spacer()
+                            Text("0.24km/12km")
+                                .customFontStyle(.gray1_B20)
+                                .italic()
+                        }
+                        .padding(16)
+                        .background(.white)
+                        .clipShape(Capsule())
+                        
+                        HStack {
+                            VStack {
+                                Image(.fire)
+                                Text("소모 칼로리")
+                                    .customFontStyle(.gray1_M16)
+                                
+                                Text("112")
+                                    .customFontStyle(.gray1_B20)
+                                    .italic()
+                            }
+                            .frame(width: 100, height: 100)
+                            .background(.white)
+                            .clipShape(Circle())
+                            
+                            Spacer()
+                            
+                            VStack {
+                                Image(.time)
+                                Text("페이스")
+                                    .customFontStyle(.gray1_M16)
+                                
+                                Text("-'--''")
+                                    .customFontStyle(.gray1_B20)
+                                    .italic()
+                            }
+                            .frame(width: 100, height: 100)
+                            .background(.white)
+                            .clipShape(Circle())
+                            
+                            Spacer()
+                            
+                            VStack {
+                                Image(.fire)
+                                Text("경과시간")
+                                    .customFontStyle(.gray1_M16)
+                                
+                                Text("00:20")
+                                    .customFontStyle(.gray1_B20)
+                                    .italic()
+                            }
+                            .frame(width: 100, height: 100)
+                            .background(.white)
+                            .clipShape(Circle())
+                        }
+                    }
+                    
+                    .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
+                    .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+                    
+                    Spacer()
+                    VStack {
+                        
+                        if isPause {
+                            VStack {
+                                EmptyView()
+                                    .popup(isPresented: $isShowingMessage) {
+                                        HStack {
+                                            Image(.power)
+                                            VStack(alignment: .leading) {
+                                                Text("러닝을 종료하실건가요?")
+                                                    .customFontStyle(.gray1_B16)
+                                                HStack {
+                                                    Text("러닝 종료 버튼을")
+                                                        .customFontStyle(.gray1_R14)
+                                                    Text("2초간 TAB")
+                                                        .font(.system(size: 14, weight: .bold))
+                                                        .foregroundStyle(.main)
+                                                    Text("해주세요!")
+                                                        .customFontStyle(.gray1_R14)
+                                                }
+                                            }
+                                            
+                                        }
+                                        .padding(12)
+                                        .frame(maxWidth: .infinity)
+                                        .background(.white)
+                                        .clipShape(Capsule())
+                                        
+                                    } customize: {
+                                        $0
+                                            .type(.floater())
+                                            .position(.bottom)
+                                            .animation(.smooth)
+                                            .autohideIn(2)
+                                    }
+                                HStack {
+                                    Button(action: stopButtonTapped, label: {
+                                        VStack {
+                                            Image(systemName: "stop.fill")
+                                                .foregroundStyle(.gray1)
+                                                .font(.system(size: 55))
+                                                .padding(27)
+                                        }
+                                        .background(.white)
+                                        .clipShape(Circle())
+                                    })
+                                    .simultaneousGesture(LongPressGesture(minimumDuration: 2)
+                                        .updating($press) { currentState, gestureState, transaction in
+                                            gestureState = currentState
+                                        }
+                                        .onEnded(stopButtonLongPressed))
+                                    .simultaneousGesture(TapGesture().onEnded(stopButtonTapped))
+
+                                    Spacer()
+                                    
+                                    Button(action: playButtonTapped, label: {
+                                        VStack {
+                                            Image(systemName: "play.fill")
+                                                .foregroundStyle(.gray1)
+                                                .font(.system(size: 55))
+                                                .padding(27)
+                                        }
+                                        .background(.white)
+                                        .clipShape(Circle())
+                                    })
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            
+                        } else {
+                            // 일시정지 버튼
+                            Button(action: pasueButtonTapped, label: {
+                                VStack {
+                                    Image(systemName: "pause.fill")
+                                        .foregroundStyle(.gray1)
+                                        .font(.system(size: 55))
+                                        .padding(27)
+                                }
+                                .background(.white)
+                                .clipShape(Circle())
+                            })
+                        }
+                    }
+                    .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+                    .padding(.bottom, UIApplication.shared.statusBarFrame.size.height + 20)
                 }
             }
         }
         .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(true)
+    }
+    
+    func pasueButtonTapped() {
+        withAnimation {
+            isPause = true
+        }
+    }
+    
+    func playButtonTapped() {
+        withAnimation {
+            isPause = false
+            isShowingMessage = false
+        }
+    }
+    
+    func stopButtonTapped() {
+        isShowingMessage = true
+    }
+    
+    func stopButtonLongPressed(value: Bool) {
+        HapticManager.instance.impact(style: .heavy)
+        isShowingResultView = true
     }
 }
 

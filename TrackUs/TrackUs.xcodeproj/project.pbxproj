@@ -10,6 +10,7 @@
 		820330D62B700FAC00CB97F7 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 820330D52B700FAC00CB97F7 /* PopupView */; };
 		820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820330D72B70127800CB97F7 /* SettingPopup.swift */; };
 		8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8224637C2B68E7F6008D3DAA /* MyProfileView.swift */; };
+		822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822AE5ED2B70370700D90264 /* RunningResultView.swift */; };
 		823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9ACF2B6807BF00C9F772 /* ReportView.swift */; };
 		823B9AD32B68094E00C9F772 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 823B9AD22B68094E00C9F772 /* MapboxMaps */; };
 		823B9AD62B68109200C9F772 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 823B9AD52B68109200C9F772 /* FirebaseAnalytics */; };
@@ -78,6 +79,7 @@
 /* Begin PBXFileReference section */
 		820330D72B70127800CB97F7 /* SettingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPopup.swift; sourceTree = "<group>"; };
 		8224637C2B68E7F6008D3DAA /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
+		822AE5ED2B70370700D90264 /* RunningResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningResultView.swift; sourceTree = "<group>"; };
 		823B9ACF2B6807BF00C9F772 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		823B9AE12B6818DB00C9F772 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		823B9AE32B681A5900C9F772 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				82EEA2362B70042C00157752 /* NavigationLinkCard.swift */,
 				FE90EECD2B6FCEB700A08E23 /* RunningLiveView.swift */,
 				820330D72B70127800CB97F7 /* SettingPopup.swift */,
+				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -565,6 +568,7 @@
 				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
+				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
 				8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,

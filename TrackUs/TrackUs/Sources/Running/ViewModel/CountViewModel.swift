@@ -9,7 +9,7 @@ import SwiftUI
 
 class CountViewModel: ObservableObject {
     @Published var countdown: Int = 3
-    @Published var isHidden: Bool = false
+    @Published var isHidden: Bool = true
     @Published var backgroundOpacity: Double = 0.31
 
     func startCountdown() {
@@ -18,7 +18,7 @@ class CountViewModel: ObservableObject {
                 if self.countdown > 1 {
                     self.countdown -= 1
                 } else {
-                    self.isHidden = true
+                    self.isHidden = false
                     timer.invalidate()
                 }
             }

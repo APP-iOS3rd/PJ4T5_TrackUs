@@ -17,8 +17,8 @@ struct RunningHomeView: View {
     var body: some View {
         ZStack {
             MapBoxMapView()
-            
-            BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 40, minHeight: 100) {
+                
+            BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
                     // MARK: - 프로필 & 러닝 시작
                     VStack {
@@ -128,7 +128,7 @@ struct RunningHomeView: View {
             NavigationLinkCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!")
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
-
+            
         } customize: {
             $0
                 .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
