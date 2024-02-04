@@ -44,6 +44,8 @@
 		82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BB2B67A6E9002CFD00 /* Color+.swift */; };
 		82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */; };
 		82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */; };
+		82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */; };
+		82EEA2372B70042C00157752 /* NavigationLinkCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EEA2362B70042C00157752 /* NavigationLinkCard.swift */; };
 		963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */; };
 		963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4062B678EAC00E98BF4 /* ContentView.swift */; };
 		963AE4092B678EAE00E98BF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963AE4082B678EAE00E98BF4 /* Assets.xcassets */; };
@@ -102,6 +104,8 @@
 		82ECF0BB2B67A6E9002CFD00 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 		82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPicker.swift; sourceTree = "<group>"; };
 		82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
+		82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecruitmentCell.swift; sourceTree = "<group>"; };
+		82EEA2362B70042C00157752 /* NavigationLinkCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLinkCard.swift; sourceTree = "<group>"; };
 		963AE4012B678EAC00E98BF4 /* TrackUs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackUs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackUsApp.swift; sourceTree = "<group>"; };
 		963AE4062B678EAC00E98BF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -288,6 +292,8 @@
 			isa = PBXGroup;
 			children = (
 				824DA8972B6FB92200B15B89 /* RunningHomeView.swift */,
+				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
+				82EEA2362B70042C00157752 /* NavigationLinkCard.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -550,6 +556,7 @@
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
 				98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */,
 				823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */,
+				82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */,
 				82ECF0B52B67A101002CFD00 /* LoginView.swift in Sources */,
 				82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */,
 				823B9AE22B6818DB00C9F772 /* Router.swift in Sources */,
@@ -583,6 +590,7 @@
 				963AE42B2B6A445800E98BF4 /* ProfileEditView.swift in Sources */,
 				824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
+				82EEA2372B70042C00157752 /* NavigationLinkCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,6 +729,7 @@
 				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -752,6 +761,7 @@
 				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

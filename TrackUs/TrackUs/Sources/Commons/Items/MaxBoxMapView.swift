@@ -20,23 +20,22 @@ struct MapBoxMapView: UIViewControllerRepresentable {
 
 class MapViewController: UIViewController, GestureManagerDelegate {
     internal var mapView: MapView!
-    private var lineCoordinates: [CLLocationCoordinate2D] = []
+    private var locationTrackingCancellation: AnyCancelable?
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.23147718386432, longitude: 127.1200232560824), zoom: 17, bearing: 0)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.23147718386432, longitude: 127.1200232560824), zoom: 17, bearing: 0, pitch: 0)
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.mapboxMap.styleURI = .light
+        
         self.view.addSubview(mapView)
         
         mapView.location.options.puckType = .puck2D()
         mapView.location.options.puckBearingEnabled = true
-        mapView.gestures.delegate = self
+        mapView.gestures.delegate = self // gesture delegate
     }
-    
-    // start tracking
-    
     
     func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
         

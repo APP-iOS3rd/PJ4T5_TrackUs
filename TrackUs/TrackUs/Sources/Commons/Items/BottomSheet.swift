@@ -9,7 +9,6 @@ import SwiftUI
 
 
 // CustomBottomSheet
-
 fileprivate enum BottomSheetConstants {
     static let radius: CGFloat = 27
     static let indicatorHeight: CGFloat = 4

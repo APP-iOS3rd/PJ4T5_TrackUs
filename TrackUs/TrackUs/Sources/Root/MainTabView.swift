@@ -25,6 +25,7 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             TabView(selection: $selectedTab) {
+                // Sheet 애니메이션 끊김현상으로 일시적으로 VStack으로 래핑
                 VStack {
                     RunningHomeView()
                 }
