@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import PopupView
 
 struct RunningHomeView: View {
     @State private var isOpen: Bool = false
     @State private var maxHeight: CGFloat = 300
+    @State private var showingPopup = false
+    @State private var showingFloater = true
     
     var body: some View {
         ZStack {
@@ -42,6 +45,9 @@ struct RunningHomeView: View {
                                 .overlay(
                                     Image("Setting")
                                 )
+                                .onTapGesture {
+                                    showingPopup = true
+                                }
                             
                             
                             
@@ -52,9 +58,9 @@ struct RunningHomeView: View {
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 7)
                             })
-                            
                             .background(.main)
                             .clipShape(Capsule())
+                            
                         }
                         .padding(.vertical, 10)
                         .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
@@ -97,7 +103,7 @@ struct RunningHomeView: View {
                     
                     // MARK: - 러닝 리포트 확인하기
                     VStack {
-                        NavigationLinkCard()
+                        NavigationLinkCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.")
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(.gray3, lineWidth: 1)
@@ -117,6 +123,26 @@ struct RunningHomeView: View {
                 
             }
             
+        }
+        .popup(isPresented: $showingFloater) {
+            NavigationLinkCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!")
+                .cornerRadius(12)
+                .padding(.horizontal, 16)
+
+        } customize: {
+            $0
+                .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
+                .position(.top)
+                .animation(.spring())
+        }
+        .popup(isPresented: $showingPopup) {
+            SettingPopup(showingPopup: $showingPopup)
+        } customize: {
+            $0
+                .backgroundColor(.black.opacity(0.3))
+                .isOpaque(true)
+                .dragToDismiss(false)
+                .closeOnTap(false)
         }
         .navigationDestination(for: String.self, destination: { screenName in
             switch screenName {

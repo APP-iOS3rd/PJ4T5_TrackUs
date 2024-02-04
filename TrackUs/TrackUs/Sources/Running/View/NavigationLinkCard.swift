@@ -8,24 +8,30 @@
 import SwiftUI
 
 struct NavigationLinkCard: View {
+    let title: String
+    let subTitle: String
+    
     var body: some View {
         VStack {
             HStack {
                 Image("Clipboard")
                 VStack(alignment: .leading) {
-                    Text("러닝 리포트 확인하기")
+                    Text(title)
                         .customFontStyle(.main_B16)
-                    Text("러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.")
+                    Text(subTitle)
                         .customFontStyle(.gray1_R12)
                 }
                 Spacer()
                 Image("ChevronRight")
             }
+            
+            
             .padding(7)
         }
+        .background(.white)
     }
 }
 
-#Preview {
-    NavigationLinkCard()
-}
+//#Preview {
+//    NavigationLinkCard()
+//}
