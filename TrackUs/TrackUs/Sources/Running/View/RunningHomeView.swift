@@ -40,17 +40,17 @@ struct RunningHomeView: View {
                             Spacer()
                             
                             
-                            Circle()
-                                .fill(.white.shadow(.drop(color: .divider, radius: 10)))
-                                .frame(width: 28, height: 28)
-                                .overlay(
-                                    Image("Setting")
-                                )
-                                .onTapGesture {
+                            Button(action: {
                                     showingPopup = true
-                                }
-                            
-                            
+                            }) {
+                                Circle()
+                                    .fill(.white.shadow(.drop(color: .divider, radius: 10)))
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Image(systemName: "gearshape")
+                                            .foregroundStyle(.gray1)
+                                    )
+                            }           
                             
                             NavigationLink(value: "RunningLiveView", label: {
                                 Text("러닝 시작")
@@ -61,7 +61,7 @@ struct RunningHomeView: View {
                             })
                             .background(.main)
                             .clipShape(Capsule())
-                            
+             
                         }
                         .padding(.vertical, 10)
                         .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)

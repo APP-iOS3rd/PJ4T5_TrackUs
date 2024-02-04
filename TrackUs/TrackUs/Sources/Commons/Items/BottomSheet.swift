@@ -62,7 +62,6 @@ struct BottomSheet<Content: View>: View {
             )
             .frame(height: geometry.size.height, alignment: .bottom)
             .offset(y: max(self.offset + self.translation, 0))
-            .animation(.interactiveSpring(), value: isOpen)
             .animation(.interactiveSpring(), value: translation)
             .gesture(
                 DragGesture().updating(self.$translation) { value, state, _ in
@@ -72,7 +71,9 @@ struct BottomSheet<Content: View>: View {
                     guard abs(value.translation.height) > snapDistance else {
                         return
                     }
-                    self.isOpen = value.translation.height < 0
+                    withAnimation(.interactiveSpring) {
+                        self.isOpen = value.translation.height < 0
+                    }
                 }
             )
         }
