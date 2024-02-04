@@ -25,13 +25,15 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             TabView(selection: $selectedTab) {
-                RunningView()
-                    .tabItem {
-                        Image("Running")
-                            .renderingMode(.template)
-                        Text("러닝")
-                    }
-                    .tag(Tab.running)
+                VStack {
+                    RunningHomeView()
+                }
+                .tabItem {
+                    Image("Running")
+                        .renderingMode(.template)
+                    Text("러닝")
+                }
+                .tag(Tab.running)
                 
                 RecruitmentView()
                     .tabItem {
@@ -40,7 +42,7 @@ struct MainTabView: View {
                         Text("모집")
                     }
                     .tag(Tab.recruitment)
-                 
+                
                 
                 ChattingView()
                     .tabItem {
@@ -49,7 +51,7 @@ struct MainTabView: View {
                         Text("채팅")
                     }
                     .tag(Tab.chatting)
-                  
+                
                 
                 ReportView()
                     .tabItem {
@@ -58,7 +60,7 @@ struct MainTabView: View {
                         Text("리포트")
                     }
                     .tag(Tab.report)
-                  
+                
                 
                 MyProfileView()
                     .tabItem {
@@ -74,7 +76,7 @@ struct MainTabView: View {
         }
     }
     
-  
+    
 }
 
 #Preview {

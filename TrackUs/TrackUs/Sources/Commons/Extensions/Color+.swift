@@ -13,4 +13,5 @@ extension Color {
     static let Gray2 = Color("Gray2")
     static let Gray3 = Color("Gray3")
     static let Caution = Color("Caution")
+    static let Secondary = Color("Secondary")
 }

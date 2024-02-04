@@ -20,6 +20,9 @@
 		823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */; };
 		823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE72B68232600C9F772 /* View+NavigationBar.swift */; };
 		823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE92B68264500C9F772 /* NavigationBackButton.swift */; };
+		824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */; };
+		824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8972B6FB92200B15B89 /* RunningHomeView.swift */; };
+		824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8992B6FB95100B15B89 /* BottomSheet.swift */; };
 		8252D5192B6CC4CD006B4FE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8252D5182B6CC4CD006B4FE5 /* GoogleService-Info.plist */; };
 		8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
@@ -35,7 +38,6 @@
 		82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */; };
 		82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */; };
 		82ECF0AF2B67A0D0002CFD00 /* RunningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AE2B67A0D0002CFD00 /* RunningViewModel.swift */; };
-		82ECF0B12B67A0E4002CFD00 /* RunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B02B67A0E4002CFD00 /* RunningView.swift */; };
 		82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B22B67A0F8002CFD00 /* AuthenticationViewModel.swift */; };
 		82ECF0B52B67A101002CFD00 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B42B67A101002CFD00 /* LoginView.swift */; };
 		82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0B92B67A64B002CFD00 /* Constants.swift */; };
@@ -75,6 +77,9 @@
 		823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarModifier.swift; sourceTree = "<group>"; };
 		823B9AE72B68232600C9F772 /* View+NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationBar.swift"; sourceTree = "<group>"; };
 		823B9AE92B68264500C9F772 /* NavigationBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackButton.swift; sourceTree = "<group>"; };
+		824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxBoxMapView.swift; sourceTree = "<group>"; };
+		824DA8972B6FB92200B15B89 /* RunningHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningHomeView.swift; sourceTree = "<group>"; };
+		824DA8992B6FB95100B15B89 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		8252D5182B6CC4CD006B4FE5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
@@ -91,7 +96,6 @@
 		82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AE2B67A0D0002CFD00 /* RunningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningViewModel.swift; sourceTree = "<group>"; };
-		82ECF0B02B67A0E4002CFD00 /* RunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningView.swift; sourceTree = "<group>"; };
 		82ECF0B22B67A0F8002CFD00 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		82ECF0B42B67A101002CFD00 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		82ECF0B92B67A64B002CFD00 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -283,7 +287,7 @@
 		82ECF0A52B67A03C002CFD00 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				82ECF0B02B67A0E4002CFD00 /* RunningView.swift */,
+				824DA8972B6FB92200B15B89 /* RunningHomeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -343,6 +347,8 @@
 				823B9AE92B68264500C9F772 /* NavigationBackButton.swift */,
 				82AB28B02B6B4DC200D7734D /* MenuItems.swift */,
 				82AB28B42B6B4F6B00D7734D /* NavigationText.swift */,
+				824DA8992B6FB95100B15B89 /* BottomSheet.swift */,
+				824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -557,6 +563,7 @@
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
 				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
 				82AB28B12B6B4DC200D7734D /* MenuItems.swift in Sources */,
+				824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
 				82AB28B72B6B512F00D7734D /* WebView.swift in Sources */,
 				FE71D03E2B6B9C8E00F391AA /* RecruitmentViewModel.swift in Sources */,
@@ -565,6 +572,7 @@
 				8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */,
 				82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */,
 				963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */,
+				824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */,
 				98F1C2F82B6A23AF009382B1 /* RunningStyleView.swift in Sources */,
 				823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */,
 				823B9AE62B6821B700C9F772 /* CustomNavigationBarModifier.swift in Sources */,
@@ -573,7 +581,7 @@
 				823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */,
 				82AB28C12B6B5B6600D7734D /* TeamIntroView.swift in Sources */,
 				963AE42B2B6A445800E98BF4 /* ProfileEditView.swift in Sources */,
-				82ECF0B12B67A0E4002CFD00 /* RunningView.swift in Sources */,
+				824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -713,11 +721,12 @@
 				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -743,11 +752,12 @@
 				DEVELOPMENT_TEAM = P4D4ZQC4YF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
