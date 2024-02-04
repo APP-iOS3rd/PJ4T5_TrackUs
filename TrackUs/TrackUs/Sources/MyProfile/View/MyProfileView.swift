@@ -111,47 +111,7 @@ struct MyProfileView: View {
                     .foregroundColor(Color.gray1)
             }
         }
-        .navigationDestination(for: String.self) { screenName in
-            switch screenName {
-            case "ProfileEditView":
-                ProfileEditView()
-            case "SettingsView":
-                SettingsView()
-            case "RunningRecordView":
-                RunningRecordView()
-            case "TermsOfService":
-                WebViewSurport(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
-                    .customNavigation {
-                        NavigationText(title: "서비스 이용약관")
-                    } left: {
-                        NavigationBackButton()
-                    }
-            case "FAQView":
-                FAQView()
-            case "WithdrawalView":
-                Withdrawal()
-            case "TeamIntroView":
-                TeamIntroView()
-            case "OpenSourceLicense":
-                WebViewSurport(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL)
-                    .customNavigation {
-                        NavigationText(title: "오픈소스/라이센스")
-                    } left: {
-                        NavigationBackButton()
-                    }
-                
-            case "ServiceRequest":
-                WebViewSurport(url: Constants.WebViewUrl.SERVICE_REQUEST_URL)
-                    .customNavigation {
-                        NavigationText(title: "문의하기")
-                    } left: {
-                        NavigationBackButton()
-                    }
-                
-            default:
-                EmptyView()
-            }
-        }
+        
     }
 }
 

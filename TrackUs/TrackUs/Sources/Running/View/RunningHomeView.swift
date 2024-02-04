@@ -144,14 +144,6 @@ struct RunningHomeView: View {
                 .dragToDismiss(false)
                 .closeOnTap(false)
         }
-        .navigationDestination(for: String.self, destination: { screenName in
-            switch screenName {
-            case "RunningLiveView":
-                RunningLiveView()
-            default:
-                EmptyView()
-            }
-        })
         .edgesIgnoringSafeArea(.top)
     }
 }
