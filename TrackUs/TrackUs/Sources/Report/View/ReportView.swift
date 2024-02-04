@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReportView: View {
     var body: some View {
-        Text("리포트 뷰")
+        PreparingService()
     }
 }
 
