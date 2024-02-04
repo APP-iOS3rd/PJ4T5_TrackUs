@@ -14,10 +14,11 @@ struct RunningHomeView: View {
     @State private var showingPopup = false
     @State private var showingFloater = true
     
+    
     var body: some View {
         ZStack {
             MapBoxMapView()
-                
+            
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
                     // MARK: - 프로필 & 러닝 시작
@@ -134,6 +135,7 @@ struct RunningHomeView: View {
                 .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
                 .position(.top)
                 .animation(.spring())
+                .closeOnTap(false)
         }
         .popup(isPresented: $showingPopup) {
             SettingPopup(showingPopup: $showingPopup)

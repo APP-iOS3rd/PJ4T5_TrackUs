@@ -51,6 +51,7 @@ struct SettingPopup: View {
                                     .customFontStyle(.gray1_R16)
                             }
                         } label: {}
+                            .padding(5)
                             .accentColor(.gray1)
                             .frame(maxWidth: .infinity)
                             .overlay(
@@ -71,6 +72,7 @@ struct SettingPopup: View {
                                     .customFontStyle(.gray1_R16)
                             }
                         } label: {}
+                            .padding(5)
                             .accentColor(.gray1)
                             .frame(maxWidth: .infinity)
                             .overlay(
