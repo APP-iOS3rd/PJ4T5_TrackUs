@@ -21,7 +21,7 @@ struct NavigationLinkCard: View {
                 Spacer()
                 Image("ChevronRight")
             }
-            .padding(12)
+            .padding(7)
         }
     }
 }

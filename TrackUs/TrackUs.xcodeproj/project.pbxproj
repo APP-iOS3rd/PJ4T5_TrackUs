@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		820330D62B700FAC00CB97F7 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 820330D52B700FAC00CB97F7 /* PopupView */; };
 		8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8224637C2B68E7F6008D3DAA /* MyProfileView.swift */; };
 		823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9ACF2B6807BF00C9F772 /* ReportView.swift */; };
 		823B9AD32B68094E00C9F772 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 823B9AD22B68094E00C9F772 /* MapboxMaps */; };
@@ -142,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				823B9ADA2B68109200C9F772 /* FirebaseAnalyticsSwift in Frameworks */,
+				820330D62B700FAC00CB97F7 /* PopupView in Frameworks */,
 				823B9ADC2B68109200C9F772 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				823B9AD62B68109200C9F772 /* FirebaseAnalytics in Frameworks */,
 				823B9AD82B68109200C9F772 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
@@ -298,7 +300,6 @@
 				824DA8972B6FB92200B15B89 /* RunningHomeView.swift */,
 				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
 				82EEA2362B70042C00157752 /* NavigationLinkCard.swift */,
-		
 				FE90EECD2B6FCEB700A08E23 /* RunningLiveView.swift */,
 			);
 			path = View;
@@ -483,6 +484,7 @@
 				823B9AD92B68109200C9F772 /* FirebaseAnalyticsSwift */,
 				823B9ADB2B68109200C9F772 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				823B9ADD2B68109200C9F772 /* FirebaseAppCheck */,
+				820330D52B700FAC00CB97F7 /* PopupView */,
 			);
 			productName = TrackUs;
 			productReference = 963AE4012B678EAC00E98BF4 /* TrackUs.app */;
@@ -515,6 +517,7 @@
 			packageReferences = (
 				823B9AD12B68094E00C9F772 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
 				823B9AD42B68109200C9F772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				820330D42B700FAC00CB97F7 /* XCRemoteSwiftPackageReference "PopupView" */,
 			);
 			productRefGroup = 963AE4022B678EAC00E98BF4 /* Products */;
 			projectDirPath = "";
@@ -815,6 +818,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		820330D42B700FAC00CB97F7 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.4;
+			};
+		};
 		823B9AD12B68094E00C9F772 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios/";
@@ -834,6 +845,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		820330D52B700FAC00CB97F7 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 820330D42B700FAC00CB97F7 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
+		};
 		823B9AD22B68094E00C9F772 /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 823B9AD12B68094E00C9F772 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;

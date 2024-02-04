@@ -44,13 +44,15 @@ struct RunningHomeView: View {
                                 )
                             
                             
-                            Button(action: {}) {
+                            
+                            NavigationLink(value: "RunningLiveView", label: {
                                 Text("러닝 시작")
                                     .foregroundStyle(.white)
                                     .font(.system(size: 12, weight: .bold))
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 7)
-                            }
+                            })
+                            
                             .background(.main)
                             .clipShape(Capsule())
                         }
@@ -116,6 +118,14 @@ struct RunningHomeView: View {
             }
             
         }
+        .navigationDestination(for: String.self, destination: { screenName in
+            switch screenName {
+            case "RunningLiveView":
+                RunningLiveView()
+            default:
+                EmptyView()
+            }
+        })
         .edgesIgnoringSafeArea(.top)
     }
 }

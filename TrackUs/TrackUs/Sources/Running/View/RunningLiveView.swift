@@ -12,9 +12,7 @@ struct RunningLiveView: View {
 
     var body: some View {
         ZStack {
-            Image("Shin")
-                .resizable()
-                .ignoresSafeArea(.all)
+            MapBoxMapView()
             
             Color.black
                 .opacity(countVM.isHidden ? 0.0 : countVM.backgroundOpacity)
@@ -34,8 +32,13 @@ struct RunningLiveView: View {
                     Text("잠시후 러닝이 시작됩니다!")
                         .customFontStyle(.white_SB20)
                 }
+                else {
+                    Text("HIHI")
+                }
             }
         }
+        .edgesIgnoringSafeArea(.all)
+        .navigationBarHidden(true)
     }
 }
 
