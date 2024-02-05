@@ -8,7 +8,17 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject private var viewModel: LoginViewModel
+    @EnvironmentObject var router: Router
+    @EnvironmentObject private var viewModel: AuthenticationViewModel
+    
+    private func deleteAccount() {
+        Task {
+            if await viewModel.deleteAccount() == true {
+                router.popToRoot()
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -52,10 +62,14 @@ struct SettingsView: View {
     
     func logoutButtonTapped() {
         // 테스트용
-        viewModel.authenticationState = .unauthenticated
+        viewModel.logOut()
+        //viewModel.authenticationState = .unauthenticated
+        router.popToRoot()
     }
     
-    func withdrawalButtonTapped() {}
+    func withdrawalButtonTapped() {
+        deleteAccount()
+    }
 }
 
 #Preview {

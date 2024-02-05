@@ -18,7 +18,8 @@ enum SignUpFlow {
 
 struct SignUpView: View {
     @EnvironmentObject var router: Router
-    @EnvironmentObject var viewModel: LoginViewModel
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @StateObject var userInfoViewModel = UserInfoViewModel()
     @State private var signUpFlow: SignUpFlow = .nickname
     
     var body: some View {
@@ -28,16 +29,22 @@ struct SignUpView: View {
             switch signUpFlow {
             case .nickname:
                 NickNameView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .profile:
                 ProfileImageView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .physical:
                 PhysicalView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .ageGender:
                 AgeGenderView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .runningStyle:
                 RunningStyleView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .daily:
                 DailyGoalView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: signUpFlow)
@@ -54,7 +61,6 @@ struct SignUpView: View {
         } right: {
             Button(action: {
                 skipButton()
-                router.popToRoot()
             }) {
                 Text(signUpFlow != .nickname ? "건너뛰기" : "")
                     .customFontStyle(.gray1_R12)
@@ -94,7 +100,9 @@ struct SignUpView: View {
             signUpFlow = .daily
         case .daily:
             // 테스트용
+            router.popToRoot()
             viewModel.authenticationState = .authenticated
+            userInfoViewModel.storeUserInformation()
         }
     }
     
@@ -138,7 +146,7 @@ struct ProgressBar: View {
         }
     }
 }
-
-#Preview {
-    SignUpView()
-}
+//
+//#Preview {
+//    SignUpView()
+//}

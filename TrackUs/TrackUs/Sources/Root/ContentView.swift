@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = LoginViewModel()
-    let isMainView = true
+    @EnvironmentObject var router: Router
+    @StateObject private var viewModel = AuthenticationViewModel()
+    
     var body: some View {
         VStack{
             switch viewModel.authenticationState {
@@ -17,8 +18,7 @@ struct ContentView: View {
             case .unauthenticated, .authenticating:
                 VStack {
                     LoginView()
-                        .environmentObject(viewModel)
-                }
+                        .environmentObject(viewModel)                }
                 //이전에 로그인 했을경우
             case .signUpcating:
                 VStack{
@@ -32,7 +32,7 @@ struct ContentView: View {
                 }
             }
         }
-        .animation(.easeIn(duration: 0.3), value: viewModel.authenticationState)
+        //.animation(.easeIn(duration: 0.3), value: viewModel.authenticationState)
     }
 }
 

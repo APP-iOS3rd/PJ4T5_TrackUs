@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NickNameView: View {
     @Binding private var signUpFlow: SignUpFlow
+    @EnvironmentObject var userInfoViewModel : UserInfoViewModel
     
     // nickName 데이터값 변경
     @State private var nickName: String = ""
@@ -32,6 +33,7 @@ struct NickNameView: View {
             
             MainButton(active: availability, buttonText: "다음으로") {
                 signUpFlow = .profile
+                userInfoViewModel.userInfo.username = nickName
             }
         }
     }

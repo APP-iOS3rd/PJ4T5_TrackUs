@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProfileImageView: View {
+    @EnvironmentObject var userInfoViewModel : UserInfoViewModel
     @Binding private var signUpFlow: SignUpFlow
     @State private var image: Image?
     @State private var availability: Bool = false
@@ -26,6 +27,7 @@ struct ProfileImageView: View {
             Spacer()
             
             MainButton(active: image != nil, buttonText: "다음으로") {
+                userInfoViewModel.persistImageToStorage(image: image)
                 signUpFlow = .physical
             }
         }
