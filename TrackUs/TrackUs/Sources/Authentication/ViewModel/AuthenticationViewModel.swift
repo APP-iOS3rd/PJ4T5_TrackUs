@@ -32,6 +32,8 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     @Published var newUser: Bool = false
     @Published var checkBool: Bool?
     
+    
+    // apple login
     var window: UIWindow?
     fileprivate var currentNonce: String?
 
@@ -50,7 +52,15 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 if user == nil {
                     self.authenticationState = .unauthenticated
                 } else {
-                    self.authenticationState = .authenticated
+                    Task{
+                        let check = try await Firestore.firestore().collection("users")
+                            .whereField("uid", isEqualTo: user!.uid).getDocuments()
+                        if check.isEmpty {
+                            self.authenticationState = .signUpcating
+                        }else {
+                            self.authenticationState = .authenticated
+                        }
+                    }
                 }
             }
         }
@@ -132,13 +142,7 @@ extension AuthenticationViewModel {
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                            accessToken: accessToken.tokenString)
-            self.newUser = ((try await Auth.auth().signIn(with: credential).additionalUserInfo?.isNewUser) == true)
-                if newUser {
-                    self.authenticationState = .signUpcating
-                    print("신규 유저 여부 : \(newUser)")
-                }else {
-                    self.authenticationState = .authenticated
-                }
+            try await Auth.auth().signIn(with: credential)
             return true
         }
         catch {
@@ -221,12 +225,7 @@ extension AuthenticationViewModel: ASAuthorizationControllerDelegate {
             // Sign in with Firebase.
             Task {
                 do {
-                    self.newUser = ((try await Auth.auth().signIn(with: credential).additionalUserInfo?.isNewUser) == true)
-                    if newUser {
-                        self.authenticationState = .signUpcating
-                    }else {
-                        self.authenticationState = .authenticated
-                    }
+                    try await Auth.auth().signIn(with: credential)
                 }
                 catch {
                     print("Error authenticating: \(error.localizedDescription)")

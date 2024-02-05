@@ -90,7 +90,7 @@ struct NickNameTextFiled: View {
                 .customFontStyle(isError ? .caution_L12 : .gray2_L12)
             Spacer()
             if isError{
-                Text("닉네임을 다시 확인해주세요.")
+                Text("닉네임 형식을 확인해주세요.")
                     .customFontStyle(.caution_L12)
             }
         }

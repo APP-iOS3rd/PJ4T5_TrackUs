@@ -32,7 +32,6 @@ struct UserInfo : Decodable {
     }
     
     enum CodingKeys:String, CodingKey {
-        
         case uid = "uid"
         case username = "username"
         case weight = "weight"
@@ -123,7 +122,7 @@ class UserInfoViewModel: ObservableObject {
             if let error = error {
                 print("Error getting documents: \(error)")
             }else{
-                guard let documents = snapshot?.description else {return}
+                guard let _ = snapshot?.description else {return}
                 let decoder =  JSONDecoder()
                 do {
                     let data = snapshot?.data()

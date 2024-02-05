@@ -32,7 +32,7 @@ struct ContentView: View {
                 }
             }
         }
-        //.animation(.easeIn(duration: 0.3), value: viewModel.authenticationState)
+        .animation(.easeIn(duration: 0.15), value: viewModel.authenticationState)
     }
 }
 

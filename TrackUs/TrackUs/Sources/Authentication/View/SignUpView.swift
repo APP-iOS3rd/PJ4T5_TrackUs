@@ -53,10 +53,12 @@ struct SignUpView: View {
             Text("회원가입")
         } left: {
             Button(action: {
-                backButton()
+                    backButton()
             }) {
-                Image(systemName: "chevron.left")
-                    .foregroundColor(.gray1)
+                if signUpFlow != .nickname{
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.gray1)
+                }
             }
         } right: {
             Button(action: {
