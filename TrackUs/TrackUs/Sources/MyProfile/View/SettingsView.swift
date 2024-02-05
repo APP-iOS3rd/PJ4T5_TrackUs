@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject private var viewModel: AuthenticationViewModel
+    @State private var isShownModal = false
     
     private func deleteAccount() {
         Task {
