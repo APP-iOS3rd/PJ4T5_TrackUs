@@ -13,7 +13,8 @@ struct NickNameView: View {
     
     // nickName 데이터값 변경
     @State private var nickName: String = ""
-    @State private var availability: Bool = false
+    @State private var nickNameCheck: Bool = false
+    @State private var availability: Bool = true
     
     init(signUpFlow: Binding<SignUpFlow>) {
         self._signUpFlow = signUpFlow
@@ -30,12 +31,24 @@ struct NickNameView: View {
             }
             
             Spacer()
-            
+            if !nickNameCheck{
+                Text("닉네임이 중복됩니다.")
+                    .customFontStyle(.caution_L12)
+            }
             MainButton(active: availability, buttonText: "다음으로") {
-                signUpFlow = .profile
-                userInfoViewModel.userInfo.username = nickName
+                Task{
+                    self.nickNameCheck = await userInfoViewModel.checkUser(username: nickName)
+                }
+                if nickNameCheck {
+                    signUpFlow = .profile
+                    userInfoViewModel.userInfo.username = nickName
+                }
             }
         }
+    }
+    
+    func nicknameCheck() async {
+        self.nickNameCheck = await userInfoViewModel.checkUser(username: nickName)
     }
 }
 //

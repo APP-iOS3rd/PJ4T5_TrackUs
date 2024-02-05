@@ -168,6 +168,7 @@ struct Withdrawal: View {
     }
     
     func withdrawalButtonTapped() {
+        router.popToRoot()
         deleteAccount()
     }
 }

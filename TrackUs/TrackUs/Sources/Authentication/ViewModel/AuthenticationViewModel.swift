@@ -56,6 +56,21 @@ class AuthenticationViewModel: NSObject, ObservableObject {
         }
     }
     
+    // 닉네임 중복 체크
+    func checkUser(username: String) async -> Bool {
+        do {
+            let querySnapshot = try await Firestore.firestore().collection("users")
+                .whereField("username", isEqualTo: username).getDocuments()
+            if querySnapshot.isEmpty {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return true
+        }
+    }
+    
     // MARK: - 로그아웃
     func logOut() {
         do {

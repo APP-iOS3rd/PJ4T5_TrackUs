@@ -11,7 +11,8 @@ import Firebase
 import FirebaseStorage
 
 // Model쪽으로 이후 수정
-struct UserInfo {
+struct UserInfo : Decodable {
+    
     var uid: String
     var username: String
     var weight: Int?
@@ -28,6 +29,20 @@ struct UserInfo {
         self.username = ""
         self.isProfilePublic = false
         self.isProSubscriber = false
+    }
+    
+    enum CodingKeys:String, CodingKey {
+        
+        case uid = "uid"
+        case username = "username"
+        case weight = "weight"
+        case height = "height"
+        case age = "age"
+        case gender = "gender"
+        case isProfilePublic = "isProfilePublic"
+        case isProSubscriber = "isProSubscriber"
+        case profileImageUrl = "profileImageUrl"
+        case setDailyGoal = "setDailyGoal"
     }
 }
 
@@ -49,12 +64,28 @@ class FirebaseManger: NSObject {
 }
 
 class UserInfoViewModel: ObservableObject {
+    static let shared = UserInfoViewModel()
+    
     @Published var userInfo: UserInfo
     
     init() {
         self.userInfo = UserInfo()
     }
     
+    // 닉네임 중복 체크
+    func checkUser(username: String) async -> Bool {
+        do {
+            let querySnapshot = try await Firestore.firestore().collection("users")
+                .whereField("username", isEqualTo: username).getDocuments()
+            if querySnapshot.isEmpty {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return true
+        }
+    }
     // MARK: - 사용자 정보 저장
     func storeUserInformation() {
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
@@ -80,28 +111,31 @@ class UserInfoViewModel: ObservableObject {
         }
     }
     
-    // MARK: - 사용자 본인 정보 가져오기
-    func storeUserInformation() {
+    func getMyInformation(){
+        
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
-            return }
-        // 해당부분 자료형 지정 필요
-        let userData = ["uid": uid,
-                        "username": userInfo.username,
-                        "weight": userInfo.weight ?? "",
-                        "height": userInfo.height ?? "",
-                        "age": userInfo.age ?? "",
-                        "gender": userInfo.gender ?? "",
-                        "isProfilePublic": userInfo.isProfilePublic,
-                        "isProSubscriber": false,
-                        "profileImageUrl": userInfo.profileImageUrl ?? "",
-                        "setDailyGoal": userInfo.setDailyGoal ?? ""] as [String : Any]
-        FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
-            if error != nil {
-                print("@@@@@@ error 1 @@@@@@")
-                return
-            }
-            print("success")
+            print("error uid")
+            return
+        }
+        FirebaseManger.shared.firestore.collection("users").document(uid).getDocument { (snapshot, error) in
+            //var userInfo: UserInfo = []
             
+            if let error = error {
+                print("Error getting documents: \(error)")
+            }else{
+                guard let documents = snapshot?.description else {return}
+                let decoder =  JSONDecoder()
+                do {
+                    let data = snapshot?.data()
+                    let jsonData = try JSONSerialization.data(withJSONObject:data ?? "")
+                    self.userInfo = try decoder.decode(UserInfo.self, from: jsonData)
+                    //userInfo.append(roadInfo)
+                } catch let err {
+                    print("err: \(err)")
+                }
+                //completionHandler(roadInfos)
+                print(self.userInfo)
+            }
         }
     }
     
