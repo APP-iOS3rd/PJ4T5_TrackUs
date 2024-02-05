@@ -70,7 +70,11 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     // MARK: - 회원탈퇴
     func deleteAccount() async -> Bool {
         do {
-            try await user?.delete()
+            if let uid = Auth.auth().currentUser?.uid {
+                try await user?.delete()
+                try await Firestore.firestore().collection("users").document(uid).delete()
+                print("Document successfully removed!")
+            }
             self.authenticationState = .unauthenticated
             return true
         }

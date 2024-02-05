@@ -58,7 +58,6 @@ class UserInfoViewModel: ObservableObject {
     // MARK: - 사용자 정보 저장
     func storeUserInformation() {
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
-            print("@@@@@@ error 1 @@@@@@")
             return }
         // 해당부분 자료형 지정 필요
         let userData = ["uid": uid,
@@ -81,22 +80,45 @@ class UserInfoViewModel: ObservableObject {
         }
     }
     
+    // MARK: - 사용자 본인 정보 가져오기
+    func storeUserInformation() {
+        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
+            return }
+        // 해당부분 자료형 지정 필요
+        let userData = ["uid": uid,
+                        "username": userInfo.username,
+                        "weight": userInfo.weight ?? "",
+                        "height": userInfo.height ?? "",
+                        "age": userInfo.age ?? "",
+                        "gender": userInfo.gender ?? "",
+                        "isProfilePublic": userInfo.isProfilePublic,
+                        "isProSubscriber": false,
+                        "profileImageUrl": userInfo.profileImageUrl ?? "",
+                        "setDailyGoal": userInfo.setDailyGoal ?? ""] as [String : Any]
+        FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
+            if error != nil {
+                print("@@@@@@ error 1 @@@@@@")
+                return
+            }
+            print("success")
+            
+        }
+    }
+    
+    
     // MARK: - 이미지 저장 부분
     func persistImageToStorage(image: Image?) {
         // 사용자 uid 받아오기
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
-            print("@@@@@@ error 1 @@@@@@")
             return }
         let ref = FirebaseManger.shared.storage.reference(withPath: uid)
         
         // 이미지 크기 줄이기
         guard let resizedImage = image?.asUIImage().resizeWithWidth(width: 700) else {
-            print("@@@@@@ error 2 @@@@@@")
             return }
         guard let  jpegData = resizedImage.jpegData(compressionQuality: 0.5) else {
-            
-            print("@@@@@@ error 3 @@@@@@")
-            return }
+            return
+        }
         // 이미지 포맷
         ref.putData(jpegData, metadata: nil) { metadata, error in
             if let error = error {
@@ -114,7 +136,6 @@ class UserInfoViewModel: ObservableObject {
                 print("Successfully stored image with url: \(url?.absoluteString ?? "")")
                 
                 // 이미지 url 저장
-                print("======================== 이미지 저장부분 ========================")
                 guard let url = url else {return}
                 self.userInfo.profileImageUrl = url.absoluteString
             }
