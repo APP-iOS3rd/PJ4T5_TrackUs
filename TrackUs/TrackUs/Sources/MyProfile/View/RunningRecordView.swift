@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RunningRecordView: View {
     var body: some View {
-        Text("러닝기록 화면 개발중")
+        PreparingService()
             .customNavigation {
                 NavigationText(title: "러닝기록")
             } left: {

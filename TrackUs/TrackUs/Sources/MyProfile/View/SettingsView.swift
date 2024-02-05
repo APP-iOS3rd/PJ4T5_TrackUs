@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var isShownModal = false
     var body: some View {
         VStack {
             ScrollView {
@@ -16,9 +17,14 @@ struct SettingsView: View {
                         .customFontStyle(.gray1_SB16)
                 } content: {
                     MenuItem(title: "버전정보", label: "v.1.0.0")
-                    NavigationLink(value: "TeamIntroView") {
+                    Button {
+                        isShownModal.toggle()
+                    } label: {
                         MenuItem(title: "팀 트랙어스", image: .init(.chevronRight))
                     }
+                    .sheet(isPresented: $isShownModal, content: {
+                        WebViewSurport(url: Constants.WebViewUrl.TEAM_INTRO_URL)
+                    })
                 }
                 
                 Divider()
