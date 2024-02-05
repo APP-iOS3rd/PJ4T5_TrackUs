@@ -11,7 +11,7 @@ struct PremiumPaymentView: View {
     @Binding var isShownFullScreenCover: Bool
     
     var body: some View {
-        Text("프리미엄 결제화면 개발중")
+        PreparingService()
             .customNavigation {
                 EmptyView()
             } left: {

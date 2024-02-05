@@ -22,11 +22,10 @@ struct TrackUsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
-        @StateObject var router = Router()
         
         WindowGroup {
             ContentView()
-                .environmentObject(router)
+                .environmentObject(Router())
         }
     }
 }

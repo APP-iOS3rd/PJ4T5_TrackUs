@@ -25,13 +25,16 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             TabView(selection: $selectedTab) {
-                RunningView()
-                    .tabItem {
-                        Image("Running")
-                            .renderingMode(.template)
-                        Text("러닝")
-                    }
-                    .tag(Tab.running)
+                // Sheet 애니메이션 끊김현상으로 일시적으로 VStack으로 래핑
+                VStack {
+                    RunningHomeView()
+                }
+                .tabItem {
+                    Image("Running")
+                        .renderingMode(.template)
+                    Text("러닝")
+                }
+                .tag(Tab.running)
                 
                 RecruitmentView()
                     .tabItem {
@@ -41,6 +44,7 @@ struct MainTabView: View {
                     }
                     .tag(Tab.recruitment)
                 
+                
                 ChattingView()
                     .tabItem {
                         Image("Chatting")
@@ -48,6 +52,7 @@ struct MainTabView: View {
                         Text("채팅")
                     }
                     .tag(Tab.chatting)
+                
                 
                 ReportView()
                     .tabItem {
@@ -57,6 +62,7 @@ struct MainTabView: View {
                     }
                     .tag(Tab.report)
                 
+                
                 MyProfileView()
                     .tabItem {
                         Image("Profile")
@@ -65,9 +71,56 @@ struct MainTabView: View {
                     }
                     .tag(Tab.profile)
             }
+            .navigationDestination(for: String.self) { screenName in
+                switch screenName {
+                case "ProfileEditView":
+                    ProfileEditView()
+                case "SettingsView":
+                    SettingsView()
+                case "RunningRecordView":
+                    RunningRecordView()
+                case "TermsOfService":
+                    WebViewSurport(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
+                        .customNavigation {
+                            NavigationText(title: "서비스 이용약관")
+                        } left: {
+                            NavigationBackButton()
+                        }
+                case "FAQView":
+                    FAQView()
+                case "WithdrawalView":
+                    Withdrawal()
+                case "TeamIntroView":
+                    TeamIntroView()
+                case "OpenSourceLicense":
+                    WebViewSurport(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL)
+                        .customNavigation {
+                            NavigationText(title: "오픈소스/라이센스")
+                        } left: {
+                            NavigationBackButton()
+                        }
+                    
+                case "ServiceRequest":
+                    WebViewSurport(url: Constants.WebViewUrl.SERVICE_REQUEST_URL)
+                        .customNavigation {
+                            NavigationText(title: "문의하기")
+                        } left: {
+                            NavigationBackButton()
+                        }
+                case "RunningLiveView":
+                    RunningLiveView()
+                default:
+                    EmptyView()
+                }
+            }
+            .onChange(of: selectedTab) { _ in
+                HapticManager.instance.impact(style: .light)
+            }
             
         }
     }
+    
+    
 }
 
 #Preview {
