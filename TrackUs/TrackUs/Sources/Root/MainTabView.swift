@@ -11,10 +11,6 @@ struct MainTabView: View {
     @EnvironmentObject var router: Router
     @State private var selectedTab: Tab = .running
     
-    enum Tab {
-        case running, recruitment, chatting, report, profile
-    }
-    
     init() {
         let appearance = UITabBarAppearance()
         appearance.shadowColor = .divider
@@ -24,10 +20,10 @@ struct MainTabView: View {
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            TabView(selection: $selectedTab) {
+            TabView(selection: $router.selectedIndex) {
                 // Sheet 애니메이션 끊김현상으로 일시적으로 VStack으로 래핑
                 VStack {
-                    RunningHomeView()
+                    router.buildScreen(page: .running)
                 }
                 .tabItem {
                     Image("Running")
@@ -36,7 +32,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.running)
                 
-                RecruitmentView()
+                router.buildScreen(page: .recruitment)
                     .tabItem {
                         Image("Recruitment")
                             .renderingMode(.template)
@@ -45,16 +41,16 @@ struct MainTabView: View {
                     .tag(Tab.recruitment)
                 
                 
-                ChattingView()
+                router.buildScreen(page: .chat)
                     .tabItem {
                         Image("Chatting")
                             .renderingMode(.template)
                         Text("채팅")
                     }
-                    .tag(Tab.chatting)
+                    .tag(Tab.chat)
                 
                 
-                ReportView()
+                router.buildScreen(page: .report)
                     .tabItem {
                         Image("Report")
                             .renderingMode(.template)
@@ -63,7 +59,7 @@ struct MainTabView: View {
                     .tag(Tab.report)
                 
                 
-                MyProfileView()
+                router.buildScreen(page: .profile)
                     .tabItem {
                         Image("Profile")
                             .renderingMode(.template)
@@ -71,56 +67,21 @@ struct MainTabView: View {
                     }
                     .tag(Tab.profile)
             }
-            .navigationDestination(for: String.self) { screenName in
-                switch screenName {
-                case "ProfileEditView":
-                    ProfileEditView()
-                case "SettingsView":
-                    SettingsView()
-                case "RunningRecordView":
-                    RunningRecordView()
-                case "TermsOfService":
-                    WebViewSurport(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL)
-                        .customNavigation {
-                            NavigationText(title: "서비스 이용약관")
-                        } left: {
-                            NavigationBackButton()
-                        }
-                case "FAQView":
-                    FAQView()
-                case "WithdrawalView":
-                    Withdrawal()
-                case "TeamIntroView":
-                    TeamIntroView()
-                case "OpenSourceLicense":
-                    WebViewSurport(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL)
-                        .customNavigation {
-                            NavigationText(title: "오픈소스/라이센스")
-                        } left: {
-                            NavigationBackButton()
-                        }
-                    
-                case "ServiceRequest":
-                    WebViewSurport(url: Constants.WebViewUrl.SERVICE_REQUEST_URL)
-                        .customNavigation {
-                            NavigationText(title: "문의하기")
-                        } left: {
-                            NavigationBackButton()
-                        }
-                case "RunningLiveView":
-                    RunningLiveView()
-                default:
-                    EmptyView()
-                }
-            }
+            .navigationDestination(for: Page.self, destination: { page in
+                router.buildScreen(page: page)
+            })
+            .sheet(item: $router.sheet, content: { sheet in
+                router.buildScreen(sheet: sheet)
+            })
+            .fullScreenCover(item: $router.fullScreenCover, content: { fullScreenCover in
+                router.buildScreen(fullScreenCover: fullScreenCover)
+            })
+            
             .onChange(of: selectedTab) { _ in
                 HapticManager.instance.impact(style: .light)
             }
-            
         }
     }
-    
-    
 }
 
 #Preview {
