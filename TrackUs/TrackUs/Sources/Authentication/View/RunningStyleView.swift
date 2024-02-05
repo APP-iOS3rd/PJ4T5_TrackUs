@@ -42,6 +42,7 @@ struct RunningStyleView: View {
             Spacer()
             
             MainButton(active: runningStyle != nil, buttonText: "다음으로") {
+                //userInfoViewModel.userInfo.
                 signUpFlow = .daily
             }
         }

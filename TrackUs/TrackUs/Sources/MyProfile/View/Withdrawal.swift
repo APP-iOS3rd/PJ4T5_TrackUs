@@ -64,11 +64,21 @@ struct PlaceholderTextView: UIViewRepresentable {
 }
 
 struct Withdrawal: View {
+    @EnvironmentObject private var viewModel: AuthenticationViewModel
+    @EnvironmentObject var router: Router
     @State private var text: String = ""
     @State private var isAgreed: Bool = false
     @State private var showWithdrawalAlert: Bool = false
     @State private var isEditing: Bool = true
     
+    // 회원 탈퇴
+    private func deleteAccount() {
+        Task {
+            if await viewModel.deleteAccount() == true {
+                router.popToRoot()
+            }
+        }
+    }
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
@@ -157,7 +167,10 @@ struct Withdrawal: View {
         }
     }
     
-    func withdrawalButtonTapped() {}
+    func withdrawalButtonTapped() {
+        router.popToRoot()
+        deleteAccount()
+    }
 }
 
 #Preview {

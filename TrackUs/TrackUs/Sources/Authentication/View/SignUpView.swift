@@ -17,6 +17,9 @@ enum SignUpFlow {
 }
 
 struct SignUpView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @StateObject var userInfoViewModel = UserInfoViewModel()
     @State private var signUpFlow: SignUpFlow = .nickname
     
     var body: some View {
@@ -26,16 +29,22 @@ struct SignUpView: View {
             switch signUpFlow {
             case .nickname:
                 NickNameView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .profile:
                 ProfileImageView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .physical:
                 PhysicalView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .ageGender:
                 AgeGenderView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .runningStyle:
                 RunningStyleView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             case .daily:
                 DailyGoalView(signUpFlow: $signUpFlow)
+                    .environmentObject(userInfoViewModel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: signUpFlow)
@@ -46,23 +55,23 @@ struct SignUpView: View {
             Button(action: {
                 backButton()
             }) {
-                Image("BackLogo")
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.gray1)
             }
         } right: {
-            //if signUpFlow != .nickname{
-                Button(action: {
-                    skipButton()
-                }) {
-                    Text("건너뛰기")
-                        .customFontStyle(.gray1_R12)
-                }
-            //}
+            Button(action: {
+                skipButton()
+            }) {
+                Text(signUpFlow != .nickname ? "건너뛰기" : "")
+                    .customFontStyle(.gray1_R12)
+            }
         }
     }
     func backButton(){
         switch signUpFlow {
         case .nickname:
-            return
+            // 테스트용
+            viewModel.authenticationState = .unauthenticated
         case .profile:
             signUpFlow = .nickname
         case .physical:
@@ -90,7 +99,10 @@ struct SignUpView: View {
         case .runningStyle:
             signUpFlow = .daily
         case .daily:
-            return
+            // 테스트용
+            router.popToRoot()
+            viewModel.authenticationState = .authenticated
+            userInfoViewModel.storeUserInformation()
         }
     }
     
@@ -134,7 +146,7 @@ struct ProgressBar: View {
         }
     }
 }
-
-#Preview {
-    SignUpView()
-}
+//
+//#Preview {
+//    SignUpView()
+//}

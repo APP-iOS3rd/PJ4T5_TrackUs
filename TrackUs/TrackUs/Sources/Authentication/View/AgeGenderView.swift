@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AgeGenderView: View {
+    @EnvironmentObject var userInfoViewModel : UserInfoViewModel
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경
@@ -42,6 +43,8 @@ struct AgeGenderView: View {
             Spacer()
             
             MainButton(active: selectedAge != nil && selectedGender != nil, buttonText: "다음으로") {
+                userInfoViewModel.userInfo.age = Int(selectedAge!)
+                userInfoViewModel.userInfo.gender = selectedGender
                 signUpFlow = .runningStyle
             }
         }

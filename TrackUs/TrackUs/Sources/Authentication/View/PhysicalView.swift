@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PhysicalView: View {
+    @EnvironmentObject var userInfoViewModel : UserInfoViewModel
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경
@@ -29,6 +30,8 @@ struct PhysicalView: View {
             Spacer()
             
             MainButton(active: weight != nil && height != nil, buttonText: "다음으로") {
+                userInfoViewModel.userInfo.weight = Int(weight!)
+                userInfoViewModel.userInfo.height = Int(height!)
                 signUpFlow = .ageGender
             }
         }

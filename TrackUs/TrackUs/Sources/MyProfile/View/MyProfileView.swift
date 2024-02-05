@@ -10,6 +10,7 @@
 import SwiftUI
 
 struct MyProfileView: View {
+    @StateObject var viewModel = UserInfoViewModel()
     @State private var selectedImage: Image?
     @State private var isShownFullScreenCover: Bool = false
     
@@ -92,6 +93,7 @@ struct MyProfileView: View {
                     }
                 } content: {
                     Button {
+                        viewModel.getMyInformation()
                         isShownFullScreenCover.toggle()
                     } label: {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
@@ -117,7 +119,7 @@ struct MyProfileView: View {
 
 
 
-
-#Preview {
-    MyProfileView()
-}
+//
+//#Preview {
+//    MyProfileView()
+//}

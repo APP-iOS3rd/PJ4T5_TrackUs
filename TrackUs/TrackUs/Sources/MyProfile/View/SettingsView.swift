@@ -8,7 +8,18 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject private var viewModel: AuthenticationViewModel
     @State private var isShownModal = false
+    
+    private func deleteAccount() {
+        Task {
+            if await viewModel.deleteAccount() == true {
+                router.popToRoot()
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -40,7 +51,7 @@ struct SettingsView: View {
                     NavigationLink(value: "WithdrawalView") {
                         HStack {
                             Text("회원탈퇴")
-                                .customFontStyle(.gray1_SB16)
+                                .customFontStyle(.caution_R16)
                             Spacer()
                         }
                     }
@@ -55,9 +66,16 @@ struct SettingsView: View {
         
     }
     
-    func logoutButtonTapped() {}
+    func logoutButtonTapped() {
+        // 테스트용
+        viewModel.logOut()
+        //viewModel.authenticationState = .unauthenticated
+        router.popToRoot()
+    }
     
-    func withdrawalButtonTapped() {}
+    func withdrawalButtonTapped() {
+        deleteAccount()
+    }
 }
 
 #Preview {

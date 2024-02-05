@@ -6,9 +6,21 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @Environment(\.dismiss) var dismiss
 //    let robotoMedium = "Roboto-Medium" // 구글 글꼴
+    
+    private func signInWithGoogle() {
+        Task {
+            if await viewModel.signInWithGoogle() == true {
+                dismiss()
+            }
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -47,8 +59,7 @@ struct LoginView: View {
                 
                 VStack(alignment: .leading) {
                     Button(action: {
-                        // 애플 로그인 기능
-                        
+                        viewModel.startSignInWithAppleFlow()
                     }, label: {
                         HStack(alignment: .center) {
                             // 애플 로고
@@ -75,7 +86,7 @@ struct LoginView: View {
                     
                     Button(action: {
                         // 구글 로그인 기능
-                        
+                        signInWithGoogle()
                     }, label: {
                         HStack(alignment: .center) {
                             // 구글 로고
