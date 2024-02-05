@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChattingView: View {
     var body: some View {
-        Text("채팅뷰 개발 중입니다.")
+        PreparingService()
     }
 }
 

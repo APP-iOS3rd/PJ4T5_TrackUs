@@ -41,6 +41,9 @@ enum CustomFontStyle {
     // White_Bold
     case white_B16
     
+    // White_SemiBold
+    case white_SB20
+    
     // MARK: - Main
     // Main_Bold
     case main_B16
@@ -133,6 +136,11 @@ extension View {
             // MARK: - White
         case .white_B16:
             font = Font.system(size: 16, weight: .bold)
+            color = .white
+            
+            // White_SemiBold
+        case .white_SB20:
+            font = Font.system(size: 20, weight: .semibold)
             color = .white
             
             // MARK: - Main
