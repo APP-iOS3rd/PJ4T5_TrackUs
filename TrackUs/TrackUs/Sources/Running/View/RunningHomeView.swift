@@ -195,6 +195,3 @@ struct RunningHomeView: View {
     
 }
 
-//#Preview {
-//    RunningHomeView()
-//}

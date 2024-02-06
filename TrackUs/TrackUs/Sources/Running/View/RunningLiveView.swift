@@ -188,8 +188,9 @@ struct RunningLiveView: View {
                 }
             }
         }
-        .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.all)
+        .preventGesture()
     }
     
     func pasueButtonTapped() {
