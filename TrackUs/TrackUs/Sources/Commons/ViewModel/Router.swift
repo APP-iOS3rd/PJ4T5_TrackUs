@@ -11,15 +11,18 @@ enum Page: Hashable, Identifiable {
     static func == (lhs: Page, rhs: Page) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
+    // Root
     case running
     case recruitment
     case chat
     case report
     case profile
+    // Profile
     case profileEdit
     case runningRecorded
     case faq
     case setting
+    // Home
     case runningStart
     case runningResult
     
@@ -53,7 +56,6 @@ enum Tab {
 }
 
 final class Router: ObservableObject {
-    
     
     @Published var path = NavigationPath()
     @Published var selectedIndex: Tab = .running

@@ -49,7 +49,6 @@ struct MainTabView: View {
                     }
                     .tag(Tab.chat)
                 
-                
                 router.buildScreen(page: .report)
                     .tabItem {
                         Image("Report")
@@ -77,7 +76,7 @@ struct MainTabView: View {
                 router.buildScreen(fullScreenCover: fullScreenCover)
             })
             
-            .onChange(of: selectedTab) { _ in
+            .onChange(of: router.selectedIndex) { _ in
                 HapticManager.instance.impact(style: .light)
             }
         }

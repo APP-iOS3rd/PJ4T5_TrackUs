@@ -10,7 +10,6 @@ import SwiftUI
 struct SettingPopup: View {
     @Binding var showingPopup: Bool
     @State private var goalMinValue: Double = 0.1
-    @State private var goalMaxValue: Double = 40.0
     @State private var estimatedTime = 0
     
     var body: some View {
@@ -46,7 +45,7 @@ struct SettingPopup: View {
                             .foregroundStyle(.gray1)
                         
                         Picker(selection: $goalMinValue) {
-                            ForEach(Array(stride(from: goalMinValue, through: goalMaxValue, by: 0.1)), id: \.self) {
+                            ForEach(Array(stride(from: 0.1, through: 40.0, by: 0.1)), id: \.self) {
                                 Text("\($0, specifier: "%.1f") km")
                                     .customFontStyle(.gray1_R16)
                             }

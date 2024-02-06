@@ -13,10 +13,9 @@ struct RunningLiveView: View {
     @GestureState private var press = false
     @State private var isPause = false
     @State private var isShowingMessage = false
-        
+    
     var body: some View {
         ZStack {
-           
             MapBoxMapView()
             
             Color.black
@@ -97,7 +96,6 @@ struct RunningLiveView: View {
                             .clipShape(Circle())
                         }
                     }
-                    
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                     
@@ -154,7 +152,7 @@ struct RunningLiveView: View {
                                         }
                                         .onEnded(stopButtonLongPressed))
                                     .simultaneousGesture(TapGesture().onEnded(stopButtonTapped))
-
+                                    
                                     Spacer()
                                     
                                     Button(action: playButtonTapped, label: {

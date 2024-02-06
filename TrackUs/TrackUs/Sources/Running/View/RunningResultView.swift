@@ -99,6 +99,7 @@ struct RunningResultView: View {
                 )
             )
         }
+        .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
     }
 }
