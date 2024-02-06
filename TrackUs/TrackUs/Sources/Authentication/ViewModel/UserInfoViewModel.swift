@@ -23,6 +23,7 @@ struct UserInfo : Decodable {
     var isProSubscriber: Bool
     var profileImageUrl: String?
     var setDailyGoal: Double?
+    var runningOption: String?
     
     init(){
         self.uid = ""
@@ -43,6 +44,7 @@ struct UserInfo : Decodable {
         case isProSubscriber = "isProSubscriber"
         case profileImageUrl = "profileImageUrl"
         case setDailyGoal = "setDailyGoal"
+        case runningOption = "runningOption"
     }
 }
 
@@ -100,7 +102,8 @@ class UserInfoViewModel: ObservableObject {
                         "isProfilePublic": userInfo.isProfilePublic,
                         "isProSubscriber": false,
                         "profileImageUrl": userInfo.profileImageUrl ?? "",
-                        "setDailyGoal": userInfo.setDailyGoal ?? ""] as [String : Any]
+                        "setDailyGoal": userInfo.setDailyGoal ?? "",
+                        "runningOption": userInfo.runningOption ?? ""] as [String : Any]
         FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
             if error != nil {
                 print("@@@@@@ error 1 @@@@@@")

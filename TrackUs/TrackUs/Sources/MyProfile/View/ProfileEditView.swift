@@ -7,22 +7,24 @@
 
 import SwiftUI
 
-enum RunnningOption: String, CaseIterable, Identifiable {
+enum RunningOption: String, CaseIterable, Identifiable {
     case record = "기록갱신", diet = "다이어트"
     var id: Self { self }
 }
 
 struct ProfileEditView: View {
-    private let runningOptions: [RunnningOption] = [.record, .diet]
-    @State private var runningOption: RunnningOption = .record
-    @State private var selectedImage: Image? = nil
+    @State private var selectedImage: Image?
     @State private var nickname: String = ""
-    @State private var height: Int = 170
-    @State private var weight: Int = 65
-    @State private var goalMinValue: Double = 0.1
+    @State private var height: Int = 0
+    @State private var weight: Int = 0
+    @State private var runningOption: String = ""
+    @State private var setDailyGoal: Double = 0.0
+    @State private var goalMinValue: Double = 0.0
     @State private var goalMaxValue: Double = 40.0
-    @State private var isProfilePublic: Bool = true
-    
+    @State private var isProfilePublic: Bool = false
+    @State private var isProfileSaved: Bool = false
+    @StateObject private var viewModel = UserInfoViewModel.shared
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
@@ -100,23 +102,19 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 Picker(selection: $runningOption, label: Text("러닝 스타일")) {
-                                    ForEach(runningOptions) { option in
-                                        Text(option.rawValue)
-                                        
-                                            .multilineTextAlignment(.leading)
-                                    }
+                                    Text("기록갱신").tag("기록갱신")
+                                    Text("다이어트").tag("다이어트")
                                 }
                                 .accentColor(.gray1)
                                 .padding(.horizontal, -8)
-                                
                             }
                             
                             HStack {
                                 Text("일일목표")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $goalMinValue, label: Text("일일목표")) {
-                                    ForEach(Array(stride(from: goalMinValue, through: goalMaxValue, by: 0.1)), id: \.self) {
+                                Picker(selection: $setDailyGoal, label: Text("일일목표")) {
+                                    ForEach(Array(stride(from: 0.0, through: 40.0, by: 0.1)), id: \.self) {
                                         Text("\($0, specifier: "%.1f") km")
                                             .multilineTextAlignment(.leading)
                                     }
@@ -143,7 +141,6 @@ struct ProfileEditView: View {
                                     .foregroundColor(Color.gray1)
                                     .labelsHidden()
                             }
-                            
                         }
                         .padding(.vertical, 14)
                     }
@@ -157,15 +154,34 @@ struct ProfileEditView: View {
             }
             MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+                .simultaneousGesture(TapGesture().onEnded {
+                })
         }
         .onTapGesture {
             hideKeyboard()
         }
+        .onAppear {
+            viewModel.getMyInformation()
+            nickname = viewModel.userInfo.username
+            height = viewModel.userInfo.height ?? 120
+            weight = viewModel.userInfo.weight ?? 30
+            runningOption = viewModel.userInfo.runningOption ?? "기록갱신"
+            setDailyGoal = viewModel.userInfo.setDailyGoal ?? 0.0
+            isProfilePublic = viewModel.userInfo.isProfilePublic
+        }
+        
     }
     
-    func modifyButtonTapped() {}
-}
-
-#Preview {
-    ProfileEditView()
+    
+    func modifyButtonTapped() {
+        viewModel.userInfo.username = nickname
+        viewModel.userInfo.height = height
+        viewModel.userInfo.weight = weight
+        viewModel.userInfo.runningOption = runningOption
+        viewModel.userInfo.setDailyGoal = setDailyGoal
+        viewModel.userInfo.isProfilePublic = isProfilePublic
+        viewModel.storeUserInformation()
+        isProfileSaved = true
+        presentationMode.wrappedValue.dismiss()
+    }
 }
