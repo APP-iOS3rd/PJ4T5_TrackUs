@@ -63,7 +63,7 @@ class MapViewController: UIViewController, GestureManagerDelegate {
     }
     
     private func setupLocationButton() {
-        locationButton.addTarget(self, action: #selector(centerMapOnUser), for: .touchUpInside)
+        locationButton.addTarget(self, action: #selector(centerMapOnUser), for: .touchDown)
 
         if #available(iOS 13.0, *) {
             locationButton.setImage(UIImage(named: "locationButton"), for: .normal)
