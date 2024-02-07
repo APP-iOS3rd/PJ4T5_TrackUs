@@ -25,13 +25,18 @@ class MapViewController: UIViewController, GestureManagerDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        let bounds = CoordinateBounds(
+            southwest: CLLocationCoordinate2D(latitude: 33.0, longitude: 124.0),
+                northeast: CLLocationCoordinate2D(latitude: 38.0, longitude: 132.0))
         
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: locationManager.currentLocation?.coordinate.latitude ?? 37.57098684878895, longitude: locationManager.currentLocation?.coordinate.longitude ?? 126.97891142355786), zoom: 14, bearing: 0, pitch: 0)
+        let cameraBoundsOptions = CameraBoundsOptions(bounds: bounds)
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+        
         mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.mapboxMap.styleURI = .light
-        
+        try? mapView.mapboxMap.setCameraBounds(with: cameraBoundsOptions)
         self.view.addSubview(mapView)
         
         mapView.location.options.puckType = .puck2D()

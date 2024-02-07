@@ -10,6 +10,7 @@
 import SwiftUI
 
 struct MyProfileView: View {
+    @EnvironmentObject var router: Router
     @StateObject var viewModel = UserInfoViewModel()
     @State private var selectedImage: Image?
     @State private var isShownFullScreenCover: Bool = false
@@ -25,7 +26,9 @@ struct MyProfileView: View {
                         .padding(.vertical, 12)
                         .clipShape(Circle())
                     
-                    NavigationLink(value: "ProfileEditView") {
+                    Button(action: {
+                        router.push(.profileEdit)
+                    }) {
                         HStack(spacing: 6) {
                             Text("TrackUs님")
                                 .customFontStyle(.gray1_SB16)
@@ -46,7 +49,9 @@ struct MyProfileView: View {
                     Text("운동")
                         .customFontStyle(.gray1_SB16)
                 } content: {
-                    NavigationLink(value: "RunningRecordView") {
+                    Button(action: {
+                        router.push(.runningRecorded)
+                    }) {
                         MenuItem(title: "러닝기록", image: .init(.chevronRight))
                     }
                 }
@@ -54,15 +59,19 @@ struct MyProfileView: View {
                 Divider()
                     .background(.divider)
                 
+                // MARK: - 서비스
                 MenuItems {
                     Text("서비스")
                         .customFontStyle(.gray1_SB16)
                 } content: {
-                    NavigationLink(value: "TermsOfService") {
+                    Button(action: {
+                        router.present(sheet: .webView(url: Constants.WebViewUrl.TERMS_OF_SERVICE_URL))
+                    }) {
                         MenuItem(title: "이용약관", image: .init(.chevronRight))
                     }
-                    
-                    NavigationLink(value: "OpenSourceLicense") {
+                    Button(action: {
+                        router.present(sheet: .webView(url: Constants.WebViewUrl.OPEN_SOURCE_LICENSE_URL))
+                    }) {
                         MenuItem(title: "오픈소스/라이센스", image: .init(.chevronRight))
                     }
                 }
@@ -70,14 +79,19 @@ struct MyProfileView: View {
                 Divider()
                     .background(.divider)
                 
+                // MARK: - 고객지원
                 MenuItems {
                     Text("고객지원")
                         .customFontStyle(.gray1_SB16)
                 } content: {
-                    NavigationLink(value: "FAQView") {
+                    Button(action: {
+                        router.push(.faq)
+                    }) {
                         MenuItem(title: "자주묻는 질문 Q&A", image: .init(.chevronRight))
                     }
-                    NavigationLink(value: "ServiceRequest") {
+                    Button(action: {
+                        router.present(sheet: .webView(url: Constants.WebViewUrl.SERVICE_REQUEST_URL))
+                    }) {
                         MenuItem(title: "문의하기", image: .init(.chevronRight))
                     }
                 }
@@ -85,6 +99,7 @@ struct MyProfileView: View {
                 Divider()
                     .background(.divider)
                 
+                // MARK: - 프리미엄 결제
                 MenuItems {
                     HStack(spacing: 6) {
                         Text("트랙어스 응원하기")
@@ -94,13 +109,10 @@ struct MyProfileView: View {
                 } content: {
                     Button {
                         viewModel.getMyInformation()
-                        isShownFullScreenCover.toggle()
+                        router.present(fullScreenCover: .payment)
                     } label: {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
                     }
-                    .fullScreenCover(isPresented: $isShownFullScreenCover, content: {
-                        PremiumPaymentView(isShownFullScreenCover: $isShownFullScreenCover)
-                    })
                 }
                 .padding(.bottom, 60)
             }
@@ -108,7 +120,9 @@ struct MyProfileView: View {
         .customNavigation {
             NavigationText(title: "마이페이지")
         } right: {
-            NavigationLink(value: "SettingsView") {
+            Button(action: {
+                router.push(.setting)
+            }) {
                 Image(.settingLogo)
                     .foregroundColor(Color.gray1)
             }
