@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct RunningLiveView: View {
+    @EnvironmentObject var router: Router
     @StateObject private var countVM = CountViewModel()
     @GestureState private var press = false
     @State private var isPause = false
     @State private var isShowingMessage = false
-    @State private var isShowingResultView = false
-    
     
     var body: some View {
         ZStack {
-            NavigationLink(destination: RunningResultView().navigationBarBackButtonHidden(true), isActive: $isShowingResultView) {
-                                           EmptyView()
-                                       }
             MapBoxMapView()
             
             Color.black
@@ -72,7 +68,7 @@ struct RunningLiveView: View {
                             Spacer()
                             
                             VStack {
-                                Image(.time)
+                                Image(.pace)
                                 Text("페이스")
                                     .customFontStyle(.gray1_M16)
                                 
@@ -87,7 +83,7 @@ struct RunningLiveView: View {
                             Spacer()
                             
                             VStack {
-                                Image(.fire)
+                                Image(.time)
                                 Text("경과시간")
                                     .customFontStyle(.gray1_M16)
                                 
@@ -100,7 +96,6 @@ struct RunningLiveView: View {
                             .clipShape(Circle())
                         }
                     }
-                    
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                     
@@ -157,7 +152,7 @@ struct RunningLiveView: View {
                                         }
                                         .onEnded(stopButtonLongPressed))
                                     .simultaneousGesture(TapGesture().onEnded(stopButtonTapped))
-
+                                    
                                     Spacer()
                                     
                                     Button(action: playButtonTapped, label: {
@@ -193,8 +188,9 @@ struct RunningLiveView: View {
                 }
             }
         }
-        .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.all)
+        .preventGesture()
     }
     
     func pasueButtonTapped() {
@@ -216,7 +212,7 @@ struct RunningLiveView: View {
     
     func stopButtonLongPressed(value: Bool) {
         HapticManager.instance.impact(style: .heavy)
-        isShowingResultView = true
+        router.push(.runningResult)
     }
 }
 
