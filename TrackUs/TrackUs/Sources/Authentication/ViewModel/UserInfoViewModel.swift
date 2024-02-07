@@ -152,8 +152,11 @@ class UserInfoViewModel: ObservableObject {
         guard let  jpegData = resizedImage.jpegData(compressionQuality: 0.5) else {
             return
         }
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
         // 이미지 포맷
-        ref.putData(jpegData, metadata: nil) { metadata, error in
+        ref.putData(jpegData, metadata: metadata) { metadata, error in
             if let error = error {
                 print("Failed to push image to Storage: \(error)")
                 return

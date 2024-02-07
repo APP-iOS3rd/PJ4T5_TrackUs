@@ -41,6 +41,43 @@ enum PickerType {
     case dailyGoal
 }
 
+struct PickerTypeInfo {
+    var title: String
+    var unit: String
+    var format: String
+    var rangeValues: [Double]
+    var startingValue: Double
+    
+    init(pickerType: PickerType) {
+        switch pickerType {
+        case .height:
+            self.title = "키"
+            self.unit = "cm"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 100, through: 250, by: 1).map { $0 }
+            self.startingValue = 160
+        case .weight:
+            self.title = "체중"
+            self.unit = "kg"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 30, through: 200, by: 1).map { $0 }
+            self.startingValue = 50
+        case .age:
+            self.title = "나이대"
+            self.unit = "대"
+            self.format = "%.0f"
+            self.rangeValues = stride(from: 10, through: 60, by: 10).map { $0 }
+            self.startingValue = 30
+        case .dailyGoal:
+            self.title = "일일 운동량"
+            self.unit = "km"
+            self.format = "%.1f"
+            self.rangeValues = stride(from: 0, through: 40, by: 0.1).map { $0 }
+            self.startingValue = 1
+        }
+    }
+}
+
 // MARK: - SelectPicker : Picker 선택부분
 struct SelectPicker: View {
     
@@ -50,12 +87,8 @@ struct SelectPicker: View {
     @Binding var selectedValue: Double?
     
     private let pickerType: PickerType
-    private var title: String
-    private var unit: String
-    private var format: String
-    private var rangeValues: [Double]
+    private let pickerTypeInfo: PickerTypeInfo
     
-    @State private var startValue: Double // picker 시작값
     @State private var pickerPresented: Bool = false
     
     
@@ -70,41 +103,16 @@ struct SelectPicker: View {
     init(selectedValue: Binding<Double?>, pickerType: PickerType) {
         self._selectedValue = selectedValue
         self.pickerType = pickerType
-        switch pickerType {
-        case .height:
-            self.title = "키"
-            self.unit = "cm"
-            self.format = "%.0f"
-            self.rangeValues = stride(from: 100, through: 250, by: 1).map { $0 }
-            self.startValue = 160
-        case .weight:
-            self.title = "체중"
-            self.unit = "kg"
-            self.format = "%.0f"
-            self.rangeValues = stride(from: 30, through: 200, by: 1).map { $0 }
-            self.startValue = 50
-        case .age:
-            self.title = "나이대"
-            self.unit = "대"
-            self.format = "%.0f"
-            self.rangeValues = stride(from: 10, through: 60, by: 10).map { $0 }
-            self.startValue = 30
-        case .dailyGoal:
-            self.title = "일일 운동량"
-            self.unit = "km"
-            self.format = "%.1f"
-            self.rangeValues = stride(from: 0, through: 40, by: 0.1).map { $0 }
-            self.startValue = 1
-        }
+        self.pickerTypeInfo = PickerTypeInfo(pickerType: pickerType)
     }
     
     var body: some View {
         ZStack{
             VStack(alignment: .leading, spacing: 8){
                 HStack(spacing:0){
-                    Text(title)
+                    Text(pickerTypeInfo.title)
                         .customFontStyle(.gray1_R16)
-                    Text("(\(unit))")
+                    Text("(\(pickerTypeInfo.unit))")
                         .customFontStyle(.gray1_R12)
                 }
                 Button(action: {
@@ -112,10 +120,10 @@ struct SelectPicker: View {
                 }, label: {
                     HStack{
                         if let value = selectedValue{
-                            Text("\(String(format: format, value))\(unit)")
+                            Text("\(String(format: pickerTypeInfo.format, value))\(pickerTypeInfo.unit)")
                                 .customFontStyle(.gray1_M16)
                         }else{
-                            Text("\(title)을 선택해주세요.")
+                            Text("\(pickerTypeInfo.title)을 선택해주세요.")
                                 .customFontStyle(.gray2_L16)
                         }
                         Spacer()
@@ -131,128 +139,37 @@ struct SelectPicker: View {
                     .frame(height: 1), alignment: .bottom)
                 
                 .sheet(isPresented: $pickerPresented) {
-                    PickerSheet2(selectedValueBinding: $selectedValue, title: title, unit: unit, format: format, rangeValues: rangeValues, selectedValue: $startValue)
+                    PickerSheet(selectedValueBinding: $selectedValue, pickerType: pickerType, startingValue: pickerTypeInfo.startingValue)
                 }
             }
         }
-    }
-    
-    func pickerSetting(){
-        
     }
 }
 
 
 // MARK: -  PickerSheet : Picker 선택 창 부분
 struct PickerSheet: View {
-    
-    @Binding private var selectedValueBinding: Double?
-    @Binding private var check: Bool
-    
-    private let title: String
-    private let unit: String
-    private let format: String = "%.0f"
-    // stride(from: 20, through: 220, by: 10).map { $0 }
-    private let rangeValues: [Double]
-    @State private var selectedValue: Double
-    
-    /*
-     가장 상단에 있는 view에 추가
-     .overlay(alignment: .center) {
-                 if pickercheck {
-                     PickerSheet(selectedValueBinding: $value, check: $pickercheck, title: "체중", unit: "kg", rangeFrom: 20, rangeThrough: 150, rangeBy: 1, selectedValue: 70)
-                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                         .background(!pickercheck ? Color.white : Color.black.opacity(0.45))
-                         .edgesIgnoringSafeArea(.all)
-                 }
-             }
-             .animation(.easeOut(duration: 0.5), value: pickercheck)
-     */
-    
-    /// selectedValueBinding: 반환 받을 변수, check: picker띄우기 여부(Bool), title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값
-    init(selectedValueBinding: Binding<Double?>, check: Binding<Bool>, title: String, unit: String, rangeFrom: Double, rangeThrough: Double, rangeBy: Double, selectedValue: Double) {
-        self._selectedValueBinding = selectedValueBinding
-        self._check = check
-        self.title = title
-        self.unit = unit
-        self.rangeValues = stride(from: rangeFrom, through: rangeThrough, by: rangeBy).map { $0 }
-        self.selectedValue = selectedValue
-    }
-    
-    
-    var body: some View {
-        VStack{            
-            Text("\(title) 입력")
-                .font(.system(size: 20,weight: .bold))
-            Picker(title, selection: $selectedValue) {
-                ForEach(rangeValues, id: \.self) { value in
-                    Text("\(String(format: format, value)) \(unit)")
-                        .tag(value)
-                }
-            }
-            .frame(width: 320)
-            .foregroundStyle(.black)
-            .pickerStyle(WheelPickerStyle())
-            //.labelsHidden()  // 레이블 숨기기
-            //.presentationDetents([.height(300)])
-            
-            HStack(spacing: 8){
-                Button("취소") {
-                    check.toggle()
-                }
-                .fontWeight(.semibold)
-                .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
-                .overlay(
-                    Capsule()
-                        .stroke( .main, lineWidth: 1)
-                )
-                Button("확인") {
-                    selectedValueBinding = selectedValue
-                    check.toggle()
-                }
-                .frame(width: 212, height: 40)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .background(.main)
-                .clipShape(Capsule())
-            }
-        }
-        .frame(width: 380,height: 400)
-        .background(
-            RoundedRectangle(cornerRadius: 16.0, style: .continuous)
-                .foregroundStyle(.white)
-                .padding(.all, 16)
-        )
-    }
-}
-
-struct PickerSheet2: View {
     @Environment(\.dismiss) var dismiss
     @Binding private var selectedValueBinding: Double?
-    @Binding private var selectedValue: Double
     
-    private let title: String
-    private let unit: String
-    private let format: String
-    private let rangeValues: [Double]
+    @State private var startingValue: Double
+    private let pickerTypeInfo: PickerTypeInfo
     
-    /// selectedValueBinding: 반환 받을 변수, check: picker띄우기 여부(Bool), title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값
-    init(selectedValueBinding: Binding<Double?>, title: String, unit: String, format: String, rangeValues: [Double], selectedValue: Binding<Double>) {
+    /// selectedValueBinding: 반환 받을 변수,  title: 값 명칭(체중), unit: 단위(kg), selectedValue: 디폴트값 - 본인 채중 그대로 입력
+    init(selectedValueBinding: Binding<Double?>, pickerType: PickerType, startingValue: Double) {
         self._selectedValueBinding = selectedValueBinding
-        self.title = title
-        self.unit = unit
-        self.format = format
-        self.rangeValues = rangeValues
-        self._selectedValue = selectedValue
+        self._startingValue = State<Double>(initialValue: startingValue)
+        self.pickerTypeInfo = PickerTypeInfo(pickerType: pickerType)
     }
     
     var body: some View {            
+        
         VStack{
-        Text("\(title) 입력")
+            Text("\(pickerTypeInfo.title) 입력")
             .customFontStyle(.gray1_B20)
-        Picker(title, selection: $selectedValue) {
-            ForEach(rangeValues, id: \.self) { value in
-                Text("\(String(format: format, value)) \(unit)")
+            Picker(pickerTypeInfo.title, selection: $startingValue) {
+                ForEach(pickerTypeInfo.rangeValues, id: \.self) { value in
+                Text("\(String(format: pickerTypeInfo.format, value)) \(pickerTypeInfo.unit)")
                     .tag(value)
             }
         }
@@ -272,7 +189,7 @@ struct PickerSheet2: View {
                     )
             }
             Button {
-                selectedValueBinding = selectedValue
+                selectedValueBinding = startingValue
                 dismiss()
             } label: {
                 Text("확인")
@@ -286,4 +203,3 @@ struct PickerSheet2: View {
     .padding(20)
     }
 }
-
