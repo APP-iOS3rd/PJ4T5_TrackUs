@@ -162,10 +162,10 @@ struct ProfileEditView: View {
         }
         .onAppear {
             viewModel.getMyInformation()
-            nickname = viewModel.userInfo.username
+            nickname = viewModel.userInfo.username ?? "닉네임을 입력하세요"
             height = viewModel.userInfo.height ?? 120
             weight = viewModel.userInfo.weight ?? 30
-            runningOption = viewModel.userInfo.runningOption ?? "기록갱신"
+            runningOption = viewModel.userInfo.runningOption ?? "-"
             setDailyGoal = viewModel.userInfo.setDailyGoal ?? 0.0
             isProfilePublic = viewModel.userInfo.isProfilePublic
         }

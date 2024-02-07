@@ -147,7 +147,6 @@ struct FirebaseProfileImageView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 116, height: 116)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color.black, lineWidth: 2))
                 .shadow(radius: 2)
         } else {
             ProgressView()
@@ -175,8 +174,3 @@ class ImageLoader: ObservableObject {
             .assign(to: \.image, on: self)
     }
 }
-
-//
-//#Preview {
-//    MyProfileView()
-//}
