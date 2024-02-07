@@ -22,7 +22,8 @@ class MapViewController: UIViewController, GestureManagerDelegate {
     internal var mapView: MapView!
     private var locationTrackingCancellation: AnyCancelable?
     private let locationManager = LocationManager.shared
-    
+    private lazy var locationButton = UIButton(frame: .zero)
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         let bounds = CoordinateBounds(
@@ -39,6 +40,8 @@ class MapViewController: UIViewController, GestureManagerDelegate {
         try? mapView.mapboxMap.setCameraBounds(with: cameraBoundsOptions)
         self.view.addSubview(mapView)
         
+        setupLocationButton()
+        
         mapView.location.options.puckType = .puck2D()
         mapView.gestures.delegate = self // gesture delegate
     }
@@ -54,4 +57,44 @@ class MapViewController: UIViewController, GestureManagerDelegate {
     func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEndAnimatingFor gestureType: MapboxMaps.GestureType) {
         
     }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    private func setupLocationButton() {
+        locationButton.addTarget(self, action: #selector(centerMapOnUser), for: .touchDown)
+
+        if #available(iOS 13.0, *) {
+            locationButton.setImage(UIImage(named: "locationButton"), for: .normal)
+        } else {
+            locationButton.setTitle("No tracking", for: .normal)
+        }
+        
+        let buttonWidth = 44.0
+        locationButton.translatesAutoresizingMaskIntoConstraints = false
+//        locationButton.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        locationButton.layer.cornerRadius = buttonWidth/2
+        locationButton.layer.shadowOffset = CGSize(width: -1, height: 1)
+        locationButton.layer.shadowColor = UIColor.black.cgColor
+        locationButton.layer.shadowOpacity = 0.5
+        view.addSubview(locationButton)
+        
+        NSLayoutConstraint.activate([
+            locationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            locationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+            locationButton.widthAnchor.constraint(equalTo: locationButton.heightAnchor),
+            locationButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        ])
+    }
+    @objc private func centerMapOnUser() {
+        guard let userLocation = locationManager.currentLocation?.coordinate else {
+            // 사용자의 위치를 가져올 수 없는 경우 예외 처리
+            print("사용자의 위치를 가져올 수 없습니다.")
+            return
+        }
+        let camera = CameraOptions(center: userLocation, zoom: 14, bearing: 0, pitch: 0)
+        mapView.camera.ease(to: camera, duration: 1.3)
+    }
 }
+
