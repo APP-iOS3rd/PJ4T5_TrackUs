@@ -9,8 +9,7 @@ import SwiftUI
 
 struct DailyGoalView: View {
     @EnvironmentObject var router: Router
-    @EnvironmentObject var userInfoViewModel : UserInfoViewModel
-    @EnvironmentObject private var viewModel: AuthenticationViewModel
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경
@@ -47,10 +46,10 @@ struct DailyGoalView: View {
                     .animation(.easeIn(duration: 0.3), value: isProfilePublic)
                 }
                 MainButton(active: goal != nil, buttonText: "다음으로") {
-                    userInfoViewModel.userInfo.setDailyGoal = goal
-                    userInfoViewModel.userInfo.isProfilePublic = isProfilePublic
-                    userInfoViewModel.storeUserInformation()
-                    viewModel.authenticationState = .authenticated
+                    authViewModel.userInfo.setDailyGoal = goal
+                    authViewModel.userInfo.isProfilePublic = isProfilePublic
+                    authViewModel.storeUserInformation()
+                    authViewModel.authenticationState = .authenticated
                     router.popToRoot()
                 }
             }

@@ -12,7 +12,7 @@ import Combine
 
 struct MyProfileView: View {
     @EnvironmentObject var router: Router
-    @StateObject var viewModel = UserInfoViewModel()
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @State private var selectedImage: Image?
     @State private var isShownFullScreenCover: Bool = false
     
@@ -21,7 +21,7 @@ struct MyProfileView: View {
             ScrollView{
                 // MARK: - 프로필 헤더
                 VStack {
-                    if let profileImageUrl = viewModel.userInfo.profileImageUrl {
+                    if let profileImageUrl = authViewModel.userInfo.profileImageUrl {
                         FirebaseProfileImageView(imageURL: profileImageUrl)
                             .frame(width: 116, height: 116)
                             .padding(.vertical, 12)
@@ -38,14 +38,14 @@ struct MyProfileView: View {
                         router.push(.profileEdit)
                     }) {
                         HStack(spacing: 6) {
-                            Text("\(viewModel.userInfo.username)님")
+                            Text("\(authViewModel.userInfo.username)님")
                                 .customFontStyle(.gray1_SB16)
                             Image(.chevronRight)
                         }
                     }
                     
                     HStack {
-                        if let height = viewModel.userInfo.height, let weight = viewModel.userInfo.weight, let age = viewModel.userInfo.age {
+                        if let height = authViewModel.userInfo.height, let weight = authViewModel.userInfo.weight, let age = authViewModel.userInfo.age {
                                     Text("\(height)cm · \(weight)kg · \(age)대")
                                         .customFontStyle(.gray2_R16)
                                 } else {
@@ -120,7 +120,7 @@ struct MyProfileView: View {
                     }
                 } content: {
                     Button {
-                        viewModel.getMyInformation()
+                        authViewModel.getMyInformation()
                         router.present(fullScreenCover: .payment)
                     } label: {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
@@ -140,7 +140,7 @@ struct MyProfileView: View {
             }
         }
         .onAppear {
-            viewModel.getMyInformation()
+            authViewModel.getMyInformation()
         }
     }
 }

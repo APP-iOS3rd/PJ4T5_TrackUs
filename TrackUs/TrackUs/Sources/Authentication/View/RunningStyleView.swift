@@ -13,6 +13,7 @@ enum runningStyle {
 }
 
 struct RunningStyleView: View {
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경

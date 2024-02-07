@@ -15,15 +15,15 @@ enum RunningOption: String, CaseIterable, Identifiable {
 struct ProfileEditView: View {
     @State private var selectedImage: Image?
     @State private var nickname: String = ""
-    @State private var height: Int = 0
-    @State private var weight: Int = 0
+    @State private var height: Int?
+    @State private var weight: Int?
     @State private var runningOption: String = ""
-    @State private var setDailyGoal: Double = 0.0
-    @State private var goalMinValue: Double = 0.0
-    @State private var goalMaxValue: Double = 40.0
+    @State private var setDailyGoal: Double? = 0.0
+    @State private var goalMinValue: Double? = 0.0
+    @State private var goalMaxValue: Double? = 40.0
     @State private var isProfilePublic: Bool = false
     @State private var isProfileSaved: Bool = false
-    @StateObject private var viewModel = UserInfoViewModel.shared
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -40,7 +40,7 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 20) {
                             Text("닉네임")
                                 .customFontStyle(.gray1_B20)
-                            TextField("TrackUs", text: $nickname)
+                            TextField("닉네임을 입력해주세요", text: $nickname)
                                 .padding(.leading, 16)
                                 .foregroundColor(.gray1)
                                 .frame(height: 47)
@@ -161,26 +161,26 @@ struct ProfileEditView: View {
             hideKeyboard()
         }
         .onAppear {
-            viewModel.getMyInformation()
-            nickname = viewModel.userInfo.username ?? "닉네임을 입력하세요"
-            height = viewModel.userInfo.height ?? 120
-            weight = viewModel.userInfo.weight ?? 30
-            runningOption = viewModel.userInfo.runningOption ?? "-"
-            setDailyGoal = viewModel.userInfo.setDailyGoal ?? 0.0
-            isProfilePublic = viewModel.userInfo.isProfilePublic
+            authViewModel.getMyInformation()
+            nickname = authViewModel.userInfo.username
+            height = authViewModel.userInfo.height ?? 120
+            weight = authViewModel.userInfo.weight ?? 30
+            runningOption = authViewModel.userInfo.runningOption ?? "-"
+            setDailyGoal = authViewModel.userInfo.setDailyGoal ?? 0.0
+            isProfilePublic = authViewModel.userInfo.isProfilePublic
         }
         
     }
     
     
     func modifyButtonTapped() {
-        viewModel.userInfo.username = nickname
-        viewModel.userInfo.height = height
-        viewModel.userInfo.weight = weight
-        viewModel.userInfo.runningOption = runningOption
-        viewModel.userInfo.setDailyGoal = setDailyGoal
-        viewModel.userInfo.isProfilePublic = isProfilePublic
-        viewModel.storeUserInformation()
+        authViewModel.userInfo.username = nickname
+        authViewModel.userInfo.height = height
+        authViewModel.userInfo.weight = weight
+        authViewModel.userInfo.runningOption = runningOption
+        authViewModel.userInfo.setDailyGoal = setDailyGoal
+        authViewModel.userInfo.isProfilePublic = isProfilePublic
+        authViewModel.storeUserInformation()
         isProfileSaved = true
         presentationMode.wrappedValue.dismiss()
     }

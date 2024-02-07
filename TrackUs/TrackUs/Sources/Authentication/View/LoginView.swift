@@ -10,13 +10,13 @@ import AuthenticationServices
 
 struct LoginView: View {
     @EnvironmentObject var router: Router
-    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @Environment(\.dismiss) var dismiss
 //    let robotoMedium = "Roboto-Medium" // 구글 글꼴
     
     private func signInWithGoogle() {
         Task {
-            if await viewModel.signInWithGoogle() == true {
+            if await authViewModel.signInWithGoogle() == true {
                 dismiss()
             }
         }
@@ -59,7 +59,7 @@ struct LoginView: View {
                 
                 VStack(alignment: .leading) {
                     Button(action: {
-                        viewModel.startSignInWithAppleFlow()
+                        authViewModel.startSignInWithAppleFlow()
                     }, label: {
                         HStack(alignment: .center) {
                             // 애플 로고

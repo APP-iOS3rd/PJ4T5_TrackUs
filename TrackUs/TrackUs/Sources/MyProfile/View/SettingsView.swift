@@ -9,12 +9,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var router: Router
-    @EnvironmentObject private var viewModel: AuthenticationViewModel
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     
     
     private func deleteAccount() {
         Task {
-            if await viewModel.deleteAccount() == true {
+            if await authViewModel.deleteAccount() == true {
                 router.popToRoot()
             }
         }
@@ -65,7 +65,7 @@ struct SettingsView: View {
     
     func logoutButtonTapped() {
         // 테스트용
-        viewModel.logOut()
+        authViewModel.logOut()
         //viewModel.authenticationState = .unauthenticated
         router.popToRoot()
     }

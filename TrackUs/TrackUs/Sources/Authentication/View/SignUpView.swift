@@ -18,8 +18,7 @@ enum SignUpFlow {
 
 struct SignUpView: View {
     @EnvironmentObject var router: Router
-    @EnvironmentObject var viewModel: AuthenticationViewModel
-    @StateObject var userInfoViewModel = UserInfoViewModel()
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @State private var signUpFlow: SignUpFlow = .nickname
     
     var body: some View {
@@ -29,22 +28,16 @@ struct SignUpView: View {
             switch signUpFlow {
             case .nickname:
                 NickNameView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             case .profile:
                 ProfileImageView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             case .physical:
                 PhysicalView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             case .ageGender:
                 AgeGenderView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             case .runningStyle:
                 RunningStyleView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             case .daily:
                 DailyGoalView(signUpFlow: $signUpFlow)
-                    .environmentObject(userInfoViewModel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: signUpFlow)
@@ -73,7 +66,7 @@ struct SignUpView: View {
         switch signUpFlow {
         case .nickname:
             // 테스트용
-            viewModel.authenticationState = .unauthenticated
+            authViewModel.authenticationState = .unauthenticated
         case .profile:
             signUpFlow = .nickname
         case .physical:
@@ -103,8 +96,8 @@ struct SignUpView: View {
         case .daily:
             // 테스트용
             router.popToRoot()
-            viewModel.authenticationState = .authenticated
-            userInfoViewModel.storeUserInformation()
+            authViewModel.authenticationState = .authenticated
+            authViewModel.storeUserInformation()
         }
     }
     

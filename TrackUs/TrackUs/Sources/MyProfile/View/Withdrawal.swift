@@ -64,7 +64,7 @@ struct PlaceholderTextView: UIViewRepresentable {
 }
 
 struct Withdrawal: View {
-    @EnvironmentObject private var viewModel: AuthenticationViewModel
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @EnvironmentObject var router: Router
     @State private var text: String = ""
     @State private var isAgreed: Bool = false
@@ -74,7 +74,7 @@ struct Withdrawal: View {
     // 회원 탈퇴
     private func deleteAccount() {
         Task {
-            if await viewModel.deleteAccount() == true {
+            if await authViewModel.deleteAccount() == true {
                 router.popToRoot()
             }
         }
@@ -156,7 +156,7 @@ struct Withdrawal: View {
                 .padding(.vertical, 20)
                 
             }
-            MainButton(active: true, buttonText: "회원탈퇴", action: withdrawalButtonTapped)
+            MainButton(active: isAgreed, buttonText: "회원탈퇴", action: withdrawalButtonTapped)
         }
         .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
         .customNavigation {
@@ -169,10 +169,10 @@ struct Withdrawal: View {
     
     func withdrawalButtonTapped() {
         Task {
-            let isDeleted = await viewModel.deleteAccount()
+            let isDeleted = await authViewModel.deleteAccount()
             if isDeleted {
                 router.popToRoot()
-                router.push(to: .running)
+                router.push(.running)
             }
         }
     }
