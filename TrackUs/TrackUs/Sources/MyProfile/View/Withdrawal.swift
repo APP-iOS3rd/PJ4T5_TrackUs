@@ -168,8 +168,13 @@ struct Withdrawal: View {
     }
     
     func withdrawalButtonTapped() {
-        router.popToRoot()
-        deleteAccount()
+        Task {
+            let isDeleted = await viewModel.deleteAccount()
+            if isDeleted {
+                router.popToRoot()
+                router.push(to: .running)
+            }
+        }
     }
 }
 
