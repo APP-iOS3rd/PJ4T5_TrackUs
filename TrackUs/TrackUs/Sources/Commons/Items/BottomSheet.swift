@@ -20,16 +20,20 @@ fileprivate enum BottomSheetConstants {
 struct BottomSheet<Content: View>: View {
     @Binding var isOpen: Bool
     @GestureState private var translation: CGFloat = 0
+    let onChanged: (DragGesture.Value) -> ()
+    let onEnded: (DragGesture.Value) -> ()
     
     let maxHeight: CGFloat
     let minHeight: CGFloat
     let content: Content
     
-    init(isOpen: Binding<Bool>, maxHeight: CGFloat, minHeight: CGFloat, @ViewBuilder content: () -> Content) {
+    init(isOpen: Binding<Bool>, maxHeight: CGFloat, minHeight: CGFloat, @ViewBuilder content: () -> Content, onChanged : @escaping (DragGesture.Value) -> (), onEnded : @escaping (DragGesture.Value) -> ()) {
         self.minHeight = minHeight
         self.maxHeight = maxHeight
         self.content = content()
         self._isOpen = isOpen
+        self.onChanged = onChanged
+        self.onEnded = onEnded
     }
     
     private var offset: CGFloat {
@@ -42,14 +46,14 @@ struct BottomSheet<Content: View>: View {
             .frame(
                 width: BottomSheetConstants.indicatorWidth,
                 height: BottomSheetConstants.indicatorHeight
-        )
+            )
+            .padding(12)
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 self.indicator
-                    .padding(12)
                 self.content
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
@@ -61,20 +65,28 @@ struct BottomSheet<Content: View>: View {
                 )
             )
             .frame(height: geometry.size.height, alignment: .bottom)
-            .offset(y: max(self.offset + self.translation, 0))
+            .offset(y: max(min(self.offset + self.translation, self.maxHeight - self.minHeight), 0))
             .animation(.interactiveSpring(), value: translation)
             .gesture(
-                DragGesture().updating(self.$translation) { value, state, _ in
+                DragGesture().updating(self.$translation) { value, state, transaction in
                     state = value.translation.height
-                }.onEnded { value in
-                    let snapDistance = self.maxHeight * BottomSheetConstants.snapRatio
-                    guard abs(value.translation.height) > snapDistance else {
-                        return
-                    }
-                    withAnimation(.interactiveSpring) {
-                        self.isOpen = value.translation.height < 0
-                    }
                 }
+                    .onChanged({ value in
+                        onChanged(value)
+                    })
+                
+                    .onEnded { value in
+                        let snapDistance = self.maxHeight * BottomSheetConstants.snapRatio
+                        
+                        guard abs(value.translation.height) > snapDistance else {
+                            onEnded(value)
+                            return
+                        }
+                        withAnimation(.interactiveSpring) {
+                            self.isOpen = value.translation.height < 0
+                        }
+                        onEnded(value)
+                    }
             )
         }
     }
