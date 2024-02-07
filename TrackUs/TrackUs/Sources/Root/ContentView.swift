@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
     
@@ -31,6 +32,7 @@ struct ContentView: View {
             }
         }
         .animation(.easeIn(duration: 0.15), value: authViewModel.authenticationState)
+        .preferredColorScheme(.light)
     }
 }
 
