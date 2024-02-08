@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PopupView
+import CoreLocation
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
@@ -14,6 +15,7 @@ struct RunningHomeView: View {
     @State private var maxHeight: CGFloat = 300
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
+    @State private var showingAlert: Bool = false
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
     
@@ -71,9 +73,7 @@ struct RunningHomeView: View {
                                     )
                             }
                             
-                            Button(action: {
-                                router.push(.runningStart)
-                            }, label: {
+                            Button(action: startButtonTapped, label: {
                                 Text("러닝 시작")
                                     .foregroundStyle(.white)
                                     .font(.system(size: 12, weight: .bold))
@@ -82,6 +82,24 @@ struct RunningHomeView: View {
                             })
                             .background(.main)
                             .clipShape(Capsule())
+                            .alert(isPresented: $showingAlert) {
+                                Alert(
+                                    title: Text("러닝을 시작하기 위해서 앱에서 위치를 엑세스할 수 있도록 허용해 주세요."),
+                                    message: Text("러닝을 추적하고 그 외 다른 서비스와 기능을 이용하기 위해서 정확한 위치 정보가 필요합니다."),
+                                    primaryButton: .destructive (
+                                        Text("취소"),
+                                        action: { }
+                                    ),
+                                    secondaryButton: .default (
+                                        Text("설정"),
+                                        action: {
+                                            if let appSettings = URL(string: "App-Prefs:root=LOCATION_SERVICES") {
+                                                UIApplication.shared.open(appSettings,options: [:],completionHandler: nil)
+                                            }
+                                        }
+                                    )
+                                )
+                            }
                             
                         }
                         .padding(.vertical, 10)
@@ -193,5 +211,14 @@ struct RunningHomeView: View {
         .edgesIgnoringSafeArea(.top)
     }
     
+    func startButtonTapped() {
+        LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
+            if authrionzationStatus == .authorizedWhenInUse {
+                router.push(.runningStart)
+            } else {
+                showingAlert = true
+            }
+        }
+    }
 }
 

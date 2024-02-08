@@ -16,7 +16,7 @@ struct RunningLiveView: View {
     
     var body: some View {
         ZStack {
-            MapBoxMapView()
+            LiveTrackingMapView()
             
             Color.black
                 .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)

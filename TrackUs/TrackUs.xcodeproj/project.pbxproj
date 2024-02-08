@@ -41,6 +41,8 @@
 		82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28BA2B6B531B00D7734D /* PremiumPaymentView.swift */; };
 		82AB28BD2B6B56E100D7734D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28BC2B6B56E100D7734D /* SettingsView.swift */; };
 		82AB28C12B6B5B6600D7734D /* TeamIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28C02B6B5B6600D7734D /* TeamIntroView.swift */; };
+		82BEE5092B74623A00DDCF0B /* LiveTrackingMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BEE5082B74623A00DDCF0B /* LiveTrackingMapView.swift */; };
+		82E237CF2B73A43B00BC6D58 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82E237CE2B73A43B00BC6D58 /* GoogleService-Info.plist */; };
 		82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */; };
 		82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */; };
 		82ECF0AF2B67A0D0002CFD00 /* RunningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AE2B67A0D0002CFD00 /* RunningViewModel.swift */; };
@@ -58,6 +60,7 @@
 		963AE40C2B678EAE00E98BF4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963AE40B2B678EAE00E98BF4 /* Preview Assets.xcassets */; };
 		963AE4252B6A2C3C00E98BF4 /* Withdrawal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4242B6A2C3C00E98BF4 /* Withdrawal.swift */; };
 		963AE42B2B6A445800E98BF4 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE42A2B6A445800E98BF4 /* ProfileEditView.swift */; };
+		9846EB1B2B6CB7F20052BDA6 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9846EB1A2B6CB7F20052BDA6 /* UserInfoViewModel.swift */; };
 		9846EB1D2B6CB8EF0052BDA6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9846EB1C2B6CB8EF0052BDA6 /* FirebaseAnalytics */; };
 		9846EB1F2B6CB8EF0052BDA6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 9846EB1E2B6CB8EF0052BDA6 /* FirebaseAnalyticsOnDeviceConversion */; };
 		9846EB212B6CB8EF0052BDA6 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9846EB202B6CB8EF0052BDA6 /* FirebaseAnalyticsSwift */; };
@@ -171,6 +174,8 @@
 		82AB28BA2B6B531B00D7734D /* PremiumPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumPaymentView.swift; sourceTree = "<group>"; };
 		82AB28BC2B6B56E100D7734D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		82AB28C02B6B5B6600D7734D /* TeamIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamIntroView.swift; sourceTree = "<group>"; };
+		82BEE5082B74623A00DDCF0B /* LiveTrackingMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTrackingMapView.swift; sourceTree = "<group>"; };
+		82E237CE2B73A43B00BC6D58 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AE2B67A0D0002CFD00 /* RunningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningViewModel.swift; sourceTree = "<group>"; };
@@ -442,6 +447,7 @@
 				FE90EECD2B6FCEB700A08E23 /* RunningLiveView.swift */,
 				820330D72B70127800CB97F7 /* SettingPopup.swift */,
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
+				82BEE5082B74623A00DDCF0B /* LiveTrackingMapView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -539,6 +545,7 @@
 		963AE4032B678EAC00E98BF4 /* TrackUs */ = {
 			isa = PBXGroup;
 			children = (
+				82E237CE2B73A43B00BC6D58 /* GoogleService-Info.plist */,
 				9878DD8D2B6FE5CE00475A16 /* TrackUs.entitlements */,
 				984B3A422B739FE800C9831C /* GoogleService-Info.plist */,
 				82AB28AD2B6B2B4D00D7734D /* Info.plist */,
@@ -781,6 +788,7 @@
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
 				8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
+				82BEE5092B74623A00DDCF0B /* LiveTrackingMapView.swift in Sources */,
 				98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */,
 				823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */,
 				82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */,
