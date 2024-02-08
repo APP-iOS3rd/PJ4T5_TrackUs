@@ -118,12 +118,22 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - 회원탈퇴
-    func deleteAccount() async -> Bool {
+    func deleteAccount(withReason reason: String) async -> Bool {
         do {
             if let uid = Auth.auth().currentUser?.uid {
+                // 사용자 프로필 이미지 삭제 (있을 경우)
+                if let url = userInfo.profileImageUrl {
+                    try await FirebaseManger.shared.storage.reference(forURL: url).delete()
+                }
                 try await user?.delete()
                 try await Firestore.firestore().collection("users").document(uid).delete()
                 print("Document successfully removed!")
+                // 탈퇴 사유를 Firestore에 저장
+                if !reason.isEmpty {
+                    let withdrawalData = ["uid": uid,
+                                          "reason": reason]
+                    Firestore.firestore().collection("withdrawalReasons").addDocument(data: withdrawalData)
+                }
             }
             self.authenticationState = .unauthenticated
             return true

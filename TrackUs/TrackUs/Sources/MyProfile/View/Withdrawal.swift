@@ -66,7 +66,7 @@ struct PlaceholderTextView: UIViewRepresentable {
 struct Withdrawal: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @EnvironmentObject var router: Router
-    @State private var text: String = ""
+    @State private var reason: String = ""
     @State private var isAgreed: Bool = false
     @State private var showWithdrawalAlert: Bool = false
     @State private var isEditing: Bool = true
@@ -74,7 +74,7 @@ struct Withdrawal: View {
     // 회원 탈퇴
     private func deleteAccount() {
         Task {
-            if await authViewModel.deleteAccount() == true {
+            if await authViewModel.deleteAccount(withReason: reason) == true {
                 router.popToRoot()
             }
         }
@@ -119,7 +119,7 @@ struct Withdrawal: View {
                         .padding(.bottom, 12)
                     
                     ZStack(alignment: .topLeading) {
-                        PlaceholderTextView(text: $text, placeholder: "탈퇴 사유를 작성해주세요.", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.gray)
+                        PlaceholderTextView(text: $reason, placeholder: "탈퇴 사유를 작성해주세요.", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.gray)
                             .frame(height: 290)
                             .padding(.horizontal)
                             .background(Color.white)
@@ -169,7 +169,7 @@ struct Withdrawal: View {
     
     func withdrawalButtonTapped() {
         Task {
-            let isDeleted = await authViewModel.deleteAccount()
+            let isDeleted = await authViewModel.deleteAccount(withReason: reason)
             if isDeleted {
                 router.popToRoot()
                 router.push(.running)
