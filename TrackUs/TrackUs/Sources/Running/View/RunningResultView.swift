@@ -69,7 +69,7 @@ struct RunningResultView: View {
                         }
                         
                         HStack {
-                            Image(.time)
+                            Image(.pace)
                             VStack(alignment: .leading) {
                                 Text("페이스")
                                 Text("-’--’’")
@@ -99,7 +99,9 @@ struct RunningResultView: View {
                 )
             )
         }
+        .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
+        .preventGesture()
     }
 }
 

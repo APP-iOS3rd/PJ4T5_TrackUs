@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PremiumPaymentView: View {
-    @Binding var isShownFullScreenCover: Bool
+    @EnvironmentObject var router: Router
     
     var body: some View {
         PreparingService()
@@ -16,7 +16,7 @@ struct PremiumPaymentView: View {
                 EmptyView()
             } left: {
                 Button(action: {
-                    isShownFullScreenCover.toggle()
+                    router.dismissFullScreenCover()
                 }, label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(.gray1)
@@ -26,5 +26,5 @@ struct PremiumPaymentView: View {
 }
 
 #Preview {
-    PremiumPaymentView(isShownFullScreenCover: .constant(true))
+    PremiumPaymentView()
 }
