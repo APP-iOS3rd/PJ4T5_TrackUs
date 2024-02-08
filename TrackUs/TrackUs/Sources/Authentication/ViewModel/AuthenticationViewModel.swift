@@ -26,7 +26,6 @@ enum AuthenticationError: Error {
   case tokenError(message: String)
 }
 
-
 class FirebaseManger: NSObject {
     static let shared = FirebaseManger()
     
@@ -83,6 +82,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                         if check.isEmpty {
                             self.authenticationState = .signUpcating
                         }else {
+                            self.getMyInformation()
                             self.authenticationState = .authenticated
                         }
                     }
@@ -138,9 +138,6 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     }
 }
 
-//enum AuthenticationError: Error {
-//  case tokenError(message: String)
-//}
 // MARK: - SNS Login
 extension AuthenticationViewModel {
     // MARK: - 구글 로그인
@@ -157,7 +154,6 @@ extension AuthenticationViewModel {
             print("root view controller 없음")
             return false
         }
-        
         do {
             let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
             
@@ -274,70 +270,23 @@ extension AuthenticationViewModel: ASAuthorizationControllerPresentationContextP
 
 // MARK: - 사용자 정보 관련
 extension AuthenticationViewModel {
-    // MARK: - 사용자 정보 저장
-    func storeUserInformation() {
-        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
-            return }
-        // 해당부분 자료형 지정 필요
-        let userData = ["uid": uid,
-                        "username": userInfo.username,
-                        "weight": userInfo.weight ?? "",
-                        "height": userInfo.height ?? "",
-                        "age": userInfo.age ?? "",
-                        "gender": userInfo.gender ?? "",
-                        "isProfilePublic": userInfo.isProfilePublic,
-                        "isProSubscriber": false,
-                        "profileImageUrl": userInfo.profileImageUrl ?? "",
-                        "setDailyGoal": userInfo.setDailyGoal ?? "",
-                        "runningOption": userInfo.runningOption ?? ""] as [String : Any]
-        FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
-            if error != nil {
-                print("@@@@@@ error 1 @@@@@@")
-                return
-            }
-            print("success")
-            
-        }
-    }
     
-    // 값 가져오기
-    func getMyInformation(){
-        
-        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
-            print("error uid")
+    // MARK: - 이미지 저장 부분 (이미지 저장 -> 사용자 저장 순)
+    func storeUserInfoInFirebase() {
+        // 이미지 유무 확인 후 저장
+        guard let image = self.userInfo.image else {
+            userInfo.profileImageUrl = ""
+            self.storeUserInformation()
             return
         }
-        FirebaseManger.shared.firestore.collection("users").document(uid).getDocument { (snapshot, error) in
-            //var userInfo: UserInfo = []
-            
-            if let error = error {
-                print("Error getting documents: \(error)")
-            }else{
-                guard let _ = snapshot?.description else {return}
-                let decoder =  JSONDecoder()
-                do {
-                    let data = snapshot?.data()
-                    let jsonData = try JSONSerialization.data(withJSONObject:data ?? "")
-                    self.userInfo = try decoder.decode(UserInfo.self, from: jsonData)
-                    //userInfo.append(roadInfo)
-                } catch let err {
-                    print("err: \(err)")
-                }
-                //completionHandler(roadInfos)
-                print(self.userInfo)
-            }
-        }
-    }
-    
-    // MARK: - 이미지 저장 부분
-    func persistImageToStorage(image: Image?) {
-        // 사용자 uid 받아오기
+         
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
             return }
-        let ref = FirebaseManger.shared.storage.reference(withPath: uid)
+        //let ref = FirebaseManger.shared.storage.reference(withPath: uid)
+        let ref = FirebaseManger.shared.storage.reference().child("usersImage/\(uid)")
         
-        // 이미지 크기 줄이기
-        guard let resizedImage = image?.asUIImage().resizeWithWidth(width: 700) else {
+        // 이미지 크기 줄이기 (용량 축소)
+        guard let resizedImage = image.resizeWithWidth(width: 300) else {
             return }
         guard let  jpegData = resizedImage.jpegData(compressionQuality: 0.5) else {
             return
@@ -350,8 +299,6 @@ extension AuthenticationViewModel {
             if let error = error {
                 print("Failed to push image to Storage: \(error)")
                 return
-            }else{
-                print("@@@@@ 이미지 업로드 성공 @@@@@@@@")
             }
             
             ref.downloadURL { url, error in
@@ -364,9 +311,83 @@ extension AuthenticationViewModel {
                 // 이미지 url 저장
                 guard let url = url else {return}
                 self.userInfo.profileImageUrl = url.absoluteString
+                // firestore 저장
+                self.storeUserInformation()
             }
         }
     }
+    // MARK: - 사용자 정보 저장 - 위 이미지 저장함수와 순차적으로 사용
+    private func storeUserInformation() {
+        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
+            return }
+        // 해당부분 자료형 지정 필요
+        let userData = ["uid": uid,
+                        "username": userInfo.username,
+                        "weight": userInfo.weight as Any,
+                        "height": userInfo.height as Any,
+                        "age": userInfo.age as Any,
+                        "gender": userInfo.gender as Any,
+                        "isProfilePublic": userInfo.isProfilePublic,
+                        "isProSubscriber": false,
+                        "profileImageUrl": userInfo.profileImageUrl as Any,
+                        "setDailyGoal": userInfo.setDailyGoal as Any,
+                        "runningStyle": userInfo.runningStyle as Any] as [String : Any]
+        FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
+            if error != nil {
+                print("@@@@@@ error 1 @@@@@@")
+                return
+            }
+            print("success")
+        }
+    }
+    
+    // MARK: - 사용자 본인 정보 불러오기
+    func getMyInformation(){
+        
+        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
+            print("error uid")
+            return
+        }
+        FirebaseManger.shared.firestore.collection("users").document(uid).getDocument { [self] (snapshot, error) in
+            
+            if let error = error {
+                print("Error getting documents: \(error)")
+            }else{
+                guard let _ = snapshot?.description else {return}
+                let decoder =  JSONDecoder()
+                do {
+                    let data = snapshot?.data()
+                    let jsonData = try JSONSerialization.data(withJSONObject:data ?? "")
+                    self.userInfo = try decoder.decode(UserInfo.self, from: jsonData)
+                    downloadImageFromStorage(uid: userInfo.uid)
+                } catch let err {
+                    print("err: \(err)")
+                }
+                print(self.userInfo)
+            }
+        }
+    }
+    
+    func downloadImageFromStorage(uid: String) {
+        guard let profileImageUrl = self.userInfo.profileImageUrl else { 
+            print("Url 없음 - downloadImageFromStorage")
+            return
+        }
+        print("Url 있음 - ", profileImageUrl)
+        let ref = FirebaseManger.shared.storage.reference(forURL: profileImageUrl)
+//
+//        let storageRef = storage.reference(forURL: url.absoluteString)
+        ref.getData(maxSize: 1 * 1024 * 1024)  { data, error in
+            if let error = error {
+                print("Error downloading image: \(error.localizedDescription)")
+            } else {
+                // Data for "images/island.jpg" is returned
+                self.userInfo.image = UIImage(data: data!)
+            }
+        }
+    }
+    
+
 }
 
 // MARK: - 이미지 수정 부분
@@ -391,7 +412,7 @@ extension Image {
 }
 
 
-// Image -> UIImage로 변환
+// UIImage 사진 크기 축소
 extension UIImage {
     func resizeWithWidth(width: CGFloat) -> UIImage? {
         let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))

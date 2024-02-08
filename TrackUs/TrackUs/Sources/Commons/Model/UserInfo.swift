@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct UserInfo : Decodable {
+struct UserInfo : Codable {
+    // 본인 프로필사진 저장용
+    var image: UIImage?
     
     var uid: String
     var username: String
@@ -19,7 +22,7 @@ struct UserInfo : Decodable {
     var isProSubscriber: Bool
     var profileImageUrl: String?
     var setDailyGoal: Double?
-    var runningOption: String?
+    var runningStyle: String?
     
     init(){
         self.uid = ""
@@ -39,6 +42,6 @@ struct UserInfo : Decodable {
         case isProSubscriber = "isProSubscriber"
         case profileImageUrl = "profileImageUrl"
         case setDailyGoal = "setDailyGoal"
-        case runningOption = "runningOption"
+        case runningStyle = "runningStyle"
     }
 }

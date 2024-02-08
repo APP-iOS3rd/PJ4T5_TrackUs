@@ -11,8 +11,9 @@ import PhotosUI
 struct ProfilePicker: View {
     @State private var showingConfirmationDialog: Bool = false
     @State private var selectedPhoto: PhotosPickerItem? = nil
+    @State private var selectedImageData: Data? = nil
     @State private var showPicker = false
-    @Binding private var image: Image?
+    @Binding private var UIimage: UIImage?
     private let size: CGFloat
     
     // MARK: - 프로필 Picker(기본)
@@ -20,9 +21,9 @@ struct ProfilePicker: View {
     // ProfilePicker(image: $바인딩 이미지 변수<Image?> )
     
     /// 프로필 Picker(기본) - image:  Binding<Image?>
-    init(image: Binding<Image?>) {
+    init(UIimage: Binding<UIImage?>) {
         self.size = 160
-        self._image = image
+        self._UIimage = UIimage
     }
     
     // MARK: - 프로필 선택 피커(사이즈 변경)
@@ -30,9 +31,9 @@ struct ProfilePicker: View {
     // ProfilePicker(image: $바인딩 이미지 변수(Image?), size: 지름 크기)
     
     /// 프로필 선택 피커(사이즈 변경) - size = 프레임 사이즈(지름)  image:  Binding<Image?>
-    init(image: Binding<Image?>, size: CGFloat) {
+    init(UIimage: Binding<UIImage?>, size: CGFloat) {
         self.size = size
-        self._image = image
+        self._UIimage = UIimage
     }
     
     var body: some View {
@@ -40,12 +41,13 @@ struct ProfilePicker: View {
             showingConfirmationDialog.toggle()
         } label: {
             ZStack{
-                if let image = self.image {
-                    image
+                if let UIimage = self.UIimage {
+                    Image(uiImage: UIimage)
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: .fill)
                         .frame(width: size, height: size)
                         .clipShape(Circle())
+                        .shadow(radius: 1)
                 }else{
                     Image(.profileDefault)
                         .resizable()
@@ -73,16 +75,18 @@ struct ProfilePicker: View {
             } label: {
                 Text("앨범에서 사진 선택")
             }
-            if image != nil {
+            if UIimage != nil {
                 Button("기본 이미지 설정", role: .destructive) {
-                    self.image = nil
+                    self.UIimage = nil
                     self.selectedPhoto = nil
                 }
             }
         }
                              .photosPicker(isPresented: $showPicker, selection: $selectedPhoto)
                              .task(id: selectedPhoto) {
-                                 image = try? await selectedPhoto?.loadTransferable(type: Image.self)
+                                 if let data = try? await selectedPhoto?.loadTransferable(type: Data.self){
+                                     self.UIimage = UIImage(data: data)
+                                 }
                              }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileImageView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @Binding private var signUpFlow: SignUpFlow
-    @State private var image: Image?
+    @State private var image: UIImage?
     @State private var availability: Bool = false
     
     init(signUpFlow: Binding<SignUpFlow>) {
@@ -21,13 +21,14 @@ struct ProfileImageView: View {
         VStack{
             Description(title: "프로필 사진 등록", detail: "다른 러너들에게 자신을 잘 나타낼 수 있는 프로필 이미지를 설정해주세요.")
             
-            ProfilePicker(image: $image)
+            //ProfilePicker(UIImage: $image)
+            ProfilePicker(UIimage: $image)
                 .offset(y: 40)
             
             Spacer()
             
             MainButton(active: image != nil, buttonText: "다음으로") {
-                authViewModel.persistImageToStorage(image: image)
+                authViewModel.userInfo.image = image
                 signUpFlow = .physical
             }
         }

@@ -21,12 +21,14 @@ struct MyProfileView: View {
             ScrollView{
                 // MARK: - 프로필 헤더
                 VStack {
-                    if let profileImageUrl = authViewModel.userInfo.profileImageUrl {
-                        FirebaseProfileImageView(imageURL: profileImageUrl)
+                    if let image = authViewModel.userInfo.image{
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
                             .frame(width: 116, height: 116)
-                            .padding(.vertical, 12)
                             .clipShape(Circle())
-                    } else {
+                            .shadow(radius: 1)
+                    }else {
                         Image(.profileDefault)
                             .resizable()
                             .frame(width: 116, height: 116)
@@ -120,7 +122,6 @@ struct MyProfileView: View {
                     }
                 } content: {
                     Button {
-                        authViewModel.getMyInformation()
                         router.present(fullScreenCover: .payment)
                     } label: {
                         MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
@@ -140,7 +141,7 @@ struct MyProfileView: View {
             }
         }
         .onAppear {
-            authViewModel.getMyInformation()
+            //authViewModel.getMyInformation()
         }
     }
 }

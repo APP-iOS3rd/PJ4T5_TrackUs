@@ -7,33 +7,37 @@
 
 import SwiftUI
 
-enum RunningOption: String, CaseIterable, Identifiable {
+enum RunningStyle: String, CaseIterable, Identifiable {
     case record = "기록갱신", diet = "다이어트"
     var id: Self { self }
 }
 
 struct ProfileEditView: View {
-    @State private var selectedImage: Image?
-    @State private var nickname: String = ""
-    @State private var height: Int?
-    @State private var weight: Int?
-    @State private var runningOption: String = ""
-    @State private var setDailyGoal: Double? = 0.0
-    @State private var goalMinValue: Double? = 0.0
-    @State private var goalMaxValue: Double? = 40.0
-    @State private var isProfilePublic: Bool = false
-    @State private var isProfileSaved: Bool = false
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @Environment(\.presentationMode) var presentationMode
+    @State private var selectedImage: UIImage?
+    @State private var nickname: String = ""
+    @State private var height: Double?
+    @State private var weight: Double?
+    @State private var runningStyle: String? = ""
+    @State private var setDailyGoal: Double?
+    @State private var goalMinValue: Double?
+    @State private var goalMaxValue: Double?
+    @State private var isProfilePublic: Bool = false
+    @State private var isProfileSaved: Bool = false
+    
+    
+    @State private var heightPickerPresented: Bool = false
+    @State private var weightPickerPresented: Bool = false
+    @State private var runningStylePickerPresented: Bool = false
+    @State private var setDailyGoalPickerPresented: Bool = false
     
     var body: some View {
         VStack {
             ScrollView {
                 VStack {
                     // MARK: - 프로필 헤더
-                    ProfilePicker(image: $selectedImage, size: 116)
-                        .padding(.vertical, 12)
-                    
+                    ProfilePicker(UIimage: $selectedImage, size: 116)
                     // MARK: - 프로필 정보
                     VStack(alignment: .leading, spacing: 32) {
                         // 닉네임
@@ -62,28 +66,14 @@ struct ProfileEditView: View {
                                 Text("신장")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $height, label: Text("신장")) {
-                                    ForEach(120..<250, id: \.self) {
-                                        Text("\($0) cm")
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                }
-                                .accentColor(.gray1)
-                                .padding(.horizontal, -8)
+                                pickerButton(pickerPresented: $heightPickerPresented, value: height, unit: "cm")
                             }
                             
                             HStack {
                                 Text("체중")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $weight, label: Text("신장")) {
-                                    ForEach(30..<200, id: \.self) {
-                                        Text("\($0) kg")
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                }
-                                .accentColor(.gray1)
-                                .padding(.horizontal, -8)
+                                pickerButton(pickerPresented: $weightPickerPresented, value: weight, unit: "kg")
                             }
                         }
                         .padding(.vertical, 14)
@@ -101,7 +91,8 @@ struct ProfileEditView: View {
                                 Text("러닝스타일")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $runningOption, label: Text("러닝 스타일")) {
+                                //pickerButton(pickerPresented: $runningStylePickerPresented, value: runningStyle, unit: "kg")
+                                Picker(selection: $runningStyle, label: Text("러닝 스타일")) {
                                     Text("기록갱신").tag("기록갱신")
                                     Text("다이어트").tag("다이어트")
                                 }
@@ -113,14 +104,15 @@ struct ProfileEditView: View {
                                 Text("일일목표")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                Picker(selection: $setDailyGoal, label: Text("일일목표")) {
-                                    ForEach(Array(stride(from: 0.0, through: 40.0, by: 0.1)), id: \.self) {
-                                        Text("\($0, specifier: "%.1f") km")
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                }
-                                .padding(.horizontal, -8)
-                                .accentColor(.gray1)
+                                pickerButton(pickerPresented: $setDailyGoalPickerPresented, value: setDailyGoal, unit: "km", format: "%.1f")
+//                                Picker(selection: $setDailyGoal, label: Text("일일목표")) {
+//                                    ForEach(Array(stride(from: 0.0, through: 40.0, by: 0.1)), id: \.self) {
+//                                        Text("\($0, specifier: "%.1f") km")
+//                                            .multilineTextAlignment(.leading)
+//                                    }
+//                                }
+//                                .padding(.horizontal, -8)
+//                                .accentColor(.gray1)
                             }
                             
                         }
@@ -161,27 +153,74 @@ struct ProfileEditView: View {
             hideKeyboard()
         }
         .onAppear {
-            authViewModel.getMyInformation()
+            //authViewModel.getMyInformation()
+            selectedImage = authViewModel.userInfo.image
             nickname = authViewModel.userInfo.username
-            height = authViewModel.userInfo.height ?? 120
-            weight = authViewModel.userInfo.weight ?? 30
-            runningOption = authViewModel.userInfo.runningOption ?? "-"
-            setDailyGoal = authViewModel.userInfo.setDailyGoal ?? 0.0
+            height = authViewModel.userInfo.height.map { Double($0) }
+            weight = authViewModel.userInfo.weight.map { Double($0) }
+            runningStyle = authViewModel.userInfo.runningStyle
+            setDailyGoal = authViewModel.userInfo.setDailyGoal
             isProfilePublic = authViewModel.userInfo.isProfilePublic
+        }
+        .sheet(isPresented: $heightPickerPresented) {
+            PickerSheet(selectedValueBinding: $height, pickerType: .height, startingValue: height ?? 160)
+        }
+        .sheet(isPresented: $weightPickerPresented) {
+            PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 60)
+        }
+        .sheet(isPresented: $runningStylePickerPresented) {
+            PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 1)
+        }
+        .sheet(isPresented: $setDailyGoalPickerPresented) {
+            PickerSheet(selectedValueBinding: $setDailyGoal, pickerType: .dailyGoal, startingValue: setDailyGoal ?? 1)
         }
         
     }
     
     
     func modifyButtonTapped() {
+        authViewModel.userInfo.image = selectedImage
         authViewModel.userInfo.username = nickname
-        authViewModel.userInfo.height = height
-        authViewModel.userInfo.weight = weight
-        authViewModel.userInfo.runningOption = runningOption
+        authViewModel.userInfo.height = height.map { Int($0) }
+        authViewModel.userInfo.weight = weight.map { Int($0) }
+        authViewModel.userInfo.runningStyle = runningStyle
         authViewModel.userInfo.setDailyGoal = setDailyGoal
         authViewModel.userInfo.isProfilePublic = isProfilePublic
-        authViewModel.storeUserInformation()
+        authViewModel.storeUserInfoInFirebase()
         isProfileSaved = true
         presentationMode.wrappedValue.dismiss()
+    }
+}
+
+struct pickerButton: View {
+    @Binding private var pickerPresented: Bool
+    private var value: Double?
+    private var unit: String
+    private var format: String
+    
+    init(pickerPresented: Binding<Bool>, value: Double? = nil, unit: String, format: String = "%.0f") {
+        self._pickerPresented = pickerPresented
+        self.value = value
+        self.unit = unit
+        self.format = format
+    }
+    
+    var body: some View {
+        Button(action: {
+            pickerPresented.toggle()
+        }, label: {
+            HStack{
+                if let value = value{
+                    Text("\(String(format: format, value))\(unit)")
+                }else {
+                    Text("-")
+                }
+                Image(.pickerLogo)
+                    .resizable()
+                    .frame(width: 9,height: 18)
+                    .scaledToFit()
+            }
+            .customFontStyle(.gray1_R16)
+        })
     }
 }

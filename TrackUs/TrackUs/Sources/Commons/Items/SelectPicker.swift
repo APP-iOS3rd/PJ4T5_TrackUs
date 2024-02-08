@@ -61,7 +61,7 @@ struct PickerTypeInfo {
             self.unit = "kg"
             self.format = "%.0f"
             self.rangeValues = stride(from: 30, through: 200, by: 1).map { $0 }
-            self.startingValue = 50
+            self.startingValue = 60
         case .age:
             self.title = "나이대"
             self.unit = "대"

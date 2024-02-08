@@ -48,7 +48,7 @@ struct DailyGoalView: View {
                 MainButton(active: goal != nil, buttonText: "다음으로") {
                     authViewModel.userInfo.setDailyGoal = goal
                     authViewModel.userInfo.isProfilePublic = isProfilePublic
-                    authViewModel.storeUserInformation()
+                    authViewModel.storeUserInfoInFirebase()
                     authViewModel.authenticationState = .authenticated
                     router.popToRoot()
                 }
