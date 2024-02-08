@@ -212,15 +212,16 @@ struct pickerButton: View {
             HStack{
                 if let value = value{
                     Text("\(String(format: format, value))\(unit)")
+                        .customFontStyle(.gray1_R16)
                 }else {
-                    Text("-")
+                    Text("정보 없음")
+                        .customFontStyle(.gray2_L12)
                 }
                 Image(.pickerLogo)
                     .resizable()
                     .frame(width: 9,height: 18)
                     .scaledToFit()
             }
-            .customFontStyle(.gray1_R16)
         })
     }
 }

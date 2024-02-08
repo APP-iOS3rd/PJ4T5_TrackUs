@@ -97,7 +97,7 @@ struct SignUpView: View {
             // 테스트용
             router.popToRoot()
             authViewModel.authenticationState = .authenticated
-            authViewModel.storeUserInformation()
+            authViewModel.storeUserInfoInFirebase()
         }
     }
     

@@ -26,6 +26,7 @@ struct MyProfileView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 116, height: 116)
+                            .padding(.vertical, 12)
                             .clipShape(Circle())
                             .shadow(radius: 1)
                     }else {

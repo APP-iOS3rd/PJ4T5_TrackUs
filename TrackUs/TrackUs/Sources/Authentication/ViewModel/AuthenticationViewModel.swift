@@ -23,7 +23,7 @@ enum AuthenticationState {
 }
 
 enum AuthenticationError: Error {
-  case tokenError(message: String)
+    case tokenError(message: String)
 }
 
 class FirebaseManger: NSObject {
@@ -275,7 +275,7 @@ extension AuthenticationViewModel {
     func storeUserInfoInFirebase() {
         // 이미지 유무 확인 후 저장
         guard let image = self.userInfo.image else {
-            userInfo.profileImageUrl = ""
+            self.userInfo.profileImageUrl = nil
             self.storeUserInformation()
             return
         }
