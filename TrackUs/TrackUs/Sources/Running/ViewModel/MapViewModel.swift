@@ -9,6 +9,7 @@ import SwiftUI
 import MapboxMaps
 import Combine
 
+
 class MapViewModel: ObservableObject {
     let locationManager = LocationManager.shared
     private var locationTrackingCancellation: AnyCancelable?
@@ -62,7 +63,8 @@ class MapViewModel: ObservableObject {
             
             // 좌표가 2개이상 존재하는경우 이동거리, 소모 칼로리 업데이트
             if self.lineCoordinates.count > 1 {
-                self.distance += self.moveDistance(coord1: self.lineCoordinates[self.lineCoordinates.count - 2], coord2: self.self.lineCoordinates[self.lineCoordinates.count - 1])
+                let coordinateCount = self.lineCoordinates.count
+                self.distance += self.lineAnnotation.lineString.distance(from: self.lineCoordinates[coordinateCount - 2], to: self.lineCoordinates[coordinateCount - 1]) ?? 0
                 self.calorie = self.calorieBurned()
             }
             
@@ -79,25 +81,6 @@ class MapViewModel: ObservableObject {
         self.locationTrackingCancellation = nil
     }
     
-    // 위도, 경도를 이용하여 거리계산 함수(임시)
-    func moveDistance(coord1: CLLocationCoordinate2D, coord2: CLLocationCoordinate2D) -> Double {
-        let R = 6371000.0
-        
-        let lat1 = coord1.latitude.radians
-        let lon1 = coord1.longitude.radians
-        let lat2 = coord2.latitude.radians
-        let lon2 = coord2.longitude.radians
-        
-        let dLat = lat2 - lat1
-        let dLon = lon2 - lon1
-        
-        let a = sin(dLat / 2.0) * sin(dLat / 2.0) + cos(lat1) * cos(lat2) * sin(dLon / 2.0) * sin(dLon / 2.0)
-        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        
-        let distanceInMeters = R * c
-        
-        return distanceInMeters
-    }
     
     // 칼로리 계산(임시)
     func calorieBurned() -> Double {
