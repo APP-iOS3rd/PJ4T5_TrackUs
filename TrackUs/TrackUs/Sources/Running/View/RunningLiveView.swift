@@ -10,14 +10,15 @@ import SwiftUI
 struct RunningLiveView: View {
     @EnvironmentObject var router: Router
     @StateObject private var countVM = CountViewModel()
+    @StateObject private var mapViewModel = MapViewModel()
     @GestureState private var press = false
     @State private var isPause = false
     @State private var isShowingMessage = false
     
     var body: some View {
         ZStack {
-            LiveTrackingMapView()
-            
+            MapViewRepresentable(mapViewModel: mapViewModel)
+                
             Color.black
                 .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)
             
@@ -87,14 +88,18 @@ struct RunningLiveView: View {
                                 Text("경과시간")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("00:20")
+                                Text("\(mapViewModel.elapsedTime.asString(style: .positional))")
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
                             .frame(width: 100, height: 100)
                             .background(.white)
                             .clipShape(Circle())
+                            
                         }
+                    }
+                    .onReceive(mapViewModel.timer) { _ in
+                        self.mapViewModel.elapsedTime += 1.0
                     }
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
@@ -197,6 +202,7 @@ struct RunningLiveView: View {
         withAnimation {
             isPause = true
         }
+        mapViewModel.stopTracking()
     }
     
     func playButtonTapped() {
@@ -204,18 +210,21 @@ struct RunningLiveView: View {
             isPause = false
             isShowingMessage = false
         }
+        mapViewModel.startTracking()
     }
     
     func stopButtonTapped() {
         isShowingMessage = true
+        
     }
     
     func stopButtonLongPressed(value: Bool) {
+        mapViewModel.stopTracking()
         HapticManager.instance.impact(style: .heavy)
         router.push(.runningResult)
     }
 }
 
-#Preview {
-    RunningLiveView()
-}
+//#Preview {
+//    RunningLiveView()
+//}
