@@ -46,7 +46,6 @@ struct MapViewRepresentable: UIViewControllerRepresentable {
             mapViewModel.setupMapView(frame: view.bounds)
             self.view.addSubview(mapViewModel.mapView)
             mapViewModel.mapView.gestures.delegate = self // gesture delegate
-            mapViewModel.startTracking()
         }
         
         

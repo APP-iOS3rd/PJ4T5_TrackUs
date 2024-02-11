@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import  MapboxMaps
 
 struct RunningLiveView: View {
     @EnvironmentObject var router: Router
@@ -15,10 +16,11 @@ struct RunningLiveView: View {
     @State private var isPause = false
     @State private var isShowingMessage = false
     
+    
     var body: some View {
         ZStack {
             MapViewRepresentable(mapViewModel: mapViewModel)
-                
+            
             Color.black
                 .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)
             
@@ -44,7 +46,7 @@ struct RunningLiveView: View {
                             Text("현재까지 거리")
                                 .customFontStyle(.gray1_M16)
                             Spacer()
-                            Text("0.24km/12km")
+                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/0km")
                                 .customFontStyle(.gray1_B20)
                                 .italic()
                         }
@@ -58,7 +60,7 @@ struct RunningLiveView: View {
                                 Text("소모 칼로리")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("112")
+                                Text(String(format: "%.0f", mapViewModel.calorie))
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
@@ -100,6 +102,9 @@ struct RunningLiveView: View {
                     }
                     .onReceive(mapViewModel.timer) { _ in
                         self.mapViewModel.elapsedTime += 1.0
+                    }
+                    .onAppear {
+                        self.mapViewModel.startTracking()
                     }
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
