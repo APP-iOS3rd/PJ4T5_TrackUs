@@ -10,6 +10,12 @@
 		610F881F2B74CF0300FB12A1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 610F881E2B74CF0300FB12A1 /* GoogleService-Info.plist */; };
 		610F88222B74D01E00FB12A1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88212B74D01E00FB12A1 /* NetworkManager.swift */; };
 		610F88242B74D02900FB12A1 /* NetworkErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88232B74D02900FB12A1 /* NetworkErrorView.swift */; };
+		610F88262B775F3D00FB12A1 /* MyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88252B775F3D00FB12A1 /* MyReportView.swift */; };
+		610F88282B775F5400FB12A1 /* MyRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88272B775F5400FB12A1 /* MyRecordView.swift */; };
+		610F882A2B77727900FB12A1 /* CircleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88292B77727900FB12A1 /* CircleTabView.swift */; };
+		610F882C2B77A44100FB12A1 /* AgeGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F882B2B77A44000FB12A1 /* AgeGraphView.swift */; };
+		610F882E2B77AC1800FB12A1 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */; };
+		610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F882F2B77BD6300FB12A1 /* BarGraphView.swift */; };
 		820330D62B700FAC00CB97F7 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 820330D52B700FAC00CB97F7 /* PopupView */; };
 		820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820330D72B70127800CB97F7 /* SettingPopup.swift */; };
 		821CD24D2B72C82900CE6D42 /* PreventionGestureModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */; };
@@ -147,6 +153,12 @@
 		610F881E2B74CF0300FB12A1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		610F88212B74D01E00FB12A1 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		610F88232B74D02900FB12A1 /* NetworkErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorView.swift; sourceTree = "<group>"; };
+		610F88252B775F3D00FB12A1 /* MyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReportView.swift; sourceTree = "<group>"; };
+		610F88272B775F5400FB12A1 /* MyRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRecordView.swift; sourceTree = "<group>"; };
+		610F88292B77727900FB12A1 /* CircleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTabView.swift; sourceTree = "<group>"; };
+		610F882B2B77A44000FB12A1 /* AgeGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeGraphView.swift; sourceTree = "<group>"; };
+		610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
+		610F882F2B77BD6300FB12A1 /* BarGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphView.swift; sourceTree = "<group>"; };
 		6184278E2B6B7AE100C10E99 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		820330D72B70127800CB97F7 /* SettingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPopup.swift; sourceTree = "<group>"; };
 		821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreventionGestureModifier.swift; sourceTree = "<group>"; };
@@ -315,6 +327,12 @@
 			isa = PBXGroup;
 			children = (
 				823B9ACF2B6807BF00C9F772 /* ReportView.swift */,
+				610F88252B775F3D00FB12A1 /* MyReportView.swift */,
+				610F88272B775F5400FB12A1 /* MyRecordView.swift */,
+				610F88292B77727900FB12A1 /* CircleTabView.swift */,
+				610F882B2B77A44000FB12A1 /* AgeGraphView.swift */,
+				610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */,
+				610F882F2B77BD6300FB12A1 /* BarGraphView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -794,6 +812,7 @@
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
 				8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
+				610F882E2B77AC1800FB12A1 /* HorizontalGraph.swift in Sources */,
 				98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */,
 				823B9AD02B6807BF00C9F772 /* ReportView.swift in Sources */,
 				82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */,
@@ -802,10 +821,13 @@
 				823B9AE22B6818DB00C9F772 /* Router.swift in Sources */,
 				82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */,
 				82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */,
+				610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */,
 				98F1C2FC2B6A242B009382B1 /* Description.swift in Sources */,
+				610F882C2B77A44100FB12A1 /* AgeGraphView.swift in Sources */,
 				FE90EECE2B6FCEB700A08E23 /* RunningLiveView.swift in Sources */,
 				98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
+				610F882A2B77727900FB12A1 /* CircleTabView.swift in Sources */,
 				820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */,
 				FE71D0402B6B9C9600F391AA /* ChattingView.swift in Sources */,
 				98F1C2F02B6A2342009382B1 /* NickNameView.swift in Sources */,
@@ -819,6 +841,7 @@
 				610F88242B74D02900FB12A1 /* NetworkErrorView.swift in Sources */,
 				821CD24F2B72C8A600CE6D42 /* View+Gesture.swift in Sources */,
 				82AB28B72B6B512F00D7734D /* WebView.swift in Sources */,
+				610F88282B775F5400FB12A1 /* MyRecordView.swift in Sources */,
 				FE71D03E2B6B9C8E00F391AA /* RecruitmentViewModel.swift in Sources */,
 				984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */,
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
@@ -836,6 +859,7 @@
 				98F1C2FA2B6A23BC009382B1 /* DailyGoalView.swift in Sources */,
 				823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */,
 				82AB28C12B6B5B6600D7734D /* TeamIntroView.swift in Sources */,
+				610F88262B775F3D00FB12A1 /* MyReportView.swift in Sources */,
 				963AE42B2B6A445800E98BF4 /* ProfileEditView.swift in Sources */,
 				824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
