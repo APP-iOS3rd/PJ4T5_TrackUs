@@ -238,6 +238,7 @@ struct RunningLiveView: View {
     
     func stopButtonLongPressed(value: Bool) {
         mapViewModel.stopTracking()
+        mapViewModel.uploadExcerciseData()
         HapticManager.instance.impact(style: .heavy)
         router.push(.runningResult)
     }

@@ -8,13 +8,14 @@
 import SwiftUI
 import MapboxMaps
 import Combine
+import Firebase
 
 
 class MapViewModel: ObservableObject {
     private let locationManager = LocationManager.shared
     private let authViewModel = AuthenticationViewModel.shared
     private var locationTrackingCancellation: AnyCancelable?
-    var lineCoordinates: [CLLocationCoordinate2D] = []
+    var lineCoordinates = [CLLocationCoordinate2D]()
     private var lineAnnotation: PolylineAnnotation!
     private var lineAnnotationManager: PolylineAnnotationManager!
     private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
@@ -97,4 +98,23 @@ class MapViewModel: ObservableObject {
         self.pace = (self.elapsedTime / 60) / (self.distance / 1000.0)
     }
     
+    // 운동정보 추가(DB)
+    @MainActor 
+    func uploadExcerciseData() {
+        let uid = authViewModel.userInfo.uid
+        
+        let data: [String : Any] = [
+            "distance":distance,
+            "pace": pace,
+            "calorie": calorie,
+            "elapsedTime": elapsedTime,
+            "coordinates":lineCoordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+            "timestamp": Timestamp(date: Date())
+        ]
+        Constants.FirebasePath.RUNNING_RECORDS.document(uid).collection("record").addDocument(data: data) { error in
+            if let error = error {
+                print("DEBUG: Failed upload data: \(error.localizedDescription)")
+            }
+        }
+    }
 }
