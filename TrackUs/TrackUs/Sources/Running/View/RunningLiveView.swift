@@ -16,6 +16,13 @@ struct RunningLiveView: View {
     @State private var isPause = false
     @State private var isShowingMessage = false
     
+    var paceMinutes: Int {
+        Int(mapViewModel.pace)
+    }
+    
+    var paceSeconds: Int {
+        Int((mapViewModel.pace - Double(paceMinutes)) * 60)
+    }
     
     var body: some View {
         ZStack {
@@ -40,7 +47,7 @@ struct RunningLiveView: View {
                 }
                 else {
                     // 운동상태
-                    VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Image(.shose)
                             Text("현재까지 거리")
@@ -60,7 +67,7 @@ struct RunningLiveView: View {
                                 Text("소모 칼로리")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("")
+                                Text(String(format: "%.1f", mapViewModel.calorie))
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
@@ -75,7 +82,7 @@ struct RunningLiveView: View {
                                 Text("페이스")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("-'--''")
+                                Text(paceMinutes == 0 && paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", paceMinutes, paceSeconds))
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
@@ -106,6 +113,9 @@ struct RunningLiveView: View {
                     .onAppear {
                         self.mapViewModel.startTracking()
                     }
+                    .onChange(of: mapViewModel.distance, perform: { value in
+                        mapViewModel.updateExcerciseData()
+                    })
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                     
@@ -197,6 +207,9 @@ struct RunningLiveView: View {
                     .padding(.bottom, UIApplication.shared.statusBarFrame.size.height + 20)
                 }
             }
+            .onChange(of: mapViewModel.distance, perform: { value in
+                
+            })
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.all)

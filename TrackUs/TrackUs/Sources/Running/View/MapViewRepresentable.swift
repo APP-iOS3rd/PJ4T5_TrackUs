@@ -27,13 +27,10 @@ struct MapViewRepresentable: UIViewControllerRepresentable {
     
     class Coordinator: UIViewController, GestureManagerDelegate {
         let mapViewModel: MapViewModel
-        let locationManager = LocationManager.shared
-        internal var mapView: MapView!
         private var locationTrackingCancellation: AnyCancelable?
         
         init(mapViewModel: MapViewModel) {
             self.mapViewModel = mapViewModel
-            self.mapView = mapViewModel.mapView
             super.init(nibName: nil, bundle: nil)
         }
         
