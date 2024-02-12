@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import  MapboxMaps
+import MapboxMaps
 
 struct RunningLiveView: View {
     @EnvironmentObject var router: Router
@@ -60,7 +60,7 @@ struct RunningLiveView: View {
                                 Text("소모 칼로리")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text(String(format: "%.0f", mapViewModel.calorie))
+                                Text("")
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }

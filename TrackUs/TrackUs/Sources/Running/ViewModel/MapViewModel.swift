@@ -22,8 +22,6 @@ class MapViewModel: ObservableObject {
     @Published var timer = Timer.publish(every: 1, on: .main, in: .default)
     @Published var timerHandler: Cancellable?
     @Published var distance: Double = 0
-    @Published var calorie: Double = 0
-    @Published var pace = 0
     
     // 맵뷰 초기설정
     func setupMapView(frame: CGRect) {
@@ -65,7 +63,6 @@ class MapViewModel: ObservableObject {
             if self.lineCoordinates.count > 1 {
                 let coordinateCount = self.lineCoordinates.count
                 self.distance += self.lineAnnotation.lineString.distance(from: self.lineCoordinates[coordinateCount - 2], to: self.lineCoordinates[coordinateCount - 1]) ?? 0
-                self.calorie = self.calorieBurned()
             }
             
             mapView.camera.ease(
@@ -79,11 +76,5 @@ class MapViewModel: ObservableObject {
     func stopTracking() {
         timerHandler?.cancel()
         self.locationTrackingCancellation = nil
-    }
-    
-    
-    // 칼로리 계산(임시)
-    func calorieBurned() -> Double {
-        return 70 * self.distance / 1000 * 0.75
     }
 }

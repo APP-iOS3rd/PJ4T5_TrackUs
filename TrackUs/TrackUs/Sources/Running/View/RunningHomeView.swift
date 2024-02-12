@@ -11,6 +11,7 @@ import CoreLocation
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @State private var isOpen: Bool = false
     @State private var maxHeight: CGFloat = 300
     @State private var showingPopup: Bool = false
@@ -45,13 +46,23 @@ struct RunningHomeView: View {
                     // MARK: - 프로필 & 러닝 시작
                     VStack {
                         HStack {
-                            Image("ProfileDefault")
-                                .resizable()
-                                .frame(width: 48, height: 48)
-                                .clipShape(Circle())
+                            AsyncImage(url: URL(string: authViewModel.userInfo.profileImageUrl ?? "")) { phase in
+                                if let image = phase.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } else if phase.error != nil {
+                                    Image("ProfileDefault")
+                                        .scaledToFill()
+                                } else {
+                                    ProgressView()
+                                }
+                            }
+                            .frame(width: 48, height: 48)
+                            .clipShape(Circle())
                             
                             VStack(alignment: .leading) {
-                                Text("TrackUs님!")
+                                Text("\(authViewModel.userInfo.username)님!")
                                     .customFontStyle(.gray1_B16)
                                 
                                 Text(cheeringPhrase)
