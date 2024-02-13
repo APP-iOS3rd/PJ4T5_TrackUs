@@ -29,6 +29,8 @@
 		823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE92B68264500C9F772 /* NavigationBackButton.swift */; };
 		824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */; };
 		82494DCF2B7A87F900FB3EB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82494DCE2B7A87F900FB3EB8 /* GoogleService-Info.plist */; };
+		82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */; };
+		82494DDC2B7B0EA100FB3EB8 /* RunningData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */; };
 		824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8972B6FB92200B15B89 /* RunningHomeView.swift */; };
 		824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8992B6FB95100B15B89 /* BottomSheet.swift */; };
 		8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */; };
@@ -161,6 +163,8 @@
 		823B9AE92B68264500C9F772 /* NavigationBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackButton.swift; sourceTree = "<group>"; };
 		824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxBoxMapView.swift; sourceTree = "<group>"; };
 		82494DCE2B7A87F900FB3EB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
+		82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningData.swift; sourceTree = "<group>"; };
 		824DA8972B6FB92200B15B89 /* RunningHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningHomeView.swift; sourceTree = "<group>"; };
 		824DA8992B6FB95100B15B89 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
@@ -320,6 +324,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		82494DD62B7AD66900FB3EB8 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		82ECF0952B679E05002CFD00 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +360,7 @@
 		82ECF0972B679E2F002CFD00 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				82494DD62B7AD66900FB3EB8 /* API */,
 				984B3A442B73ADA500C9831C /* Model */,
 				823B9AE02B6818CA00C9F772 /* ViewModel */,
 				82ECF0B82B67A635002CFD00 /* Modifiers */,
@@ -567,6 +580,7 @@
 			isa = PBXGroup;
 			children = (
 				984B3A452B73ADDD00C9831C /* UserInfo.swift */,
+				82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -774,6 +788,7 @@
 				987B90BE2B69210B0099C7DA /* Font+.swift in Sources */,
 				989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */,
 				82FEE3DA2B74C3F300D85F89 /* MapViewRepresentable.swift in Sources */,
+				82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */,
 				822AE5F02B704AA500D90264 /* PreparingService.swift in Sources */,
 				82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */,
 				82AB28B52B6B4F6B00D7734D /* NavigationText.swift in Sources */,
@@ -784,6 +799,7 @@
 				963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */,
 				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
+				82494DDC2B7B0EA100FB3EB8 /* RunningData.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,

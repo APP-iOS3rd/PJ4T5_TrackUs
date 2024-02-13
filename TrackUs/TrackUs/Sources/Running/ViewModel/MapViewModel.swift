@@ -10,16 +10,18 @@ import MapboxMaps
 import Combine
 import Firebase
 
+typealias FirestoreCompletion = ((Error?) -> Void)?
 
-class MapViewModel: ObservableObject {
+class MapViewModel: ObservableObject, Identifiable {
+    var mapView: MapView!
+    var lineCoordinates = [CLLocationCoordinate2D]()
     private let locationManager = LocationManager.shared
     private let authViewModel = AuthenticationViewModel.shared
     private var locationTrackingCancellation: AnyCancelable?
-    var lineCoordinates = [CLLocationCoordinate2D]()
+    private var snapshotter: Snapshotter!
     private var lineAnnotation: PolylineAnnotation!
     private var lineAnnotationManager: PolylineAnnotationManager!
     private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
-    @Published var mapView: MapView!
     @Published var timer = Timer.publish(every: 1, on: .main, in: .default)
     @Published var timerHandler: Cancellable?
     @Published var distance = 0.0
@@ -30,6 +32,7 @@ class MapViewModel: ObservableObject {
     // 맵뷰 초기설정
     func setupMapView(frame: CGRect) {
         // 초기설정
+        locationManager.getCurrentLocation()
         guard let coordinate = locationManager.currentLocation?.coordinate else { return }
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude), zoom: 17)
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
@@ -45,7 +48,14 @@ class MapViewModel: ObservableObject {
         self.lineAnnotationManager = self.mapView.annotations.makePolylineAnnotationManager()
         self.lineAnnotationManager.annotations = [self.lineAnnotation]
         
-        lineCoordinates.append(coordinate)
+        // 스냅샷 설정
+        let snapshotterOption = MapSnapshotOptions(size: CGSize(width: frame.width, height: frame.height), pixelRatio: UIScreen.main.scale)
+        let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.mapboxMap.cameraState)
+        self.snapshotter = Snapshotter(options: snapshotterOption)
+        self.snapshotter.setCamera(to: snapshotterCameraOptions)
+        self.snapshotter.styleURI = .light
+        
+        self.lineCoordinates.append(coordinate)
     }
     
     // 기록시작
@@ -78,7 +88,6 @@ class MapViewModel: ObservableObject {
         })
     }
     
-    
     // 기록중지
     func stopTracking() {
         timerHandler?.cancel()
@@ -99,22 +108,72 @@ class MapViewModel: ObservableObject {
     }
     
     // 운동정보 추가(DB)
-    @MainActor 
+    // TODO: - 썸네일용 사진 업로드 기능(사진크기 조절, 카메라 위치를 중앙으로 맞추기)
+    @MainActor
     func uploadExcerciseData() {
-        let uid = authViewModel.userInfo.uid
+        self.stopTracking()
+        let uid = self.authViewModel.userInfo.uid
+        // 경로가 여러개 존재하는 경우 카메라 위치 변경
+        if let updatedCenterPosition = self.calculateCenterCoordinate(for: self.lineCoordinates) {
+            self.snapshotter.setCamera(to: CameraOptions(center: updatedCenterPosition))
+        }
         
-        let data: [String : Any] = [
-            "distance":distance,
-            "pace": pace,
-            "calorie": calorie,
-            "elapsedTime": elapsedTime,
-            "coordinates":lineCoordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
-            "timestamp": Timestamp(date: Date())
-        ]
-        Constants.FirebasePath.RUNNING_RECORDS.document(uid).collection("record").addDocument(data: data) { error in
-            if let error = error {
-                print("DEBUG: Failed upload data: \(error.localizedDescription)")
+        // 스크린샷 생성
+        snapshotter.start {(overlayHandler) in
+            let context = overlayHandler.context
+            if self.lineCoordinates.count > 1 {
+                self.lineCoordinates.enumerated().forEach { data in
+                    guard data.offset > 0 else {
+                        context.move(to: overlayHandler.pointForCoordinate(data.element))
+                        return
+                    }
+                    context.addLine(to: overlayHandler.pointForCoordinate(data.element))
+                    
+                }
+            }
+            
+            context.setStrokeColor(UIColor.main.cgColor)
+            context.setLineWidth(5.0)
+            context.setLineCap(.round)
+            context.strokePath()
+            
+        } completion: {[weak self] result in
+            guard case let .success(image) = result, let `self` = self else {
+                if case .failure(_) = result {}
+                return
+            }
+            ImageUploader.uploadImage(image: image, type: .map) { url in
+                let data: [String : Any] = [
+                    "distance": self.distance,
+                    "pace": self.pace,
+                    "calorie": self.calorie,
+                    "elapsedTime": self.elapsedTime,
+                    "coordinates": self.lineCoordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "routeImageUrl": url,
+                    "timestamp": Timestamp(date: Date())
+                ]
+                
+                Constants.FirebasePath.RUNNING_RECORDS.document(uid).collection("record").addDocument(data: data) { error in
+                    if let error = error {
+                        print("DEBUG: Failed upload data: \(error.localizedDescription)")
+                    }
+                }
             }
         }
+    }
+    
+    func calculateCenterCoordinate(for coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
+        guard !coordinates.isEmpty else {
+            return nil
+        }
+        
+        // 위도와 경도의 평균값 계산
+        let totalLatitude = coordinates.map { $0.latitude }.reduce(0, +)
+        let totalLongitude = coordinates.map { $0.longitude }.reduce(0, +)
+        
+        let averageLatitude = totalLatitude / Double(coordinates.count)
+        let averageLongitude = totalLongitude / Double(coordinates.count)
+        
+        return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
 }

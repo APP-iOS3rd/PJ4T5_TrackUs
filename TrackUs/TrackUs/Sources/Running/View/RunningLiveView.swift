@@ -26,7 +26,7 @@ struct RunningLiveView: View {
     
     var body: some View {
         ZStack {
-            MapViewRepresentable(mapViewModel: mapViewModel)
+            TrackingMapView(mapViewModel: mapViewModel)
             
             Color.black
                 .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)
@@ -207,16 +207,13 @@ struct RunningLiveView: View {
                     .padding(.bottom, UIApplication.shared.statusBarFrame.size.height + 20)
                 }
             }
-            .onChange(of: mapViewModel.distance, perform: { value in
-                
-            })
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.all)
         .preventGesture()
     }
     
-    func pasueButtonTapped() {
+    func pasueButtonTapped()  {
         withAnimation {
             isPause = true
         }
@@ -233,14 +230,12 @@ struct RunningLiveView: View {
     
     func stopButtonTapped() {
         isShowingMessage = true
-        
     }
     
     func stopButtonLongPressed(value: Bool) {
-        mapViewModel.stopTracking()
         mapViewModel.uploadExcerciseData()
         HapticManager.instance.impact(style: .heavy)
-        router.push(.runningResult)
+        router.push(.runningResult(runningData: RunningData(calorie: mapViewModel.calorie, coordinates: mapViewModel.lineCoordinates, distance: mapViewModel.distance, elapsedTime: mapViewModel.elapsedTime, pace: mapViewModel.pace)))
     }
 }
 
