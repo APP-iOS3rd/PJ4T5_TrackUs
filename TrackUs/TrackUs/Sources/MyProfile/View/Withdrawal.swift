@@ -79,6 +79,7 @@ struct Withdrawal: View {
             }
         }
     }
+    
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
