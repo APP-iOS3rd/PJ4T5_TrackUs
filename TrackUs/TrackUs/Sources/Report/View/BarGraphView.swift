@@ -11,6 +11,7 @@ import Charts
 struct BarGraphView: View {
     @State var selectedBarIndex: Int?
     @State var avg = 20
+    @Binding var selectedAge : AvgAge
     
     let monthAvg = [13.5,10.2,7.8,9,0,3.0,15.0,11,12,10,11,13]
     let ageMonthAvg = [11.5,17.5,10.1,12.3,11.1,12.1,13.2,9.8,9.9,10.1,11.1,12.5]
@@ -40,7 +41,7 @@ struct BarGraphView: View {
                         LineMark(x: .value("Month", item.month), y: .value("hours", item.data))
                     }
                 }
-//                .padding(.horizontal, 10)
+                .frame(maxWidth: 310)
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
                 .offset(y: 30)
@@ -52,7 +53,7 @@ struct BarGraphView: View {
                             VStack {
                                 BarView(value: CGFloat(value), isSelected: selectedBarIndex == index).padding(.horizontal, 3)
                                 Text(monthString(index - 1))
-                                    .customFontStyle(.gray4_R9) // 696969 Regular 11 , 선택 되면 Bold
+                                    .customFontStyle(.gray4_R9)
                                     .fontWeight(selectedBarIndex == index ? .bold : .regular)
                             }
                             .onTapGesture {
@@ -81,7 +82,7 @@ struct BarGraphView: View {
             }
             
             VStack {
-                Text("회원님의 5월 운동량은 20대 평균보다") +
+                Text("회원님의 5월 운동량은 \(selectedAge.rawValue) 평균보다") +
                 Text(" 1.7% ").bold().foregroundColor(.main) +
                 Text("높으며 전달 대비 운동횟수가 ") +
                 Text(" 3회 증가 ").bold().foregroundColor(.main) +
@@ -95,16 +96,17 @@ struct BarGraphView: View {
     }
     
     func monthString(_ index: Int) -> String {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM"
-            let date = Calendar.current.date(byAdding: .month, value: index, to: Date())!
-            return formatter.string(from: date)
-        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM"
+        let date = Calendar.current.date(byAdding: .month, value: index, to: Date())!
+        return formatter.string(from: date)
+    }
 }
 
 struct WeakGraphView: View {
     @State var selectedBarIndex: Int?
     @State var avg = 20
+    @Binding var selectedAge : AvgAge
     
     let monthAvg = [13.5,10.2,7.8,9,0,3.0,15]
     let ageMonthAvg = [11.5,17.5,10.1,12.3,11.1,12.1,13.2]
@@ -129,6 +131,7 @@ struct WeakGraphView: View {
                         LineMark(x: .value("Weak", item.weak), y: .value("Data", item.data))
                     }
                 }
+                .frame(maxWidth: 280)
                 .padding(.horizontal, 20)
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
@@ -141,7 +144,7 @@ struct WeakGraphView: View {
                             VStack {
                                 BarView(value: CGFloat(value), isSelected: selectedBarIndex == index).padding(.horizontal, 10)
                                 Text(weakString(index - 1))
-                                    .customFontStyle(.gray4_R9) // 696969 Regular 11 , 선택 되면 Bold
+                                    .customFontStyle(.gray4_R9)
                                     .fontWeight(selectedBarIndex == index ? .bold : .regular)
                             }
                             .onTapGesture {
@@ -170,7 +173,7 @@ struct WeakGraphView: View {
             }
             
             VStack {
-                Text("회원님의 이번주 운동량은 20대 평균보다") +
+                Text("회원님의 이번주 운동량은 \(selectedAge.rawValue) 평균보다") +
                 Text(" 1.7% ").bold().foregroundColor(.main) +
                 Text("높으며 전주 대비 운동횟수가") +
                 Text(" 3회 증가 ").bold().foregroundColor(.main) +
@@ -186,7 +189,6 @@ struct WeakGraphView: View {
     func weakString(_ index: Int) -> String {
         let weekDay = (index) % 7
         let formatter = DateFormatter()
-//        formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "E"
         let date = Calendar.current.date(byAdding: .day, value: weekDay, to: Date())!
         return formatter.string(from: date)
@@ -206,7 +208,6 @@ struct BarView: View {
                     .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
                 Capsule()
                     .frame(maxWidth: 12, minHeight: 0, maxHeight: 100 * (value / 20))
-//                    .foregroundColor(.gray1)
                     .foregroundColor(isSelected ? .main : .gray1)
                 
             }
@@ -226,7 +227,7 @@ struct AgeWeakAvg: Identifiable {
     var data: Double
 }
 
-#Preview {
-//    BarGraphView()
-    WeakGraphView()
-}
+//#Preview {
+////    BarGraphView()
+//    WeakGraphView()
+//}

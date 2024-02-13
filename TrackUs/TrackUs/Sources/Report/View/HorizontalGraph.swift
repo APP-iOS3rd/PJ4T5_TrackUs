@@ -13,6 +13,7 @@ struct HorizontalGraph: View {
     let maxWidth: CGFloat = 130 // 최대 그래프 넓이
     let distanceLigitValue: Double = 20.0 // 최대 한계 값 거리
     let speedLimitValue: Double = 20.0 // 최대 한계 값 속도
+    @Binding var selectedAge : AvgAge
     
     var formattedCurrentDate: String {
         let dateFormatter = DateFormatter()
@@ -28,7 +29,7 @@ struct HorizontalGraph: View {
                     .frame(width: 10, height: 10)
                     .foregroundColor(.gray2)
                 Text("OO님") // 사용자의 이름
-                    .customFontStyle(.gray1_R11) // gray1 Regular 11
+                    .customFontStyle(.gray1_R11)
                 
                 Spacer()
             }
@@ -38,15 +39,15 @@ struct HorizontalGraph: View {
                 Circle()
                     .frame(width: 10, height: 10)
                     .foregroundColor(.main)
-                Text("TrackUs 20대") // 사용자의 나이대
-                    .customFontStyle(.gray1_R12) // gray1 Regular 11
+                Text("TrackUs \(selectedAge.rawValue)") // 사용자의 나이대
+                    .customFontStyle(.gray1_R12)
             }
             .padding(.bottom, 20)
             
             VStack {
                 HStack(spacing: 17) {
                     Text("러닝 거리")
-                        .customFontStyle(.gray1_SB15) // gray1 semiBold 15
+                        .customFontStyle(.gray1_SB15)
                     
                     VStack {
                         SpeedBar(value: 40, speedValue: 3.3)
@@ -60,7 +61,7 @@ struct HorizontalGraph: View {
                 
                 HStack(spacing: 17) {
                     Text("러닝 속도")
-                        .customFontStyle(.gray1_SB15) // gray1 semiBold 15
+                        .customFontStyle(.gray1_SB15)
                     
                     VStack {
                         DistanceBar(value: 30, DistanceValue: 12)
@@ -91,7 +92,7 @@ struct SpeedBar: View {
                 Capsule().frame(width: value, height: 15)
                 
                 Text("\(String(format: "%0.1f", speedValue)) km")
-                    .customFontStyle(.gray1_R9) // gray1 regular 9
+                    .customFontStyle(.gray1_R9)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
                     .offset(x: +value + 10)
@@ -115,7 +116,7 @@ struct DistanceBar: View {
                 Capsule().frame(width: value, height: 15)
                 
                 Text("\(String(format: "%0.1f", DistanceValue)) km/h")
-                    .customFontStyle(.gray1_R9) // gray1 regular 9
+                    .customFontStyle(.gray1_R9)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
                     .offset(x: +value + 10)
@@ -124,6 +125,6 @@ struct DistanceBar: View {
     }
 }
 
-#Preview {
-    HorizontalGraph()
-}
+//#Preview {
+//    HorizontalGraph()
+//}
