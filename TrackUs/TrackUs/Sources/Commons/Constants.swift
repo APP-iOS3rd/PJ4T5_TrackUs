@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 enum Constants {
     enum ViewLayout {
@@ -22,5 +23,9 @@ enum Constants {
     
     enum RunningStyle {
         
+    }
+    
+    enum FirebasePath {
+        static let RUNNING_RECORDS = Firestore.firestore().collection("runningRecords")
     }
 }
