@@ -36,7 +36,7 @@ class MapViewModel: ObservableObject, Identifiable {
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         self.mapView = MapView(frame: frame, mapInitOptions: myMapInitOptions)
         self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.mapView.mapboxMap.styleURI = .streets
+        self.mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
         self.puckConfiguration.topImage = UIImage(named: "Puck")
         self.mapView.location.options.puckType = .puck2D(puckConfiguration)
         self.mapView.location.options.puckBearingEnabled = true
@@ -67,6 +67,7 @@ class MapViewModel: ObservableObject, Identifiable {
             let coordinateCount = self.lineCoordinates.count
             guard let location = newLocation.last, let mapView else { return }
             if let lastData = self.lineCoordinates.last, lastData == location.coordinate { return}
+            // TODO: - lineCoordinates에 비슷하거나 많은 데이터가 들어옴
             
             // 경로선 레이아웃 추가
             self.lineCoordinates.append(location.coordinate)

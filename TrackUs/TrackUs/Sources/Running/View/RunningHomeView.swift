@@ -19,8 +19,6 @@ struct RunningHomeView: View {
     @State private var showingAlert: Bool = false
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
-  
-    
     let cheeringPhrase = [
         "나만의 페이스로, 나만의 피니쉬라인까지.",
         "걸음마다 성장이 느껴지는 곳, 함께 뛰어요!",
