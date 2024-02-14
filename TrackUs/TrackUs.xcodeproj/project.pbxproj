@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		610F881F2B74CF0300FB12A1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 610F881E2B74CF0300FB12A1 /* GoogleService-Info.plist */; };
 		610F88222B74D01E00FB12A1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88212B74D01E00FB12A1 /* NetworkManager.swift */; };
 		610F88242B74D02900FB12A1 /* NetworkErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88232B74D02900FB12A1 /* NetworkErrorView.swift */; };
 		610F88262B775F3D00FB12A1 /* MyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F88252B775F3D00FB12A1 /* MyReportView.swift */; };
@@ -38,13 +37,16 @@
 		823B9AE82B68232600C9F772 /* View+NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE72B68232600C9F772 /* View+NavigationBar.swift */; };
 		823B9AEA2B68264500C9F772 /* NavigationBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B9AE92B68264500C9F772 /* NavigationBackButton.swift */; };
 		824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */; };
-		82494DCF2B7A87F900FB3EB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82494DCE2B7A87F900FB3EB8 /* GoogleService-Info.plist */; };
 		82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */; };
-		82494DDC2B7B0EA100FB3EB8 /* RunningData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */; };
 		824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8972B6FB92200B15B89 /* RunningHomeView.swift */; };
 		824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8992B6FB95100B15B89 /* BottomSheet.swift */; };
 		8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
+		828EA4B42B7C507200785D0F /* RunningRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4B32B7C507200785D0F /* RunningRecord.swift */; };
+		828EA4B92B7C5ED300785D0F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 828EA4B82B7C5ED300785D0F /* Kingfisher */; };
+		828EA4BD2B7CB2BC00785D0F /* GraphicTextCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4BC2B7CB2BC00785D0F /* GraphicTextCard.swift */; };
+		828EA4BF2B7CB63100785D0F /* BorderLineModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4BE2B7CB63100785D0F /* BorderLineModifier.swift */; };
+		828EA4C32B7CDB5700785D0F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 828EA4C22B7CDB5700785D0F /* GoogleService-Info.plist */; };
 		829FF7732B6BAAF800C1ED4E /* View+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829FF7722B6BAAF800C1ED4E /* View+Keyboard.swift */; };
 		82AB28B12B6B4DC200D7734D /* MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28B02B6B4DC200D7734D /* MenuItems.swift */; };
 		82AB28B32B6B4F0E00D7734D /* RunningRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28B22B6B4F0E00D7734D /* RunningRecordView.swift */; };
@@ -65,7 +67,6 @@
 		82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */; };
 		82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */; };
 		82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */; };
-		82EEA2372B70042C00157752 /* NavigationLinkCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EEA2362B70042C00157752 /* NavigationLinkCard.swift */; };
 		82FEE3DA2B74C3F300D85F89 /* MapViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */; };
 		82FEE3DC2B74C99D00D85F89 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FEE3DB2B74C99D00D85F89 /* MapViewModel.swift */; };
 		963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */; };
@@ -157,7 +158,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		610F881E2B74CF0300FB12A1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		610F88212B74D01E00FB12A1 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		610F88232B74D02900FB12A1 /* NetworkErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorView.swift; sourceTree = "<group>"; };
 		610F88252B775F3D00FB12A1 /* MyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReportView.swift; sourceTree = "<group>"; };
@@ -182,15 +182,16 @@
 		823B9AE72B68232600C9F772 /* View+NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationBar.swift"; sourceTree = "<group>"; };
 		823B9AE92B68264500C9F772 /* NavigationBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackButton.swift; sourceTree = "<group>"; };
 		824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxBoxMapView.swift; sourceTree = "<group>"; };
-		82494DCE2B7A87F900FB3EB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
-		82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningData.swift; sourceTree = "<group>"; };
 		824DA8972B6FB92200B15B89 /* RunningHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningHomeView.swift; sourceTree = "<group>"; };
 		824DA8992B6FB95100B15B89 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
+		828EA4B32B7C507200785D0F /* RunningRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecord.swift; sourceTree = "<group>"; };
+		828EA4BC2B7CB2BC00785D0F /* GraphicTextCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicTextCard.swift; sourceTree = "<group>"; };
+		828EA4BE2B7CB63100785D0F /* BorderLineModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderLineModifier.swift; sourceTree = "<group>"; };
+		828EA4C22B7CDB5700785D0F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		829FF7722B6BAAF800C1ED4E /* View+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Keyboard.swift"; sourceTree = "<group>"; };
-		82AB28AD2B6B2B4D00D7734D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		82AB28B02B6B4DC200D7734D /* MenuItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItems.swift; sourceTree = "<group>"; };
 		82AB28B22B6B4F0E00D7734D /* RunningRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecordView.swift; sourceTree = "<group>"; };
 		82AB28B42B6B4F6B00D7734D /* NavigationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationText.swift; sourceTree = "<group>"; };
@@ -210,7 +211,6 @@
 		82ECF0BD2B67A707002CFD00 /* SelectPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPicker.swift; sourceTree = "<group>"; };
 		82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecruitmentCell.swift; sourceTree = "<group>"; };
-		82EEA2362B70042C00157752 /* NavigationLinkCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLinkCard.swift; sourceTree = "<group>"; };
 		82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewRepresentable.swift; sourceTree = "<group>"; };
 		82FEE3DB2B74C99D00D85F89 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		963AE4012B678EAC00E98BF4 /* TrackUs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackUs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -295,6 +295,7 @@
 				823B9ADE2B68109200C9F772 /* FirebaseAppCheck in Frameworks */,
 				9846EB432B6CB8EF0052BDA6 /* FirebaseInstallations in Frameworks */,
 				9846EB472B6CB8EF0052BDA6 /* FirebaseMessaging in Frameworks */,
+				828EA4B92B7C5ED300785D0F /* Kingfisher in Frameworks */,
 				823B9AD32B68094E00C9F772 /* MapboxMaps in Frameworks */,
 				9846EB512B6CB8EF0052BDA6 /* FirebaseStorageCombine-Community in Frameworks */,
 				9846EB8F2B6CB93C0052BDA6 /* FirebaseAppCheck in Frameworks */,
@@ -493,7 +494,6 @@
 			children = (
 				824DA8972B6FB92200B15B89 /* RunningHomeView.swift */,
 				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
-				82EEA2362B70042C00157752 /* NavigationLinkCard.swift */,
 				FE90EECD2B6FCEB700A08E23 /* RunningLiveView.swift */,
 				820330D72B70127800CB97F7 /* SettingPopup.swift */,
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
@@ -564,6 +564,7 @@
 				824DA8992B6FB95100B15B89 /* BottomSheet.swift */,
 				824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */,
 				822AE5EF2B704AA500D90264 /* PreparingService.swift */,
+				828EA4BC2B7CB2BC00785D0F /* GraphicTextCard.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -574,6 +575,7 @@
 				82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */,
 				823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */,
 				821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */,
+				828EA4BE2B7CB63100785D0F /* BorderLineModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -597,8 +599,7 @@
 		963AE4032B678EAC00E98BF4 /* TrackUs */ = {
 			isa = PBXGroup;
 			children = (
-				610F881E2B74CF0300FB12A1 /* GoogleService-Info.plist */,
-				82AB28AD2B6B2B4D00D7734D /* Info.plist */,
+				828EA4C22B7CDB5700785D0F /* GoogleService-Info.plist */,
 				82ECF0962B679E10002CFD00 /* Resources */,
 				82ECF0952B679E05002CFD00 /* Sources */,
 			);
@@ -617,7 +618,7 @@
 			isa = PBXGroup;
 			children = (
 				984B3A452B73ADDD00C9831C /* UserInfo.swift */,
-				82494DDB2B7B0EA100FB3EB8 /* RunningData.swift */,
+				828EA4B32B7C507200785D0F /* RunningRecord.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -756,6 +757,7 @@
 				9846EB912B6CD15A0052BDA6 /* GoogleSignIn */,
 				9846EB932B6CD15A0052BDA6 /* GoogleSignInSwift */,
 				820330D52B700FAC00CB97F7 /* PopupView */,
+				828EA4B82B7C5ED300785D0F /* Kingfisher */,
 			);
 			productName = TrackUs;
 			productReference = 963AE4012B678EAC00E98BF4 /* TrackUs.app */;
@@ -790,6 +792,7 @@
 				823B9AD42B68109200C9F772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				9846EB902B6CD15A0052BDA6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				820330D42B700FAC00CB97F7 /* XCRemoteSwiftPackageReference "PopupView" */,
+				828EA4B72B7C5ED300785D0F /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 963AE4022B678EAC00E98BF4 /* Products */;
 			projectDirPath = "";
@@ -807,7 +810,7 @@
 			files = (
 				963AE40C2B678EAE00E98BF4 /* Preview Assets.xcassets in Resources */,
 				963AE4092B678EAE00E98BF4 /* Assets.xcassets in Resources */,
-				610F881F2B74CF0300FB12A1 /* GoogleService-Info.plist in Resources */,
+				828EA4C32B7CDB5700785D0F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -837,7 +840,6 @@
 				963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */,
 				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
-				82494DDC2B7B0EA100FB3EB8 /* RunningData.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
@@ -861,6 +863,7 @@
 				610F882A2B77727900FB12A1 /* CircleTabView.swift in Sources */,
 				820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */,
 				FE71D0402B6B9C9600F391AA /* ChattingView.swift in Sources */,
+				828EA4BD2B7CB2BC00785D0F /* GraphicTextCard.swift in Sources */,
 				98F1C2F02B6A2342009382B1 /* NickNameView.swift in Sources */,
 				821CD24D2B72C82900CE6D42 /* PreventionGestureModifier.swift in Sources */,
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
@@ -879,11 +882,13 @@
 				984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */,
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
 				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
+				828EA4BF2B7CB63100785D0F /* BorderLineModifier.swift in Sources */,
 				82AB28B92B6B528500D7734D /* FAQView.swift in Sources */,
 				8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */,
 				82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */,
 				963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */,
 				82DD119B2B79262B00467761 /* Double+.swift in Sources */,
+				828EA4B42B7C507200785D0F /* RunningRecord.swift in Sources */,
 				822AE5F22B704FB700D90264 /* LocationManager.swift in Sources */,
 				824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */,
 				98F1C2F82B6A23AF009382B1 /* RunningStyleView.swift in Sources */,
@@ -897,7 +902,6 @@
 				963AE42B2B6A445800E98BF4 /* ProfileEditView.swift in Sources */,
 				824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */,
 				82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */,
-				82EEA2372B70042C00157752 /* NavigationLinkCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1042,7 +1046,6 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4N3558QY8F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1072,7 +1075,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TrackUs/TrackUs.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TrackUs/Resources/Preview Content\"";
@@ -1080,7 +1083,6 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 4N3558QY8F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TrackUs/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1096,7 +1098,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TrackUs.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = TrackUs_Development;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = TrackUs_Distribution;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1151,6 +1153,14 @@
 				minimumVersion = 10.20.0;
 			};
 		};
+		828EA4B72B7C5ED300785D0F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
 		9846EB902B6CD15A0052BDA6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -1196,6 +1206,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 823B9AD42B68109200C9F772 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAppCheck;
+		};
+		828EA4B82B7C5ED300785D0F /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 828EA4B72B7C5ED300785D0F /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		9846EB1C2B6CB8EF0052BDA6 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
