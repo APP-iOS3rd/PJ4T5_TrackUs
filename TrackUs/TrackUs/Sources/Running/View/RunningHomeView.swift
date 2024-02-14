@@ -7,15 +7,19 @@
 
 import SwiftUI
 import PopupView
+import Kingfisher
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
+    @StateObject var authViewModel = AuthenticationViewModel.shared
     @State private var isOpen: Bool = false
     @State private var maxHeight: CGFloat = 300
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
+    @State private var showingAlert: Bool = false
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
+  
     
     let cheeringPhrase = [
         "나만의 페이스로, 나만의 피니쉬라인까지.",
@@ -43,13 +47,16 @@ struct RunningHomeView: View {
                     // MARK: - 프로필 & 러닝 시작
                     VStack {
                         HStack {
-                            Image("ProfileDefault")
+                            KFImage(URL(string: authViewModel.userInfo.profileImageUrl ?? ""))
+                                .placeholder({ProgressView()})
+                                .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
                                 .resizable()
+                                .scaledToFill()
                                 .frame(width: 48, height: 48)
                                 .clipShape(Circle())
                             
                             VStack(alignment: .leading) {
-                                Text("TrackUs님!")
+                                Text("\(authViewModel.userInfo.username)님!")
                                     .customFontStyle(.gray1_B16)
                                 
                                 Text(cheeringPhrase)
@@ -71,9 +78,7 @@ struct RunningHomeView: View {
                                     )
                             }
                             
-                            Button(action: {
-                                router.push(.runningStart)
-                            }, label: {
+                            Button(action: startButtonTapped, label: {
                                 Text("러닝 시작")
                                     .foregroundStyle(.white)
                                     .font(.system(size: 12, weight: .bold))
@@ -82,6 +87,24 @@ struct RunningHomeView: View {
                             })
                             .background(.main)
                             .clipShape(Capsule())
+                            .alert(isPresented: $showingAlert) {
+                                Alert(
+                                    title: Text("러닝을 시작하기 위해서 앱에서 위치를 엑세스할 수 있도록 허용해 주세요."),
+                                    message: Text("러닝을 추적하고 그 외 다른 서비스와 기능을 이용하기 위해서 정확한 위치 정보가 필요합니다."),
+                                    primaryButton: .destructive (
+                                        Text("취소"),
+                                        action: { }
+                                    ),
+                                    secondaryButton: .default (
+                                        Text("설정"),
+                                        action: {
+                                            if let appSettings = URL(string: "App-Prefs:root=LOCATION_SERVICES") {
+                                                UIApplication.shared.open(appSettings,options: [:],completionHandler: nil)
+                                            }
+                                        }
+                                    )
+                                )
+                            }
                             
                         }
                         .padding(.vertical, 10)
@@ -126,14 +149,10 @@ struct RunningHomeView: View {
                     
                     // MARK: - 러닝 리포트 확인하기
                     VStack {
-                        NavigationLinkCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.")
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(.gray3, lineWidth: 1)
-                            )
+                        GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
+                            .modifier(BorderLineModifier())
                     }
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
-                    
                 }
                 .background(
                     GeometryReader { innerGeometry in
@@ -169,7 +188,7 @@ struct RunningHomeView: View {
         
         // MARK: - 상단 팝업
         .popup(isPresented: $showingFloater) {
-            NavigationLinkCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!")
+            GraphicTextCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!", resource: .clipboard)
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
             
@@ -193,5 +212,14 @@ struct RunningHomeView: View {
         .edgesIgnoringSafeArea(.top)
     }
     
+    func startButtonTapped() {
+        LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
+            if authrionzationStatus == .authorizedWhenInUse {
+                router.push(.runningStart)
+            } else {
+                showingAlert = true
+            }
+        }
+    }
 }
 
