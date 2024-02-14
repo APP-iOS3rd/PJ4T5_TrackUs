@@ -23,6 +23,8 @@ struct MyReportView: View {
                 } label: {
                     HStack {
                         Image(.iconTrackUsPro2)
+                            .resizable()
+                            .frame(width: 38, height: 22)
                         VStack(alignment: .leading) {
                             Text("TrackUs Pro")
                                 .customFontStyle(.main_SB14)

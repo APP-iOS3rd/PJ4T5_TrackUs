@@ -38,7 +38,7 @@ class MapViewModel: ObservableObject, Identifiable {
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         self.mapView = MapView(frame: frame, mapInitOptions: myMapInitOptions)
         self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.mapView.mapboxMap.styleURI = .light
+        self.mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/juwon3415/clslhcadg00m301po56lfej03")
         self.puckConfiguration.topImage = UIImage(named: "Puck")
         self.mapView.location.options.puckType = .puck2D(puckConfiguration)
         self.mapView.location.options.puckBearingEnabled = true
@@ -53,7 +53,7 @@ class MapViewModel: ObservableObject, Identifiable {
         let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.mapboxMap.cameraState)
         self.snapshotter = Snapshotter(options: snapshotterOption)
         self.snapshotter.setCamera(to: snapshotterCameraOptions)
-        self.snapshotter.styleURI = .light
+        self.snapshotter.styleURI = StyleURI(rawValue: "mapbox://styles/juwon3415/clslhcadg00m301po56lfej03")
         
         self.lineCoordinates.append(coordinate)
     }

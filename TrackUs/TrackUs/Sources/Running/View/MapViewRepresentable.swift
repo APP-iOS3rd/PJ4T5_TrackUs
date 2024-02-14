@@ -96,7 +96,7 @@ struct RouteMapView: UIViewControllerRepresentable {
             self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
             self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.mapView.ornaments.options.scaleBar.visibility = .visible
-            self.mapView.mapboxMap.styleURI = .light
+            self.mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/juwon3415/clslhcadg00m301po56lfej03")
             view.addSubview(mapView)
             
             drawRoute()

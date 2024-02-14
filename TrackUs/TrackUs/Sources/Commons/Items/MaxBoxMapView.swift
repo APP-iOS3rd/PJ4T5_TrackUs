@@ -36,7 +36,7 @@ class MapViewController: UIViewController, GestureManagerDelegate {
         
         mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.mapboxMap.styleURI = .light
+        mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/juwon3415/clslhcadg00m301po56lfej03")
         try? mapView.mapboxMap.setCameraBounds(with: cameraBoundsOptions)
         self.view.addSubview(mapView)
         
