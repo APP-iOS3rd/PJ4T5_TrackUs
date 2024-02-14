@@ -127,7 +127,7 @@ struct MyRecordView: View {
                 Spacer()
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 5)
+            .padding(.vertical, 8)
             .background(.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
@@ -198,6 +198,7 @@ struct RecordCell: View {
                     }
                     
                     Text("광명시 러닝 메이트 구합니다")
+                        .lineLimit(1)
                         .customFontStyle(.gray1_B16)
                     
                     HStack {
