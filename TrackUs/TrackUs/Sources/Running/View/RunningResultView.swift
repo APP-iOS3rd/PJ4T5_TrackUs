@@ -85,13 +85,14 @@ struct RunningResultView: View {
                     HStack {
                         Text("피드백 메세지 피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지")
                             .customFontStyle(.gray1_R14)
-                        Spacer()
                     }
+                    .fixedSize(horizontal: false, vertical: true)
                     
                     MainButton(buttonText: "리포트로 이동하기", action: {router.popToRoot()})
                 }
                 .padding(20)
             }
+            
             
             .frame(maxWidth: .infinity)
             .background(.white)

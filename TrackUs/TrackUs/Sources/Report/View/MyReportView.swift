@@ -55,8 +55,7 @@ struct MyReportView: View {
                     .modifier(BorderLineModifier())
                 
             }
-            .padding(.top)
-            .padding(.bottom, 10)
+            .padding(.vertical, 20)
             .padding(.horizontal, 16)
         }
     }
