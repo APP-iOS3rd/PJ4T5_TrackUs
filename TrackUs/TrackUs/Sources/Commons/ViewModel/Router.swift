@@ -22,6 +22,7 @@ enum Page: Hashable, Identifiable {
     case runningRecorded
     case faq
     case setting
+    case withDrawal
     // Home
     case runningStart
     case runningResult(runningRecord: RunningRecord)
@@ -114,6 +115,8 @@ final class Router: ObservableObject {
             FAQView()
         case .setting:
             SettingsView()
+        case .withDrawal:
+            Withdrawal()
         case .runningStart:
             RunningLiveView()
         case .runningResult(runningRecord: let runningRecord):

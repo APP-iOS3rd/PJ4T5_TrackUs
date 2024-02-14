@@ -8,6 +8,24 @@
 import Foundation
 import SwiftUI
 
+enum RunningStyle: String, Codable, CaseIterable, Identifiable  {
+    case walking = "walking"
+    case jogging = "jogging"
+    case running = "running"
+    case interval = "interval"
+    
+    var id: Self {self}
+    
+    var description: String {
+        switch self {
+        case .walking: return "걷기"
+        case .jogging: return "조깅"
+        case .running: return "달리기"
+        case .interval: return "인터벌"
+        }
+    }
+}
+
 struct UserInfo : Codable {
     // 본인 프로필사진 저장용
     var image: UIImage?
@@ -22,7 +40,7 @@ struct UserInfo : Codable {
     var isProSubscriber: Bool
     var profileImageUrl: String?
     var setDailyGoal: Double?
-    var runningStyle: String?
+    var runningStyle: RunningStyle?
     
     init(){
         self.uid = ""
@@ -43,5 +61,6 @@ struct UserInfo : Codable {
         case profileImageUrl = "profileImageUrl"
         case setDailyGoal = "setDailyGoal"
         case runningStyle = "runningStyle"
+        //case image = "image"
     }
 }

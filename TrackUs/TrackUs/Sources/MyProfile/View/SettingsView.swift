@@ -12,13 +12,6 @@ struct SettingsView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     
     
-    private func deleteAccount() {
-        Task {
-            if await authViewModel.deleteAccount() == true {
-                router.popToRoot()
-            }
-        }
-    }
     
     var body: some View {
         VStack {
@@ -44,13 +37,14 @@ struct SettingsView: View {
                     Button(action: logoutButtonTapped) {
                         MenuItem(title: "로그아웃")
                     }
-                    
-                    NavigationLink(value: "WithdrawalView") {
-                        HStack {
+                    HStack{
+                        Button(action: {
+                            router.push(.withDrawal)
+                        }, label: {
                             Text("회원탈퇴")
                                 .customFontStyle(.caution_R16)
-                            Spacer()
-                        }
+                        })
+                        Spacer()
                     }
                 }
             }
@@ -71,7 +65,6 @@ struct SettingsView: View {
     }
     
     func withdrawalButtonTapped() {
-        deleteAccount()
     }
 }
 
