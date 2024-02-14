@@ -11,6 +11,7 @@ struct MainButton: View {
     private var active: Bool
     private let text: String
     private let cornerRadius: CGFloat = 14
+    private let buttonColor: Color
     
     private let action: () -> Void
     
@@ -24,17 +25,19 @@ struct MainButton: View {
         self.active = true
         self.text = buttonText
         self.action = action
-    } 
+        self.buttonColor = .main
+    }
     
     // MARK: - 활성화 버튼
     // 사용 예시
     // CompletButton(active: Bool, buttonText: "버튼 문구") { 실행코드 추가 }
     
     /// 활성화 버튼 -> active: true = 활성화, false = 비활성화
-    init(active: Bool, buttonText: String, action: @escaping () -> Void) {
+    init(active: Bool, buttonText: String, buttonColor: Color = .main, action: @escaping () -> Void) {
         self.active = active
         self.text = buttonText
         self.action = action
+        self.buttonColor = buttonColor
     }
     
     var body: some View {
@@ -44,7 +47,7 @@ struct MainButton: View {
                     .customFontStyle(active ? .white_B16 : .gray1_B16)
                     .frame(maxWidth: .infinity, minHeight: 56)
             }
-            .background(active ? .main : .gray3)
+            .background(active ? buttonColor : .gray3)
             .clipShape(Capsule())
         }
         .animation(.easeInOut(duration: 0.1), value: active)

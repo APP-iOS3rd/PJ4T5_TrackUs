@@ -7,19 +7,17 @@
 
 import SwiftUI
 
-enum RunningStyle: String, CaseIterable, Identifiable {
-    case record = "기록갱신", diet = "다이어트"
-    var id: Self { self }
-}
-
 struct ProfileEditView: View {
+    //@Environment(\.dismiss) var dismiss
+    
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedImage: UIImage?
     @State private var nickname: String = ""
     @State private var height: Double?
     @State private var weight: Double?
-    @State private var runningStyle: String? = ""
+    @State private var selectedRunningStyle: RunningStyle = .walking
+    @State private var runningStyle: RunningStyle?
     @State private var setDailyGoal: Double?
     @State private var goalMinValue: Double?
     @State private var goalMaxValue: Double?
@@ -91,13 +89,24 @@ struct ProfileEditView: View {
                                 Text("러닝스타일")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                //pickerButton(pickerPresented: $runningStylePickerPresented, value: runningStyle, unit: "kg")
-                                Picker(selection: $runningStyle, label: Text("러닝 스타일")) {
-                                    Text("기록갱신").tag("기록갱신")
-                                    Text("다이어트").tag("다이어트")
-                                }
-                                .accentColor(.gray1)
-                                .padding(.horizontal, -8)
+                                Button(action: {
+                                    selectedRunningStyle = runningStyle ?? .walking
+                                    runningStylePickerPresented.toggle()
+                                }, label: {
+                                    HStack{
+                                        if let value = runningStyle{
+                                            Text(value.description)
+                                                .customFontStyle(.gray1_R16)
+                                        }else {
+                                            Text("정보 없음")
+                                                .customFontStyle(.gray2_L12)
+                                        }
+                                        Image(.pickerLogo)
+                                            .resizable()
+                                            .frame(width: 9,height: 18)
+                                            .scaledToFit()
+                                    }
+                                })
                             }
                             
                             HStack {
@@ -105,14 +114,6 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 pickerButton(pickerPresented: $setDailyGoalPickerPresented, value: setDailyGoal, unit: "km", format: "%.1f")
-//                                Picker(selection: $setDailyGoal, label: Text("일일목표")) {
-//                                    ForEach(Array(stride(from: 0.0, through: 40.0, by: 0.1)), id: \.self) {
-//                                        Text("\($0, specifier: "%.1f") km")
-//                                            .multilineTextAlignment(.leading)
-//                                    }
-//                                }
-//                                .padding(.horizontal, -8)
-//                                .accentColor(.gray1)
                             }
                             
                         }
@@ -169,7 +170,43 @@ struct ProfileEditView: View {
             PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 60)
         }
         .sheet(isPresented: $runningStylePickerPresented) {
-            PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 1)
+            VStack{
+                Text("러닝스타일 선택")
+                    .customFontStyle(.gray1_B20)
+                Picker("러닝스타일", selection: $selectedRunningStyle) {
+                    ForEach(RunningStyle.allCases) { value in
+                        Text(value.description).tag(value)
+                    }
+                }
+                .customFontStyle(.gray1_M16)
+                .pickerStyle(WheelPickerStyle())
+                .presentationDetents([.height(300)])
+                HStack(spacing: 8){
+                    Button {
+                        runningStylePickerPresented.toggle()
+                    } label: {
+                        Text("취소")
+                            .customFontStyle(.main_R16)
+                            .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+                            .overlay(
+                                Capsule()
+                                    .stroke( .main, lineWidth: 1)
+                            )
+                    }
+                    Button {
+                        runningStyle = selectedRunningStyle
+                        runningStylePickerPresented.toggle()
+                    } label: {
+                        Text("확인")
+                            .customFontStyle(.white_B16)
+                            .frame(width: 212, height: 40)
+                            .background(.main)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+            .padding(20)
+            
         }
         .sheet(isPresented: $setDailyGoalPickerPresented) {
             PickerSheet(selectedValueBinding: $setDailyGoal, pickerType: .dailyGoal, startingValue: setDailyGoal ?? 1)

@@ -19,8 +19,4 @@ enum Constants {
         static let SERVICE_REQUEST_URL = "https://forms.gle/drvCZV4kHdgZJonRA"
         static let TEAM_INTRO_URL = "https://lizard-basketball-e41.notion.site/Team-TrackUs-2d71e86df51f4bbba4b0b7a5b04ac947?pvs=4"
     }
-    
-    enum RunningStyle {
-        
-    }
 }
