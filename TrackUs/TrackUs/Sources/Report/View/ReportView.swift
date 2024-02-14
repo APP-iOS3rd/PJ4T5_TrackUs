@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+//import FirebaseFirestore
 
 enum ReportTab: String, CaseIterable {
     case report = "리포트"
@@ -13,6 +14,7 @@ enum ReportTab: String, CaseIterable {
 }
 
 struct ReportView: View {
+    @ObservedObject var viewModel = ReportViewModel.shared
     @State private var selectedPicker: ReportTab = .report
     @Namespace private var animation
     
@@ -20,6 +22,17 @@ struct ReportView: View {
         VStack {
             animate()
             selectView(selec: selectedPicker)
+//            
+//            if viewModel.runningLog.isEmpty {
+//                Text("No")
+//                    .onAppear {
+//                        viewModel.fetchLog()
+//                    }
+//            } else {
+//                ForEach(viewModel.runningLog, id: \.self) { log in
+//                    Text("\(log.calorie), \(log.distance)")
+//                }
+//            }
         }
         .customNavigation {
             NavigationText(title: "리포트")

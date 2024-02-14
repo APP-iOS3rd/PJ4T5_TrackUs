@@ -38,10 +38,15 @@ struct BarGraphView: View {
             ZStack(alignment: .bottom) {
                 Chart {
                     ForEach(ageAvgData) { item in
-                        LineMark(x: .value("Month", item.month), y: .value("hours", item.data))
+                        LineMark(x: .value("Month", item.month), y: .value("Data", item.data))
+                            .symbol {
+                                Circle()
+                                    .frame(width: 6)
+                            }
                     }
                 }
                 .frame(maxWidth: 310)
+//                .frame(height: 100)
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
                 .offset(y: 30)
@@ -108,8 +113,8 @@ struct WeakGraphView: View {
     @State var avg = 20
     @Binding var selectedAge : AvgAge
     
-    let monthAvg = [13.5,10.2,7.8,9,0,3.0,15]
-    let ageMonthAvg = [11.5,17.5,10.1,12.3,11.1,12.1,13.2]
+    let weakAvg = [13.5,10.2,7.8,9,0,3.0,15]
+//    let ageMonthAvg = [11.5,17.5,10.1,12.3,11.1,12.1,13.2]
     
     var ageAvgData = [
         AgeWeakAvg(weak: "Sun", data: 13.2),
@@ -129,21 +134,26 @@ struct WeakGraphView: View {
                 Chart {
                     ForEach(ageAvgData) { item in
                         LineMark(x: .value("Weak", item.weak), y: .value("Data", item.data))
+                            .symbol {
+                                Circle()
+                                    .frame(width: 6)
+                            }
                     }
                 }
                 .frame(maxWidth: 280)
-                .padding(.horizontal, 20)
+//                .frame(height: 100)
+                .padding(.horizontal, 17)
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
                 .offset(y: 30)
                 
                 HStack(alignment: .bottom) {
-                    ForEach(monthAvg.indices, id: \.self) { index in
-                        let value = monthAvg[index]
+                    ForEach(weakAvg.indices, id: \.self) { index in
+                        let value = weakAvg[index]
                         ZStack {
                             VStack {
                                 BarView(value: CGFloat(value), isSelected: selectedBarIndex == index).padding(.horizontal, 10)
-                                Text(weakString(index - 1))
+                                Text(weakString(index - 3))
                                     .customFontStyle(.gray4_R9)
                                     .fontWeight(selectedBarIndex == index ? .bold : .regular)
                             }
