@@ -9,12 +9,12 @@ import SwiftUI
 
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
-    let runningData: RunningData
+    let runningRecord: RunningRecord
     
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: runningData.coordinates)
+            RouteMapView(lineCoordinates: runningRecord.coordinates)
             
             VStack {
                 VStack(spacing: 20) {
@@ -37,7 +37,7 @@ struct RunningResultView: View {
                             Image(.shose)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(String(format: "%.2f", runningData.distance / 1000.0) + " km / - ")
+                                Text(String(format: "%.2f", runningRecord.distance / 1000.0) + " km / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -49,7 +49,7 @@ struct RunningResultView: View {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(String(format: "%.1f", runningData.calorie) + " kcal / - ")
+                                Text(String(format: "%.1f", runningRecord.calorie) + " kcal / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -61,7 +61,7 @@ struct RunningResultView: View {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text("\(runningData.elapsedTime.asString(style: .positional))")
+                                Text("\(runningRecord.elapsedTime.asString(style: .positional))")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -73,7 +73,7 @@ struct RunningResultView: View {
                             Image(.pace)
                             VStack(alignment: .leading) {
                                 Text("페이스")
-                                Text(runningData.paceMinutes == 0 && runningData.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", runningData.paceMinutes, runningData.paceSeconds))
+                                Text(runningRecord.paceMinutes == 0 && runningRecord.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", runningRecord.paceMinutes, runningRecord.paceSeconds))
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()

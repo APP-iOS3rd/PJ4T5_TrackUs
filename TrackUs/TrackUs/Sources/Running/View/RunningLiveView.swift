@@ -235,7 +235,7 @@ struct RunningLiveView: View {
     func stopButtonLongPressed(value: Bool) {
         mapViewModel.uploadExcerciseData()
         HapticManager.instance.impact(style: .heavy)
-        router.push(.runningResult(runningData: RunningData(calorie: mapViewModel.calorie, coordinates: mapViewModel.lineCoordinates, distance: mapViewModel.distance, elapsedTime: mapViewModel.elapsedTime, pace: mapViewModel.pace)))
+        router.push(.runningResult(runningRecord: RunningRecord(calorie: mapViewModel.calorie, distance: mapViewModel.distance, elapsedTime: mapViewModel.elapsedTime, pace: mapViewModel.pace, coordinates: mapViewModel.lineCoordinates)))
     }
 }
 

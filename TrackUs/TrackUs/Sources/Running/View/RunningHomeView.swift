@@ -7,7 +7,7 @@
 
 import SwiftUI
 import PopupView
-import CoreLocation
+import Kingfisher
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
@@ -46,20 +46,13 @@ struct RunningHomeView: View {
                     // MARK: - 프로필 & 러닝 시작
                     VStack {
                         HStack {
-                            AsyncImage(url: URL(string: authViewModel.userInfo.profileImageUrl ?? "")) { phase in
-                                if let image = phase.image {
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } else if phase.error != nil {
-                                    Image("ProfileDefault")
-                                        .scaledToFill()
-                                } else {
-                                    ProgressView()
-                                }
-                            }
-                            .frame(width: 48, height: 48)
-                            .clipShape(Circle())
+                            KFImage(URL(string: authViewModel.userInfo.profileImageUrl ?? ""))
+                                .placeholder({ProgressView()})
+                                .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 48, height: 48)
+                                .clipShape(Circle())
                             
                             VStack(alignment: .leading) {
                                 Text("\(authViewModel.userInfo.username)님!")

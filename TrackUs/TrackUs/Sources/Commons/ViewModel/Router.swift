@@ -24,7 +24,7 @@ enum Page: Hashable, Identifiable {
     case setting
     // Home
     case runningStart
-    case runningResult(runningData: RunningData)
+    case runningResult(runningRecord: RunningRecord)
     
     var id: String {
         String(describing: self)
@@ -116,8 +116,8 @@ final class Router: ObservableObject {
             SettingsView()
         case .runningStart:
             RunningLiveView()
-        case .runningResult(runningData: let runningData):
-            RunningResultView(runningData: runningData)
+        case .runningResult(runningRecord: let runningRecord):
+            RunningResultView(runningRecord: runningRecord)
         }
     }
     
