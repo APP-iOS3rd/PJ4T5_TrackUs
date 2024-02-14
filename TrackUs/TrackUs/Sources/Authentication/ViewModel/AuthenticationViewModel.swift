@@ -118,12 +118,22 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - 회원탈퇴
-    func deleteAccount() async -> Bool {
+    func deleteAccount(withReason reason: String) async -> Bool {
         do {
             if let uid = Auth.auth().currentUser?.uid {
+                // 사용자 프로필 이미지 삭제 (있을 경우)
+                if let url = userInfo.profileImageUrl {
+                    try await FirebaseManger.shared.storage.reference(forURL: url).delete()
+                }
                 try await user?.delete()
                 try await Firestore.firestore().collection("users").document(uid).delete()
                 print("Document successfully removed!")
+                // 탈퇴 사유를 Firestore에 저장
+                if !reason.isEmpty {
+                    let withdrawalData = ["uid": uid,
+                                          "reason": reason]
+                    Firestore.firestore().collection("withdrawalReasons").addDocument(data: withdrawalData)
+                }
             }
             self.authenticationState = .unauthenticated
             return true
@@ -318,6 +328,7 @@ extension AuthenticationViewModel {
     }
     // MARK: - 사용자 정보 저장 - 위 이미지 저장함수와 순차적으로 사용
     private func storeUserInformation() {
+        print(userInfo.runningStyle)
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
             return }
         // 해당부분 자료형 지정 필요
@@ -331,7 +342,7 @@ extension AuthenticationViewModel {
                         "isProSubscriber": false,
                         "profileImageUrl": userInfo.profileImageUrl as Any,
                         "setDailyGoal": userInfo.setDailyGoal as Any,
-                        "runningStyle": userInfo.runningStyle as Any] as [String : Any]
+                        "runningStyle": userInfo.runningStyle?.rawValue as Any] as [String : Any]
         FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
             if error != nil {
                 print("@@@@@@ error 1 @@@@@@")

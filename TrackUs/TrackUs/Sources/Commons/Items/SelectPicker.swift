@@ -162,44 +162,44 @@ struct PickerSheet: View {
         self.pickerTypeInfo = PickerTypeInfo(pickerType: pickerType)
     }
     
-    var body: some View {            
+    var body: some View {
         
         VStack{
-            Text("\(pickerTypeInfo.title) 입력")
-            .customFontStyle(.gray1_B20)
+            Text("\(pickerTypeInfo.title) 선택")
+                .customFontStyle(.gray1_B20)
             Picker(pickerTypeInfo.title, selection: $startingValue) {
                 ForEach(pickerTypeInfo.rangeValues, id: \.self) { value in
-                Text("\(String(format: pickerTypeInfo.format, value)) \(pickerTypeInfo.unit)")
-                    .tag(value)
+                    Text("\(String(format: pickerTypeInfo.format, value)) \(pickerTypeInfo.unit)")
+                        .tag(value)
+                }
+            }
+            .customFontStyle(.gray1_M16)
+            .pickerStyle(WheelPickerStyle())
+            .presentationDetents([.height(300)])
+            HStack(spacing: 8){
+                Button {
+                    dismiss()
+                } label: {
+                    Text("취소")
+                        .customFontStyle(.main_R16)
+                        .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+                        .overlay(
+                            Capsule()
+                                .stroke( .main, lineWidth: 1)
+                        )
+                }
+                Button {
+                    selectedValueBinding = startingValue
+                    dismiss()
+                } label: {
+                    Text("확인")
+                        .customFontStyle(.white_B16)
+                        .frame(width: 212, height: 40)
+                        .background(.main)
+                        .clipShape(Capsule())
+                }
             }
         }
-        .customFontStyle(.gray1_M16)
-        .pickerStyle(WheelPickerStyle())
-        .presentationDetents([.height(300)])
-        HStack(spacing: 8){
-            Button {
-                dismiss()
-            } label: {
-                Text("취소")
-                    .customFontStyle(.main_R16)
-                    .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
-                    .overlay(
-                        Capsule()
-                            .stroke( .main, lineWidth: 1)
-                    )
-            }
-            Button {
-                selectedValueBinding = startingValue
-                dismiss()
-            } label: {
-                Text("확인")
-                    .customFontStyle(.white_B16)
-                    .frame(width: 212, height: 40)
-                    .background(.main)
-                    .clipShape(Capsule())
-            }
-        }
-    }
-    .padding(20)
+        .padding(20)
     }
 }

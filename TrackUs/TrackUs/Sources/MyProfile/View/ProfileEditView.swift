@@ -7,30 +7,28 @@
 
 import SwiftUI
 
-enum RunningStyle: String, CaseIterable, Identifiable {
-    case record = "기록갱신", diet = "다이어트"
-    var id: Self { self }
-}
-
 struct ProfileEditView: View {
+    //@Environment(\.dismiss) var dismiss
+    
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedImage: UIImage?
     @State private var nickname: String = ""
     @State private var height: Double?
     @State private var weight: Double?
-    @State private var runningStyle: String? = ""
+    @State private var selectedRunningStyle: RunningStyle = .walking
+    @State private var runningStyle: RunningStyle?
     @State private var setDailyGoal: Double?
-    @State private var goalMinValue: Double?
-    @State private var goalMaxValue: Double?
+    @State private var age: Double?
+    @State private var gender: Bool?
     @State private var isProfilePublic: Bool = false
-    @State private var isProfileSaved: Bool = false
     
     
     @State private var heightPickerPresented: Bool = false
     @State private var weightPickerPresented: Bool = false
     @State private var runningStylePickerPresented: Bool = false
     @State private var setDailyGoalPickerPresented: Bool = false
+    @State private var agePickerPresented: Bool = false
     
     var body: some View {
         VStack {
@@ -91,13 +89,24 @@ struct ProfileEditView: View {
                                 Text("러닝스타일")
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
-                                //pickerButton(pickerPresented: $runningStylePickerPresented, value: runningStyle, unit: "kg")
-                                Picker(selection: $runningStyle, label: Text("러닝 스타일")) {
-                                    Text("기록갱신").tag("기록갱신")
-                                    Text("다이어트").tag("다이어트")
-                                }
-                                .accentColor(.gray1)
-                                .padding(.horizontal, -8)
+                                Button(action: {
+                                    selectedRunningStyle = runningStyle ?? .walking
+                                    runningStylePickerPresented.toggle()
+                                }, label: {
+                                    HStack{
+                                        if let value = runningStyle{
+                                            Text(value.description)
+                                                .customFontStyle(.gray1_R16)
+                                        }else {
+                                            Text("정보 없음")
+                                                .customFontStyle(.gray2_L12)
+                                        }
+                                        Image(.pickerLogo)
+                                            .resizable()
+                                            .frame(width: 9,height: 18)
+                                            .scaledToFit()
+                                    }
+                                })
                             }
                             
                             HStack {
@@ -105,14 +114,35 @@ struct ProfileEditView: View {
                                     .customFontStyle(.gray1_R16)
                                 Spacer()
                                 pickerButton(pickerPresented: $setDailyGoalPickerPresented, value: setDailyGoal, unit: "km", format: "%.1f")
-//                                Picker(selection: $setDailyGoal, label: Text("일일목표")) {
-//                                    ForEach(Array(stride(from: 0.0, through: 40.0, by: 0.1)), id: \.self) {
-//                                        Text("\($0, specifier: "%.1f") km")
-//                                            .multilineTextAlignment(.leading)
-//                                    }
-//                                }
-//                                .padding(.horizontal, -8)
-//                                .accentColor(.gray1)
+                            }
+                            
+                        }
+                        .padding(.vertical, 14)
+                        
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text("연령대 및 성별")
+                                .customFontStyle(.gray1_B20)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text("연령대")
+                                        .customFontStyle(.gray1_R16)
+                                    Spacer()
+                                    pickerButton(pickerPresented: $agePickerPresented, value: age, unit: "대", format: "%.0f")
+                                }
+                                
+                                HStack {
+                                    Text("성별")
+                                        .customFontStyle(.gray1_R16)
+                                    Spacer()
+                                    HStack(spacing: 8){
+                                        SelectButton(image: [Image(.maleMain), Image(.maleGray1)],text: "남성", selected: gender == true, widthSize: 80){
+                                            gender = true
+                                        }
+                                        SelectButton(image: [Image(.femaleMain), Image(.femaleGray1)],text: "여성", selected: gender == false, widthSize: 80){
+                                            gender = false
+                                        }
+                                    }
+                                }
                             }
                             
                         }
@@ -144,7 +174,7 @@ struct ProfileEditView: View {
             } left: {
                 NavigationBackButton()
             }
-            MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
+            MainButton(active: editCheck(userInfo: authViewModel.userInfo), buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                 .simultaneousGesture(TapGesture().onEnded {
                 })
@@ -160,6 +190,8 @@ struct ProfileEditView: View {
             weight = authViewModel.userInfo.weight.map { Double($0) }
             runningStyle = authViewModel.userInfo.runningStyle
             setDailyGoal = authViewModel.userInfo.setDailyGoal
+            age = authViewModel.userInfo.age.map { Double($0) }
+            gender = authViewModel.userInfo.gender
             isProfilePublic = authViewModel.userInfo.isProfilePublic
         }
         .sheet(isPresented: $heightPickerPresented) {
@@ -169,12 +201,50 @@ struct ProfileEditView: View {
             PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 60)
         }
         .sheet(isPresented: $runningStylePickerPresented) {
-            PickerSheet(selectedValueBinding: $weight, pickerType: .weight, startingValue: weight ?? 1)
+            VStack{
+                Text("러닝스타일 선택")
+                    .customFontStyle(.gray1_B20)
+                Picker("러닝스타일", selection: $selectedRunningStyle) {
+                    ForEach(RunningStyle.allCases) { value in
+                        Text(value.description).tag(value)
+                    }
+                }
+                .customFontStyle(.gray1_M16)
+                .pickerStyle(WheelPickerStyle())
+                .presentationDetents([.height(300)])
+                HStack(spacing: 8){
+                    Button {
+                        runningStylePickerPresented.toggle()
+                    } label: {
+                        Text("취소")
+                            .customFontStyle(.main_R16)
+                            .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 40)
+                            .overlay(
+                                Capsule()
+                                    .stroke( .main, lineWidth: 1)
+                            )
+                    }
+                    Button {
+                        runningStyle = selectedRunningStyle
+                        runningStylePickerPresented.toggle()
+                    } label: {
+                        Text("확인")
+                            .customFontStyle(.white_B16)
+                            .frame(width: 212, height: 40)
+                            .background(.main)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+            .padding(20)
+            
         }
         .sheet(isPresented: $setDailyGoalPickerPresented) {
             PickerSheet(selectedValueBinding: $setDailyGoal, pickerType: .dailyGoal, startingValue: setDailyGoal ?? 1)
         }
-        
+        .sheet(isPresented: $agePickerPresented) {
+            PickerSheet(selectedValueBinding: $age, pickerType: .age, startingValue: age ?? 20)
+        }
     }
     
     
@@ -185,10 +255,26 @@ struct ProfileEditView: View {
         authViewModel.userInfo.weight = weight.map { Int($0) }
         authViewModel.userInfo.runningStyle = runningStyle
         authViewModel.userInfo.setDailyGoal = setDailyGoal
+        authViewModel.userInfo.age = age.map { Int($0) }
+        authViewModel.userInfo.gender = gender
         authViewModel.userInfo.isProfilePublic = isProfilePublic
         authViewModel.storeUserInfoInFirebase()
-        isProfileSaved = true
         presentationMode.wrappedValue.dismiss()
+    }
+    func editCheck(userInfo: UserInfo) -> Bool {
+        if selectedImage != userInfo.image ||
+            nickname != userInfo.username ||
+            height != userInfo.height.map({ Double($0) }) ||
+            weight != userInfo.weight.map({ Double($0) }) ||
+            runningStyle != userInfo.runningStyle ||
+            setDailyGoal != userInfo.setDailyGoal ||
+            age != userInfo.age.map({ Double($0) }) ||
+            gender != userInfo.gender ||
+        isProfilePublic != userInfo.isProfilePublic{
+            return true
+        }else{
+            return false
+        }
     }
 }
 

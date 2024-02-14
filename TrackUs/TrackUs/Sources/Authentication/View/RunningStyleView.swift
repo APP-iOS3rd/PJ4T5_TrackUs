@@ -7,17 +7,13 @@
 
 import SwiftUI
 
-enum runningStyle {
-    case one
-    case two
-}
 
 struct RunningStyleView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @Binding private var signUpFlow: SignUpFlow
     
     // nickName 데이터값 변경
-    @State private var runningStyle: runningStyle?
+    @State private var runningStyle: RunningStyle?
     @State private var availability: Bool = false
     
     init(signUpFlow: Binding<SignUpFlow>) {
@@ -32,18 +28,26 @@ struct RunningStyleView: View {
                 Text("러닝 스타일")
                     .customFontStyle(.gray1_R16)
                 HStack(spacing: 15){
-                    SelectButton(text: "기록갱신", selected: runningStyle == .one){
-                        runningStyle = .one
+                    SelectButton(text: "걷기", selected: runningStyle == .walking){
+                        runningStyle = .walking
                     }
-                    SelectButton(text: "다이어트", selected: runningStyle == .two){
-                        runningStyle = .two
+                    SelectButton(text: "조깅", selected: runningStyle == .jogging){
+                        runningStyle = .jogging
+                    }
+                }
+                HStack(spacing: 15){
+                    SelectButton(text: "달리기", selected: runningStyle == .running){
+                        runningStyle = .running
+                    }
+                    SelectButton(text: "인터벌", selected: runningStyle == .interval){
+                        runningStyle = .interval
                     }
                 }
             }
             Spacer()
             
             MainButton(active: runningStyle != nil, buttonText: "다음으로") {
-                //userInfoViewModel.userInfo.
+                authViewModel.userInfo.runningStyle = runningStyle
                 signUpFlow = .daily
             }
         }

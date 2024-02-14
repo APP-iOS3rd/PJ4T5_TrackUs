@@ -66,15 +66,17 @@ struct PlaceholderTextView: UIViewRepresentable {
 struct Withdrawal: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @EnvironmentObject var router: Router
-    @State private var text: String = ""
+    @State private var reason: String = ""
     @State private var isAgreed: Bool = false
     @State private var showWithdrawalAlert: Bool = false
     @State private var isEditing: Bool = true
     
+    @State private var showingAlert: Bool = false
+    
     // 회원 탈퇴
     private func deleteAccount() {
         Task {
-            if await authViewModel.deleteAccount() == true {
+            if await authViewModel.deleteAccount(withReason: reason) == true {
                 router.popToRoot()
             }
         }
@@ -96,69 +98,103 @@ struct Withdrawal: View {
                         .padding(.top, 4)
                     
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("1. 개인 정보 및 이용 기록은 모두 삭제되며, 삭제된 계정은 복구할 수 없습니다.")
-                            .customFontStyle(.gray2_R16)
-                        
-                        Text("2. 프리미엄 결제 기록의 남은 기간 금액은 환불되지 않습니다.")
-                            .customFontStyle(.gray2_R16)
-                        
-                        Text("3. 러닝 데이터를 포함한 모든 운동에 관련된 정보는 따로 저장되지 않으며 즉시 삭제 됩니다.")
-                            .customFontStyle(.gray2_R16)
+                        HStack(alignment: .top, spacing: 3){
+                            Text("1.")
+                            Text("개인 정보 및 이용 기록은 모두 삭제되며, 삭제된 계정은 복구할 수 없습니다.")
+                        }
+                        HStack(alignment: .top, spacing: 3){
+                            Text("2.")
+                            Text("프리미엄 결제 기록의 남은 기간 금액은 환불되지 않습니다.")
+                        }
+                        HStack(alignment: .top, spacing: 3){
+                            Text("3.")
+                            Text("러닝 데이터를 포함한 모든 운동에 관련된 정보는 따로 저장되지 않으며 즉시 삭제 됩니다.")
+                        }
                     }
+                    .customFontStyle(.gray2_R14)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 20)
+                    .padding(.top, 4)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 20)
-                
+                .padding(.top, 16)
                 
                 // MARK: - 회원탈퇴 사유 입력
                 VStack(alignment: .leading) {
+                    Spacer()
                     Text("회원탈퇴 사유")
                         .customFontStyle(.gray1_SB16)
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 12)
                     
-                    ZStack(alignment: .topLeading) {
-                        PlaceholderTextView(text: $text, placeholder: "탈퇴 사유를 작성해주세요.", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.gray)
+                    ZStack(alignment: .topLeading){
+                        TextEditor(text: $reason)
+                            .customFontStyle(.gray1_R12)
                             .frame(height: 290)
-                            .padding(.horizontal)
-                            .background(Color.white)
+                            .padding(9)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray3, lineWidth: 1)
                             )
-                            .onTapGesture {
-                                isEditing = true
-                            }
+                        if reason.isEmpty{
+                            Text("탈퇴 사유를 작성해주세요.")
+                                .padding()
+                                .customFontStyle(.gray2_R12)
+                        }
+                            
                     }
+                    
+//                    ZStack(alignment: .topLeading) {
+//                        PlaceholderTextView(text: $reason, placeholder: "탈퇴 사유를 작성해주세요.", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.gray)
+//                            .frame(height: 290)
+//                            .padding(.horizontal)
+//                            .background(Color.white)
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 12)
+//                                    .stroke(Color.gray3, lineWidth: 1)
+//                            )
+//                            .onTapGesture {
+//                                isEditing = true
+//                            }
+//                    }
                 }
-                .padding(.top, 66)
+                .padding(.top, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 // 탈퇴 동의
-                HStack {
-                    Text("안내 사항 확인 후 탈퇴에 동의합니다.")
-                        .customFontStyle(.gray1_R16)
-                    Spacer()
-                    Circle()
-                        .strokeBorder(.gray1, lineWidth: 1)
-                        .frame(width: 18, height: 18)
-                        .overlay (
-                            Circle()
-                                .frame(width: 10, height: 10)
-                                .foregroundColor(isAgreed ? .main : .white)
-                        )
-                    
-                        .onTapGesture {
-                            isAgreed.toggle()
-                        }
-                }
-                .padding(.vertical, 20)
-                
             }
-            MainButton(active: isAgreed, buttonText: "회원탈퇴", action: withdrawalButtonTapped)
+            HStack {
+                Text("안내 사항 확인 후 탈퇴에 동의합니다.")
+                    .customFontStyle(.gray1_R16)
+                Spacer()
+                Circle()
+                    .strokeBorder(.gray1, lineWidth: 1)
+                    .frame(width: 18, height: 18)
+                    .overlay (
+                        Circle()
+                            .frame(width: 10, height: 10)
+                            .foregroundColor(isAgreed ? .main : .white)
+                    )
+                
+                    .onTapGesture {
+                        isAgreed.toggle()
+                    }
+            }
+            .padding(.vertical, 8)
+            MainButton(active: isAgreed, buttonText: "회원탈퇴", buttonColor: .Caution) {
+                showingAlert.toggle()
+            }
         }
+        .alert(Text("알림"),
+               isPresented: $showingAlert,
+               actions: {
+                Button("탈퇴", role: .destructive) { withdrawalButtonTapped() }
+                Button("취소", role: .cancel) { }
+                }, message: {
+                    Text("정말 탈퇴를 진행하시겠습니까?\nTrackUs 서비스의 모든 데이터가 삭제됩니다.")
+                        .customFontStyle(.gray1_R12)
+                }
+        )
+        
         .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
         .customNavigation {
             Text("회원탈퇴")
@@ -170,10 +206,9 @@ struct Withdrawal: View {
     
     func withdrawalButtonTapped() {
         Task {
-            let isDeleted = await authViewModel.deleteAccount()
+            let isDeleted = await authViewModel.deleteAccount(withReason: reason)
             if isDeleted {
                 router.popToRoot()
-                router.push(.running)
             }
         }
     }
