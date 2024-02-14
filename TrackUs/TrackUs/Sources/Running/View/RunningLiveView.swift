@@ -6,17 +6,27 @@
 //
 
 import SwiftUI
+import MapboxMaps
 
 struct RunningLiveView: View {
     @EnvironmentObject var router: Router
     @StateObject private var countVM = CountViewModel()
+    @StateObject private var mapViewModel = MapViewModel()
     @GestureState private var press = false
     @State private var isPause = false
     @State private var isShowingMessage = false
     
+    var paceMinutes: Int {
+        Int(mapViewModel.pace)
+    }
+    
+    var paceSeconds: Int {
+        Int((mapViewModel.pace - Double(paceMinutes)) * 60)
+    }
+    
     var body: some View {
         ZStack {
-            MapBoxMapView()
+            TrackingMapView(mapViewModel: mapViewModel)
             
             Color.black
                 .opacity(countVM.isHidden || isPause ? countVM.backgroundOpacity : 0.0)
@@ -37,13 +47,13 @@ struct RunningLiveView: View {
                 }
                 else {
                     // 운동상태
-                    VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Image(.shose)
                             Text("현재까지 거리")
                                 .customFontStyle(.gray1_M16)
                             Spacer()
-                            Text("0.24km/12km")
+                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/0km")
                                 .customFontStyle(.gray1_B20)
                                 .italic()
                         }
@@ -57,7 +67,7 @@ struct RunningLiveView: View {
                                 Text("소모 칼로리")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("112")
+                                Text(String(format: "%.1f", mapViewModel.calorie))
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
@@ -72,7 +82,7 @@ struct RunningLiveView: View {
                                 Text("페이스")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("-'--''")
+                                Text(paceMinutes == 0 && paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", paceMinutes, paceSeconds))
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
@@ -87,15 +97,25 @@ struct RunningLiveView: View {
                                 Text("경과시간")
                                     .customFontStyle(.gray1_M16)
                                 
-                                Text("00:20")
+                                Text("\(mapViewModel.elapsedTime.asString(style: .positional))")
                                     .customFontStyle(.gray1_B20)
                                     .italic()
                             }
                             .frame(width: 100, height: 100)
                             .background(.white)
                             .clipShape(Circle())
+                            
                         }
                     }
+                    .onReceive(mapViewModel.timer) { _ in
+                        self.mapViewModel.elapsedTime += 1.0
+                    }
+                    .onAppear {
+                        self.mapViewModel.startTracking()
+                    }
+                    .onChange(of: mapViewModel.distance, perform: { value in
+                        mapViewModel.updateExcerciseData()
+                    })
                     .padding(.top, UIApplication.shared.statusBarFrame.size.height + 5)
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                     
@@ -193,10 +213,11 @@ struct RunningLiveView: View {
         .preventGesture()
     }
     
-    func pasueButtonTapped() {
+    func pasueButtonTapped()  {
         withAnimation {
             isPause = true
         }
+        mapViewModel.stopTracking()
     }
     
     func playButtonTapped() {
@@ -204,6 +225,7 @@ struct RunningLiveView: View {
             isPause = false
             isShowingMessage = false
         }
+        mapViewModel.startTracking()
     }
     
     func stopButtonTapped() {
@@ -211,11 +233,12 @@ struct RunningLiveView: View {
     }
     
     func stopButtonLongPressed(value: Bool) {
+        mapViewModel.uploadExcerciseData()
         HapticManager.instance.impact(style: .heavy)
-        router.push(.runningResult)
+        router.push(.runningResult(runningData: RunningData(calorie: mapViewModel.calorie, coordinates: mapViewModel.lineCoordinates, distance: mapViewModel.distance, elapsedTime: mapViewModel.elapsedTime, pace: mapViewModel.pace)))
     }
 }
 
-#Preview {
-    RunningLiveView()
-}
+//#Preview {
+//    RunningLiveView()
+//}

@@ -19,16 +19,16 @@ struct ProfileEditView: View {
     @State private var selectedRunningStyle: RunningStyle = .walking
     @State private var runningStyle: RunningStyle?
     @State private var setDailyGoal: Double?
-    @State private var goalMinValue: Double?
-    @State private var goalMaxValue: Double?
+    @State private var age: Double?
+    @State private var gender: Bool?
     @State private var isProfilePublic: Bool = false
-    @State private var isProfileSaved: Bool = false
     
     
     @State private var heightPickerPresented: Bool = false
     @State private var weightPickerPresented: Bool = false
     @State private var runningStylePickerPresented: Bool = false
     @State private var setDailyGoalPickerPresented: Bool = false
+    @State private var agePickerPresented: Bool = false
     
     var body: some View {
         VStack {
@@ -119,6 +119,35 @@ struct ProfileEditView: View {
                         }
                         .padding(.vertical, 14)
                         
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text("연령대 및 성별")
+                                .customFontStyle(.gray1_B20)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text("연령대")
+                                        .customFontStyle(.gray1_R16)
+                                    Spacer()
+                                    pickerButton(pickerPresented: $agePickerPresented, value: age, unit: "대", format: "%.0f")
+                                }
+                                
+                                HStack {
+                                    Text("성별")
+                                        .customFontStyle(.gray1_R16)
+                                    Spacer()
+                                    HStack(spacing: 8){
+                                        SelectButton(image: [Image(.maleMain), Image(.maleGray1)],text: "남성", selected: gender == true, widthSize: 80){
+                                            gender = true
+                                        }
+                                        SelectButton(image: [Image(.femaleMain), Image(.femaleGray1)],text: "여성", selected: gender == false, widthSize: 80){
+                                            gender = false
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                        .padding(.vertical, 14)
+                        
                         // 사용자 관련
                         VStack(alignment: .leading, spacing: 20) {
                             Text("사용자 관련")
@@ -145,7 +174,7 @@ struct ProfileEditView: View {
             } left: {
                 NavigationBackButton()
             }
-            MainButton(active: true, buttonText: "수정완료", action: modifyButtonTapped)
+            MainButton(active: editCheck(userInfo: authViewModel.userInfo), buttonText: "수정완료", action: modifyButtonTapped)
                 .padding(Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
                 .simultaneousGesture(TapGesture().onEnded {
                 })
@@ -161,6 +190,8 @@ struct ProfileEditView: View {
             weight = authViewModel.userInfo.weight.map { Double($0) }
             runningStyle = authViewModel.userInfo.runningStyle
             setDailyGoal = authViewModel.userInfo.setDailyGoal
+            age = authViewModel.userInfo.age.map { Double($0) }
+            gender = authViewModel.userInfo.gender
             isProfilePublic = authViewModel.userInfo.isProfilePublic
         }
         .sheet(isPresented: $heightPickerPresented) {
@@ -211,7 +242,9 @@ struct ProfileEditView: View {
         .sheet(isPresented: $setDailyGoalPickerPresented) {
             PickerSheet(selectedValueBinding: $setDailyGoal, pickerType: .dailyGoal, startingValue: setDailyGoal ?? 1)
         }
-        
+        .sheet(isPresented: $agePickerPresented) {
+            PickerSheet(selectedValueBinding: $age, pickerType: .age, startingValue: age ?? 20)
+        }
     }
     
     
@@ -222,10 +255,26 @@ struct ProfileEditView: View {
         authViewModel.userInfo.weight = weight.map { Int($0) }
         authViewModel.userInfo.runningStyle = runningStyle
         authViewModel.userInfo.setDailyGoal = setDailyGoal
+        authViewModel.userInfo.age = age.map { Int($0) }
+        authViewModel.userInfo.gender = gender
         authViewModel.userInfo.isProfilePublic = isProfilePublic
         authViewModel.storeUserInfoInFirebase()
-        isProfileSaved = true
         presentationMode.wrappedValue.dismiss()
+    }
+    func editCheck(userInfo: UserInfo) -> Bool {
+        if selectedImage != userInfo.image ||
+            nickname != userInfo.username ||
+            height != userInfo.height.map({ Double($0) }) ||
+            weight != userInfo.weight.map({ Double($0) }) ||
+            runningStyle != userInfo.runningStyle ||
+            setDailyGoal != userInfo.setDailyGoal ||
+            age != userInfo.age.map({ Double($0) }) ||
+            gender != userInfo.gender ||
+        isProfilePublic != userInfo.isProfilePublic{
+            return true
+        }else{
+            return false
+        }
     }
 }
 

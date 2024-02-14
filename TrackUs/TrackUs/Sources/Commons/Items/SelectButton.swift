@@ -65,18 +65,21 @@ struct SelectButton: View {
         Button(action: {
             action()
         }, label: {
-            HStack(spacing: 20){
+            HStack(spacing: 0){
                 if let image = image {
                     image[selected ? 0 : 1]
                         .resizable()
                         .frame(width: 20.0, height: 20.0)
+                        .padding(.leading, 8)
+                    Spacer()
                 }
                 Text(text)
                     .customFontStyle(selected ? .main_B16 : .gray2_L16)
+                    .padding(.trailing, 8)
             }
         })
-        .frame(maxWidth: widthSize, maxHeight: 36)
-        //.frame(width: widthSize, height: 36)
+        .frame(maxWidth: widthSize)
+        .frame(height: 36)
         .overlay(
             Capsule()
                 .stroke(selected ? .main : .gray2, lineWidth: 1 )
