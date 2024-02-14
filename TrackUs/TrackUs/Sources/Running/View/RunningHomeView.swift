@@ -19,6 +19,7 @@ struct RunningHomeView: View {
     @State private var showingAlert: Bool = false
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
+  
     
     let cheeringPhrase = [
         "나만의 페이스로, 나만의 피니쉬라인까지.",
@@ -148,14 +149,10 @@ struct RunningHomeView: View {
                     
                     // MARK: - 러닝 리포트 확인하기
                     VStack {
-                        NavigationLinkCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.")
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(.gray3, lineWidth: 1)
-                            )
+                        GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
+                            .modifier(BorderLineModifier())
                     }
                     .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
-                    
                 }
                 .background(
                     GeometryReader { innerGeometry in
@@ -191,7 +188,7 @@ struct RunningHomeView: View {
         
         // MARK: - 상단 팝업
         .popup(isPresented: $showingFloater) {
-            NavigationLinkCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!")
+            GraphicTextCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!", resource: .clipboard)
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
             

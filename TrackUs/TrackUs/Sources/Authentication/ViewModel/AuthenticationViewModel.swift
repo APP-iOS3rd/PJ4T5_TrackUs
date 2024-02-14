@@ -55,7 +55,6 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     @Published var checkBool: Bool?
     @Published var userInfo: UserInfo = UserInfo()
     
-    
     // apple login 
     var window: UIWindow?
     fileprivate var currentNonce: String?

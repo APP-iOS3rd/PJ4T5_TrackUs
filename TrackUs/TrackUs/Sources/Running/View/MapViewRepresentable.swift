@@ -94,7 +94,7 @@ struct RouteMapView: UIViewControllerRepresentable {
             let cameraOptions = CameraOptions(center: centerPostion, zoom: 16)
             let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
             self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
-            self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.mapView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
             self.mapView.ornaments.options.scaleBar.visibility = .visible
             self.mapView.mapboxMap.styleURI = .light
             view.addSubview(mapView)

@@ -17,34 +17,12 @@ struct MyReportView: View {
             VStack (alignment: .leading){
                 
                 //MARK: - TrackUs Pro
-                
                 Button {
                     router.present(fullScreenCover: .payment)
                 } label: {
-                    HStack {
-                        Image(.iconTrackUsPro2)
-                        VStack(alignment: .leading) {
-                            Text("TrackUs Pro")
-                                .customFontStyle(.main_SB14)
-                            Text("상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요")
-                                .customFontStyle(.gray4_M12)
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                        }
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                    }
-                    .padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(lineWidth: 2)
-                            .foregroundColor(.gray3)
-                    )
+                    GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+                        .modifier(BorderLineModifier())
                 }
-                
-                
                 //MARK: - 기간별 운동 정보
                 
                 Text("기간별 운동 정보")
@@ -59,11 +37,7 @@ struct MyReportView: View {
                 // Circle View
                 CircleTabView(selectedPicker: $selectedTab, selectedDate: $selectedDate)
                     .padding(.top)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(lineWidth: 2)
-                            .foregroundColor(.gray3)
-                    )
+                    .modifier(BorderLineModifier())
                 
                 //MARK: - 연령대 추세
                 
@@ -78,11 +52,7 @@ struct MyReportView: View {
                 // 그래프 View
                 AgeGraphView(selectedTab: selectedTab, selectedDate: $selectedDate)
                     .padding(.top)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(lineWidth: 2)
-                            .foregroundColor(.gray3)
-                    )
+                    .modifier(BorderLineModifier())
                 
             }
             .padding(.top)

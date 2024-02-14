@@ -15,7 +15,7 @@ struct RunningResultView: View {
     var body: some View {
         VStack {
             RouteMapView(lineCoordinates: runningRecord.coordinates)
-            
+                .offset(y: 15)
             VStack {
                 VStack(spacing: 20) {
                     
@@ -83,17 +83,16 @@ struct RunningResultView: View {
                     }
                     
                     HStack {
-                        Text("피드백 메세지")
+                        Text("피드백 메세지 피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지")
                             .customFontStyle(.gray1_R14)
                         Spacer()
                     }
-                    
                     
                     MainButton(buttonText: "리포트로 이동하기", action: {router.popToRoot()})
                 }
                 .padding(20)
             }
-            .zIndex(2)
+            
             .frame(maxWidth: .infinity)
             .background(.white)
             .clipShape(
