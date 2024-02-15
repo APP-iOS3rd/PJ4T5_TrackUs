@@ -54,7 +54,7 @@ struct RunningLiveView: View {
                             Text("현재까지 거리")
                                 .customFontStyle(.gray1_M16)
                             Spacer()
-                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/ \(settingViewModel.goalMinValue)km")
+                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/" + String(format: "%.2f", settingViewModel.goalMinValue) + "km")
                                 .customFontStyle(.gray1_B20)
                                 .italic()
                         }

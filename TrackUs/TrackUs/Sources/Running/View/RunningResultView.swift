@@ -77,7 +77,7 @@ struct RunningResultView: View {
                             Image(.shose)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(String(format: "%.2f", runningRecord.distance / 1000.0) + " km / \(settingViewModel.goalMinValue) km")
+                                Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/" + String(format: "%.2f", settingViewModel.goalMinValue) + "km")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
