@@ -9,13 +9,11 @@ import SwiftUI
 
 struct SettingPopup: View {
     @Binding var showingPopup: Bool
-    @State private var goalMinValue: Double = 0.1
-    @State private var estimatedTime = 0
+    @ObservedObject var settingVM: SettingPopupViewModel
     
     var body: some View {
         VStack {
             VStack(spacing: 30) {
-                // 팝업닫기
                 HStack {
                     Spacer()
                     Button(action: {
@@ -26,7 +24,6 @@ struct SettingPopup: View {
                     }
                 }
                 
-                // 설명글
                 VStack {
                     Image("BigFire")
                     
@@ -37,14 +34,19 @@ struct SettingPopup: View {
                         .customFontStyle(.gray1_R16)
                 }
                 
-                // 목표 거리, 러닝시간 설정
                 VStack(spacing: 20) {
                     VStack {
                         Text("목표 거리량")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.gray1)
                         
-                        Picker(selection: $goalMinValue) {
+                        Picker(selection: Binding<Double>(
+                            get: { settingVM.goalMinValue },
+                            set: { newValue in
+                                settingVM.goalMinValue = newValue
+                                settingVM.updateEstimatedTime()
+                            }
+                        )) {
                             ForEach(Array(stride(from: 0.1, through: 40.0, by: 0.1)), id: \.self) {
                                 Text("\($0, specifier: "%.1f") km")
                                     .customFontStyle(.gray1_R16)
@@ -59,13 +61,12 @@ struct SettingPopup: View {
                             )
                     }
                     
-                    // 러닝 시간
                     VStack {
                         Text("러닝 시간")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.gray1)
                         
-                        Picker(selection: $estimatedTime) {
+                        Picker(selection: $settingVM.estimatedTime) {
                             ForEach(1..<240, id: \.self) {
                                 Text("\($0) min")
                                     .customFontStyle(.gray1_R16)
@@ -81,8 +82,8 @@ struct SettingPopup: View {
                     }
                 }
                 
-                // 설정 완료
                 Button(action: {
+                    settingVM.saveSettings()
                     showingPopup = false
                 }) {
                     Text("설정 완료")
@@ -105,5 +106,5 @@ struct SettingPopup: View {
 }
 
 #Preview {
-    SettingPopup(showingPopup: .constant(true))
+    SettingPopup(showingPopup: .constant(true), settingVM: SettingPopupViewModel())
 }
