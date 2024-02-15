@@ -41,7 +41,7 @@ struct BarGraphView: View {
                         LineMark(x: .value("Month", item.month), y: .value("Data", item.data))
                             .symbol {
                                 Circle()
-                                    .frame(width: 6)
+                                    .frame(width: 5)
                             }
                     }
                 }
