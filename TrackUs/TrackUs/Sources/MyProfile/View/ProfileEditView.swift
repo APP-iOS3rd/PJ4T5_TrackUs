@@ -16,14 +16,14 @@ struct ProfileEditView: View {
     @State private var nickname: String = ""
     @State private var height: Double?
     @State private var weight: Double?
-    @State private var selectedRunningStyle: RunningStyle = .walking
+    @State private var selectedRunningStyle: RunningStyle = .jogging
     @State private var runningStyle: RunningStyle?
     @State private var setDailyGoal: Double?
     @State private var age: Double?
     @State private var gender: Bool?
     @State private var isProfilePublic: Bool = false
-    
-    
+    @StateObject var settingPopupViewModel = SettingPopupViewModel()
+
     @State private var heightPickerPresented: Bool = false
     @State private var weightPickerPresented: Bool = false
     @State private var runningStylePickerPresented: Bool = false

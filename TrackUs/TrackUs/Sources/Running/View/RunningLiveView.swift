@@ -15,7 +15,8 @@ struct RunningLiveView: View {
     @GestureState private var press = false
     @State private var isPause = false
     @State private var isShowingMessage = false
-    
+    let settingViewModel = SettingPopupViewModel()
+
     var paceMinutes: Int {
         Int(mapViewModel.pace)
     }
@@ -53,7 +54,7 @@ struct RunningLiveView: View {
                             Text("현재까지 거리")
                                 .customFontStyle(.gray1_M16)
                             Spacer()
-                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/0km")
+                            Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/ \(settingViewModel.goalMinValue)km")
                                 .customFontStyle(.gray1_B20)
                                 .italic()
                         }

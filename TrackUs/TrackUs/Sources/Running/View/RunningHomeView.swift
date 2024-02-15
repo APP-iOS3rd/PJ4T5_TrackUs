@@ -199,7 +199,7 @@ struct RunningHomeView: View {
         }
         // MARK: - 목표운동량 설정 팝업
         .popup(isPresented: $showingPopup) {
-            SettingPopup(showingPopup: $showingPopup)
+            SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
         } customize: {
             $0
                 .backgroundColor(.black.opacity(0.3))
