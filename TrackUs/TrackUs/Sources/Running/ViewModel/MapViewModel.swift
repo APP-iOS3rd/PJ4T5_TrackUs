@@ -152,10 +152,9 @@ class MapViewModel: ObservableObject, Identifiable {
                     "timestamp": Timestamp(date: Date())
                 ]
                 
-                Constants.FirebasePath.RUNNING_RECORDS.document(uid).collection("record").addDocument(data: data) { error in
-                    if let error = error {
-                        print("DEBUG: Failed upload data: \(error.localizedDescription)")
-                    }
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
+                    guard let error = error else { return }
+                    print("DEBUG: failed upload Running records data in user collection")
                 }
             }
         }
