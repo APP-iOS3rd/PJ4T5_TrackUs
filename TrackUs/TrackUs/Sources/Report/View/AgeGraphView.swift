@@ -15,6 +15,17 @@ enum AvgAge: String, CaseIterable, Identifiable { // 나이대 피커
     case fifties = "50대"
     
     var id: Self { self }
+    
+    var intValue: Int {
+        switch self {
+        case .teens: return 10
+        case .twenties: return 20
+        case .thirties: return 30
+        case .forties: return 40
+        case .fifties: return 50
+            
+        }
+    }
 }
 
 //MARK: - 연령대 추세 비교 가로 그래프, 바 그래프
@@ -24,10 +35,12 @@ struct AgeGraphView: View {
     @State private var isPickerPresented = false
     @State var selectedAge : AvgAge = .twenties
     @Binding var selectedDate: Date?
+    @ObservedObject var viewModel = ReportViewModel.shared
     
     var body: some View {
         VStack {
             HStack {
+//                Text("\(viewModel.allUserRunningLog.count)")
                 Text("\(selectedTab == .day ? formattedDate : formattedMonth) 운동량")
                     .customFontStyle(.gray1_SB16)
                 
@@ -50,6 +63,10 @@ struct AgeGraphView: View {
                             .stroke(lineWidth: 1)
                             .foregroundColor(.gray1)
                     )
+                    .onChange(of: selectedAge) { newValue in
+                        viewModel.userAge = newValue.intValue
+                        viewModel.fetchUserAgeLog()
+                    }
                 }
             }
             
@@ -63,7 +80,7 @@ struct AgeGraphView: View {
             }
             
             // 가로 그래프
-            HorizontalGraph(selectedAge: $selectedAge)
+            HorizontalGraph(selectedTab: selectedTab, selectedAge: $selectedAge, selectedDate: $selectedDate)
                 .padding(.top, 14)
                 .padding(.bottom, 40)
             
@@ -98,6 +115,9 @@ struct AgeGraphView: View {
                 .presentationDetents([.height(250)])
                 .presentationDragIndicator(.hidden)
         })
+//        .onAppear {
+//            viewModel.fetchUserAgeLog()
+//        }
     }
     
     var formattedDate: String {

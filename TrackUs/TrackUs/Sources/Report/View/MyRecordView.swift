@@ -32,28 +32,9 @@ struct MyRecordView: View {
                     Button {
                         router.present(fullScreenCover: .payment)
                     } label: {
-                        HStack {
-                            Image(.iconTrackUsPro2)
-                            VStack(alignment: .leading) {
-                                Text("TrackUs Pro")
-                                    .customFontStyle(.main_SB14)
-                                Text("상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요")
-                                    .customFontStyle(.gray4_M12)
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.leading)
-                            }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray1)
-                        }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(lineWidth: 2)
-                                .foregroundColor(.gray3)
-                        )
+                        GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+                            .modifier(BorderLineModifier())
+                            .multilineTextAlignment(.leading)
                     }
                     
                     VStack(alignment: .leading) {
@@ -105,7 +86,7 @@ struct MyRecordView: View {
                     // RecordCell
                     LazyVGrid(columns: vGridItems, spacing: 0) {
 //                        ForEach(0...6, id: \.self) { item in
-                        ForEach(RunningRecord.mockData) { item in
+                        ForEach(RecordLog.mockData) { item in
 //                            RecordCell(gridDelete: $gridDelete, record: item)
                             RecordCell(gridDelete: $gridDelete, record: item, isSelected: isRecordAvailableOnDate(record: item, selectedDate: selectedDate))
                             Divider()
@@ -114,8 +95,7 @@ struct MyRecordView: View {
                         }
                     }
                 }
-                .padding(.top)
-                .padding(.bottom, 10)
+                .padding(.vertical, 20)
                 .padding(.horizontal, 16)
             }
         }
@@ -160,7 +140,7 @@ struct MyRecordView: View {
         })
     }
     
-    func isRecordAvailableOnDate(record: RunningRecord, selectedDate: Date?) -> Bool {
+    func isRecordAvailableOnDate(record: RecordLog, selectedDate: Date?) -> Bool {
         guard let selectedDate = selectedDate else { return false }
         let calendar = Calendar.current
         let recordDate = calendar.startOfDay(for: record.timestamp.dateValue())
@@ -180,7 +160,7 @@ extension MyRecordView {
 struct RecordCell: View {
     @State private var isDelete = false
     @Binding var gridDelete : Bool
-    let record : RunningRecord
+    let record : RecordLog
     let isSelected: Bool // 추가한 내용
     
     var body: some View {
@@ -318,7 +298,7 @@ struct RecordCell: View {
     }
 }
 
-struct RunningRecord : Identifiable, Hashable {
+struct RecordLog : Identifiable, Hashable {
     let id: String
     let title: String
     let location: String
@@ -331,7 +311,7 @@ struct RunningRecord : Identifiable, Hashable {
 //    var person: Int?
 }
 
-extension RunningRecord {
+extension RecordLog {
     
     
 //    static let mockData: [RunningRecord] = [
@@ -341,7 +321,7 @@ extension RunningRecord {
 //        .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: Timestamp(), withMate: false)
 //    ]
     
-    static let mockData: [RunningRecord] = {
+    static let mockData: [RecordLog] = {
             let calendar = Calendar.current
             
             let feb1Components = DateComponents(year: 2024, month: 2, day: 1)
@@ -559,7 +539,7 @@ struct CustomDateFilter: View {
     
     func isMockDataAvailableOnDate(date: Date) -> Bool {
         let calendar = Calendar.current
-        for record in RunningRecord.mockData { // 임시
+        for record in RecordLog.mockData { // 임시
             if calendar.isDate(record.timestamp.dateValue(), inSameDayAs: date) {
                 return true
             }

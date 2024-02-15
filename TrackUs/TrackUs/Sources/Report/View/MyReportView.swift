@@ -12,6 +12,8 @@ struct MyReportView: View {
     @EnvironmentObject var router: Router
     @State var selectedDate: Date? = Date()
     
+    @ObservedObject var viewModel = ReportViewModel.shared
+    
     var body: some View {
         ScrollView {
             VStack (alignment: .leading){
@@ -22,6 +24,7 @@ struct MyReportView: View {
                 } label: {
                     GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
                         .modifier(BorderLineModifier())
+                        .multilineTextAlignment(.leading)
                 }
                 //MARK: - 기간별 운동 정보
                 
@@ -57,6 +60,10 @@ struct MyReportView: View {
             }
             .padding(.vertical, 20)
             .padding(.horizontal, 16)
+        }
+        .onAppear {
+            viewModel.fetchUserLog()
+            viewModel.fetchUserAgeLog()
         }
     }
 }
