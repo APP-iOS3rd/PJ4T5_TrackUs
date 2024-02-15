@@ -55,7 +55,6 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     @Published var checkBool: Bool?
     @Published var userInfo: UserInfo = UserInfo()
     
-    
     // apple login 
     var window: UIWindow?
     fileprivate var currentNonce: String?
@@ -132,7 +131,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 if !reason.isEmpty {
                     let withdrawalData = ["uid": uid,
                                           "reason": reason]
-                    Firestore.firestore().collection("withdrawalReasons").addDocument(data: withdrawalData)
+                    try await Firestore.firestore().collection("withdrawalReasons").addDocument(data: withdrawalData)
                 }
             }
             self.authenticationState = .unauthenticated

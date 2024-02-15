@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 enum Constants {
     enum ViewLayout {
@@ -18,5 +19,13 @@ enum Constants {
         static let OPEN_SOURCE_LICENSE_URL = "https://lizard-basketball-e41.notion.site/a57a3078e21c4821932d2189859b8bcb?pvs=4"
         static let SERVICE_REQUEST_URL = "https://forms.gle/drvCZV4kHdgZJonRA"
         static let TEAM_INTRO_URL = "https://lizard-basketball-e41.notion.site/Team-TrackUs-2d71e86df51f4bbba4b0b7a5b04ac947?pvs=4"
+    }
+    
+    enum RunningStyle {
+        
+    }
+    
+    enum FirebasePath {
+        static let COLLECTION_UESRS = Firestore.firestore().collection("users")
     }
 }

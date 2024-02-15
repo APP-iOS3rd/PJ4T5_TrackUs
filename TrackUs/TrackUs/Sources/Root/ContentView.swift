@@ -11,6 +11,8 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
+    @ObservedObject var networkManager = NetworkManager()
+    @State private var showAlert = false
     
     var body: some View {
         VStack{
@@ -32,6 +34,18 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.light)
+        .popup(isPresented: $showAlert) {
+            NetworkErrorView()
+                .frame(width: 300, height: 150)
+        } customize: {
+            $0
+                .backgroundColor(.black.opacity(0.3))
+                .isOpaque(true)
+        }
+        .onReceive(networkManager.$isConnected, perform: { isConnected in
+            showAlert = !isConnected
+        })
+        .disabled(showAlert)
     }
 }
 
