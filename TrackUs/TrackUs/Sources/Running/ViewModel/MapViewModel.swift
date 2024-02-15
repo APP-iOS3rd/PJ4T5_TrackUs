@@ -10,8 +10,6 @@ import MapboxMaps
 import Combine
 import Firebase
 
-typealias FirestoreCompletion = ((Error?) -> Void)?
-
 class MapViewModel: ObservableObject, Identifiable {
     var mapView: MapView!
     var lineCoordinates = [CLLocationCoordinate2D]()
@@ -29,7 +27,7 @@ class MapViewModel: ObservableObject, Identifiable {
     @Published var calorie = 0.0
     @Published var elapsedTime = 0.0
     
-    // 맵뷰 초기설정
+    // MARK: - 맵뷰 초기설정
     func setupMapView(frame: CGRect) {
         // 초기설정
         locationManager.getCurrentLocation()
@@ -38,7 +36,7 @@ class MapViewModel: ObservableObject, Identifiable {
         let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
         self.mapView = MapView(frame: frame, mapInitOptions: myMapInitOptions)
         self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.mapView.mapboxMap.styleURI = .light
+        self.mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
         self.puckConfiguration.topImage = UIImage(named: "Puck")
         self.mapView.location.options.puckType = .puck2D(puckConfiguration)
         self.mapView.location.options.puckBearingEnabled = true
@@ -58,43 +56,45 @@ class MapViewModel: ObservableObject, Identifiable {
         self.lineCoordinates.append(coordinate)
     }
     
-    // 기록시작
+    // MARK: - 기록시작
     func startTracking() {
         // 타이머 활성화
         timer = Timer.publish(every: 1, on: .main, in: .default)
         timerHandler = timer.connect()
         
-        // TODO: - 이동거리 범위가 적은 경우 경로에 추가하지 않기
+        // 라이브트래킹 옵저브
         self.locationTrackingCancellation = mapView.location.onLocationChange.observe({ [weak mapView] newLocation in
-            let dataCount = self.lineCoordinates.count
+            let coordinateCount = self.lineCoordinates.count
             guard let location = newLocation.last, let mapView else { return }
-            if let lastData = self.lineCoordinates.last, lastData == location.coordinate { return }
+            if let lastData = self.lineCoordinates.last, lastData == location.coordinate { return}
+            // TODO: - lineCoordinates에 비슷하거나 많은 데이터가 들어옴
             
-            self.lineCoordinates.append(CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude))
+            // 경로선 레이아웃 추가
+            self.lineCoordinates.append(location.coordinate)
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: self.lineCoordinates)
             self.lineAnnotation.lineColor = StyleColor(UIColor.main)
             self.lineAnnotation.lineWidth = 5
             self.lineAnnotation.lineJoin = .round
             self.lineAnnotationManager.annotations = [self.lineAnnotation]
             
-            // 좌표가 2개이상 존재하는경우 이동거리 업데이트
-            if dataCount > 1 {
-                self.distance += self.lineAnnotation.lineString.distance(from: self.lineCoordinates[dataCount - 2], to: self.lineCoordinates[dataCount - 1]) ?? 0
+            // 이동거리 업데이트
+            if coordinateCount > 1 {
+                self.distance += self.lineAnnotation.lineString.distance(from: self.lineCoordinates[coordinateCount - 2], to: self.lineCoordinates[coordinateCount - 1]) ?? 0
             }
             
             mapView.camera.ease(
-                to: CameraOptions(center: location.coordinate, zoom: 17, bearing: 0),
+                to: CameraOptions(center: location.coordinate, zoom: 17),
                 duration: 1.3)
         })
     }
     
-    // 기록중지
+    // MARK: - 기록중지
     func stopTracking() {
         timerHandler?.cancel()
         self.locationTrackingCancellation = nil
     }
     
-    // 운동정보 계산
+    // MARK: - 운동정보 계산
     @MainActor
     func updateExcerciseData() {
         // 칼로리 계산
@@ -107,8 +107,7 @@ class MapViewModel: ObservableObject, Identifiable {
         self.pace = (self.elapsedTime / 60) / (self.distance / 1000.0)
     }
     
-    // 운동정보 추가(DB)
-    // TODO: - 썸네일용 사진 업로드 기능(사진크기 조절, 카메라 위치를 중앙으로 맞추기)
+    // MARK: - 운동데이터 업로드
     @MainActor
     func uploadExcerciseData() {
         self.stopTracking()
@@ -128,12 +127,12 @@ class MapViewModel: ObservableObject, Identifiable {
                         return
                     }
                     context.addLine(to: overlayHandler.pointForCoordinate(data.element))
-                    
                 }
             }
             
             context.setStrokeColor(UIColor.main.cgColor)
             context.setLineWidth(5.0)
+            context.setLineJoin(.round)
             context.setLineCap(.round)
             context.strokePath()
             
@@ -153,15 +152,15 @@ class MapViewModel: ObservableObject, Identifiable {
                     "timestamp": Timestamp(date: Date())
                 ]
                 
-                Constants.FirebasePath.RUNNING_RECORDS.document(uid).collection("record").addDocument(data: data) { error in
-                    if let error = error {
-                        print("DEBUG: Failed upload data: \(error.localizedDescription)")
-                    }
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
+                    guard let error = error else { return }
+                    print("DEBUG: failed upload Running records data in user collection")
                 }
             }
         }
     }
     
+    // MARK: - 중앙위치 계산
     func calculateCenterCoordinate(for coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
         guard !coordinates.isEmpty else {
             return nil
@@ -176,4 +175,5 @@ class MapViewModel: ObservableObject, Identifiable {
         
         return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
+    
 }

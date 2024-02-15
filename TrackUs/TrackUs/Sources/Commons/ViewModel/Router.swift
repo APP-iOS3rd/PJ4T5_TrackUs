@@ -25,7 +25,7 @@ enum Page: Hashable, Identifiable {
     case withDrawal
     // Home
     case runningStart
-    case runningResult(runningData: RunningData)
+    case runningResult(RunningRecord)
     
     var id: String {
         String(describing: self)
@@ -119,8 +119,8 @@ final class Router: ObservableObject {
             Withdrawal()
         case .runningStart:
             RunningLiveView()
-        case .runningResult(runningData: let runningData):
-            RunningResultView(runningData: runningData)
+        case .runningResult(let runningRecord):
+            RunningResultView(runningRecord: runningRecord)
         }
     }
     
