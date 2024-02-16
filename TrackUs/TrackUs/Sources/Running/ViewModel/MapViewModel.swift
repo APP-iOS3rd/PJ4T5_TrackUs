@@ -22,6 +22,7 @@ class MapViewModel: ObservableObject {
     private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
     @Published var timer = Timer.publish(every: 1, on: .main, in: .default)
     @Published var timerHandler: Cancellable?
+    @Published var title = ""
     @Published var distance = 0.0
     @Published var pace = 0.0
     @Published var calorie = 0.0
