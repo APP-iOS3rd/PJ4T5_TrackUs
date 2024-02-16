@@ -9,12 +9,11 @@ import SwiftUI
 
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
-    let runningRecord: RunningRecord
-    
+    @ObservedObject var mapViewModel: MapViewModel
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: runningRecord.coordinates)
+            RouteMapView(lineCoordinates: mapViewModel.lineCoordinates)
                 .offset(y: 15)
             VStack {
                 VStack(spacing: 20) {
@@ -37,7 +36,7 @@ struct RunningResultView: View {
                             Image(.shose)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(String(format: "%.2f", runningRecord.distance / 1000.0) + " km / - ")
+                                Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + " km / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -49,7 +48,7 @@ struct RunningResultView: View {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(String(format: "%.1f", runningRecord.calorie) + " kcal / - ")
+                                Text(String(format: "%.1f", mapViewModel.calorie) + " kcal / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -61,7 +60,7 @@ struct RunningResultView: View {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text("\(runningRecord.elapsedTime.asString(style: .positional))")
+                                Text("\(mapViewModel.elapsedTime.asString(style: .positional))")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -73,7 +72,7 @@ struct RunningResultView: View {
                             Image(.pace)
                             VStack(alignment: .leading) {
                                 Text("페이스")
-                                Text(runningRecord.paceMinutes == 0 && runningRecord.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", runningRecord.paceMinutes, runningRecord.paceSeconds))
+                                Text(mapViewModel.paceMinutes == 0 && mapViewModel.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", mapViewModel.paceMinutes, mapViewModel.paceSeconds))
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()

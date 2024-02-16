@@ -10,7 +10,7 @@ import MapboxMaps
 import Combine
 import Firebase
 
-class MapViewModel: ObservableObject, Identifiable {
+class MapViewModel: ObservableObject {
     var mapView: MapView!
     var lineCoordinates = [CLLocationCoordinate2D]()
     private let locationManager = LocationManager.shared
@@ -26,6 +26,14 @@ class MapViewModel: ObservableObject, Identifiable {
     @Published var pace = 0.0
     @Published var calorie = 0.0
     @Published var elapsedTime = 0.0
+    
+    var paceMinutes: Int {
+        Int(self.pace)
+    }
+    
+    var paceSeconds: Int {
+        Int((self.pace - Double(paceMinutes)) * 60)
+    }
     
     // MARK: - 맵뷰 초기설정
     func setupMapView(frame: CGRect) {
@@ -176,4 +184,14 @@ class MapViewModel: ObservableObject, Identifiable {
         return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
     
+}
+
+extension MapViewModel: Hashable {
+    static func == (lhs: MapViewModel, rhs: MapViewModel) -> Bool {
+        lhs.hashValue == rhs.hashValue
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(mapView)
+    }
 }
