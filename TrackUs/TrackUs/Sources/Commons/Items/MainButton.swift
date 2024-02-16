@@ -9,10 +9,10 @@ import SwiftUI
 
 struct MainButton: View {
     private var active: Bool
+    private var minHeight: CGFloat = 56
     private let text: String
     private let cornerRadius: CGFloat = 14
     private let buttonColor: Color
-    
     private let action: () -> Void
     
     
@@ -33,11 +33,12 @@ struct MainButton: View {
     // CompletButton(active: Bool, buttonText: "버튼 문구") { 실행코드 추가 }
     
     /// 활성화 버튼 -> active: true = 활성화, false = 비활성화
-    init(active: Bool, buttonText: String, buttonColor: Color = .main, action: @escaping () -> Void) {
+    init(active: Bool, buttonText: String, buttonColor: Color = .main, minHeight: CGFloat = 56, action: @escaping () -> Void) {
         self.active = active
         self.text = buttonText
         self.action = action
         self.buttonColor = buttonColor
+        self.minHeight = minHeight
     }
     
     var body: some View {
@@ -45,7 +46,7 @@ struct MainButton: View {
             HStack (spacing: 0) {
                 Text(text)
                     .customFontStyle(active ? .white_B16 : .gray1_B16)
-                    .frame(maxWidth: .infinity, minHeight: 56)
+                    .frame(maxWidth: .infinity, minHeight: minHeight)
             }
             .background(active ? buttonColor : .gray3)
             .clipShape(Capsule())

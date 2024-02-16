@@ -88,7 +88,16 @@ struct RunningResultView: View {
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     
-                    MainButton(buttonText: "리포트로 이동하기", action: {router.popToRoot()})
+                    HStack(spacing: 28) {
+                        MainButton(active: true, buttonText: "리포트로 이동하기", buttonColor: .gray1, minHeight: 45) {
+                            router.popToRoot()
+                        }
+                        
+                        MainButton(active: true, buttonText: "러닝 기록 저장", buttonColor: .main, minHeight: 45) {
+                            router.popToRoot()
+                        }
+                    
+                    }
                 }
                 .padding(20)
             }
