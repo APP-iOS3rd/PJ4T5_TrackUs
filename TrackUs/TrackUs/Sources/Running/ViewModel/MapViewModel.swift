@@ -118,7 +118,7 @@ class MapViewModel: ObservableObject {
     
     // MARK: - 운동데이터 업로드
     @MainActor
-    func uploadExcerciseData() {
+    func uploadRunningData(_ completion: @escaping (Bool) -> ()) {
         self.stopTracking()
         let uid = self.authViewModel.userInfo.uid
         // 경로가 여러개 존재하는 경우 카메라 위치 변경
@@ -151,19 +151,28 @@ class MapViewModel: ObservableObject {
                 return
             }
             ImageUploader.uploadImage(image: image, type: .map) { url in
-                let data: [String : Any] = [
-                    "distance": self.distance,
-                    "pace": self.pace,
-                    "calorie": self.calorie,
-                    "elapsedTime": self.elapsedTime,
-                    "coordinates": self.lineCoordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
-                    "routeImageUrl": url,
-                    "timestamp": Timestamp(date: Date())
-                ]
-                
-                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
-                    guard let error = error else { return }
-                    print("DEBUG: failed upload Running records data in user collection")
+                let coordinate = CLLocation(latitude: self.lineCoordinates.first!.latitude, longitude: self.lineCoordinates.first!.longitude)
+                self.locationManager.convertToAddressWith(coordinate: coordinate) { address in
+                    guard let address = address else { return } // 한글주소
+                    
+                    let data: [String : Any] = [
+                        "title": self.title == "" ? "\(address) 에서 러닝" : self.title,
+                        "distance": self.distance,
+                        "pace": self.pace,
+                        "calorie": self.calorie,
+                        "elapsedTime": self.elapsedTime,
+                        "coordinates": self.lineCoordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                        "routeImageUrl": url,
+                        "address": address,
+                        "timestamp": Timestamp(date: Date())
+                    ]
+                    
+                    Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
+                        guard let error = error else { return }
+                        print("DEBUG: failed upload Running records data in user collection")
+                        completion(false)
+                    }
+                    completion(true)
                 }
             }
         }

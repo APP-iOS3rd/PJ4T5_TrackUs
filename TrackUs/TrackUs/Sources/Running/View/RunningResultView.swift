@@ -117,7 +117,7 @@ struct RunningResultView: View {
         .ignoresSafeArea(.keyboard)
         .preventGesture()
         .popup(isPresented: $showingPopup) {
-            SaveDataPopup(title: $mapViewModel.title, showingPopup: $showingPopup)
+            SaveDataPopup(title: $mapViewModel.title, showingPopup: $showingPopup, mapViewModel: mapViewModel)
         } customize: {
             $0
                 .backgroundColor(.black.opacity(0.3))
@@ -132,6 +132,8 @@ struct SaveDataPopup: View {
     @Binding var title: String
     @Binding var showingPopup: Bool
     @FocusState private var titleTextFieldFocused: Bool
+    @ObservedObject var mapViewModel: MapViewModel
+    @EnvironmentObject var router: Router
     
     var body: some View {
         VStack(spacing: 0) {
@@ -165,9 +167,11 @@ struct SaveDataPopup: View {
                             .overlay(Capsule().stroke(.main))
                     })
                     
-                    
                     MainButton(active: true, buttonText: "확인", minHeight: 40) {
-                        
+                        mapViewModel.uploadRunningData { _ in
+                            showingPopup = false
+                            router.popToRoot()
+                        }
                     }
                     
                 }
