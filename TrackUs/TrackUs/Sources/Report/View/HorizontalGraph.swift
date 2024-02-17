@@ -124,8 +124,6 @@ struct HorizontalGraph: View {
         }
     }
     
-//    Text(String(format: "%.2f", totalDistanceForSelectedDate / 1000.0) + "km")
-    
     // 필터링된 데이터에서 거리 값 합산
     var totalDistanceForSelectedDate: Double {
         runningLogForSelectedDate.reduce(0) { $0 + $1.distance }
@@ -176,7 +174,7 @@ struct HorizontalGraph: View {
         let totalDistance = allUserRunningLogForSelectedDate.reduce(0.0) { $0 + $1.distance }
         return totalDistance / Double(allUserRunningLogForSelectedDate.count)
     }
-
+    
     //일별 페이스
     var allUserAveragePaceForSelectedDate: Double {
         guard !allUserRunningLogForSelectedDate.isEmpty else {
@@ -241,8 +239,6 @@ struct SpeedBar: View {
                     .customFontStyle(.gray1_R9)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
-//                    .offset(x: value == 0 ? (value * 10) + 10 : value + 10)
-//                    .offset(x: +value + 10)
                     .offset(x: +(value * 2) + 10)
             }
         }
@@ -264,21 +260,12 @@ struct DistanceBar: View {
                 Capsule().frame(width: maxWidth, height: 12) // 그래프 높이
                     .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
                 Capsule().frame(width: CGFloat(max(0, min(value * 2, Double(maxWidth)))), height: 15)
-//                Capsule().frame(width: CGFloat(max(0, min(value * 10, Double(maxWidth)))), height: 15)
-                
-//                if value != 0 {
-//                    Capsule().frame(width: CGFloat(max(0, min(value, Double(maxWidth)))), height: 15)
-//                } else {
-//                    Capsule().frame(width: CGFloat(max(0, min(value * 10, Double(maxWidth)))), height: 15)
-//                }
                 
                 Text("\(String(format: "%0.1f", DistanceValue)) km")
                     .customFontStyle(.gray1_R9)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
-//                    .offset(x: +(value * 10) + 10)
                     .offset(x: +(value * 2) + 10)
-//                    .offset(x: value == 0 ? (value * 10) + 10 : value + 10)
             }
         }
     }

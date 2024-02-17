@@ -23,7 +23,7 @@ struct MyRecordView: View {
     @State private var calendarButton = false
     @State private var selectedFilter: RecordFilter?
     @State private var gridDelete = false
-    @State var selectedDate: Date? = Date()
+    @Binding var selectedDate: Date?
     
     var body: some View {
         ScrollView {
@@ -85,9 +85,9 @@ struct MyRecordView: View {
                     
                     // RecordCell
                     LazyVGrid(columns: vGridItems, spacing: 0) {
-//                        ForEach(0...6, id: \.self) { item in
+                        //                        ForEach(0...6, id: \.self) { item in
                         ForEach(RecordLog.mockData) { item in
-//                            RecordCell(gridDelete: $gridDelete, record: item)
+                            //                            RecordCell(gridDelete: $gridDelete, record: item)
                             RecordCell(gridDelete: $gridDelete, record: item, isSelected: isRecordAvailableOnDate(record: item, selectedDate: selectedDate))
                             Divider()
                                 .padding(.top, 24)
@@ -175,14 +175,14 @@ struct RecordCell: View {
                 
                 VStack(alignment: .leading) {
                     HStack {
-//                        Text("러닝메이트")
-//                            .foregroundColor(.white)
-//                            .font(.system(size: 11))
-//                            .fontWeight(.semibold)
-//                            .padding(.horizontal, 10)
-//                            .padding(.vertical, 3)
-//                            .background(Color.orange2)
-//                            .cornerRadius(25)
+                        //                        Text("러닝메이트")
+                        //                            .foregroundColor(.white)
+                        //                            .font(.system(size: 11))
+                        //                            .fontWeight(.semibold)
+                        //                            .padding(.horizontal, 10)
+                        //                            .padding(.vertical, 3)
+                        //                            .background(Color.orange2)
+                        //                            .cornerRadius(25)
                         Text("개인")
                             .foregroundColor(.white)
                             .font(.system(size: 11))
@@ -215,7 +215,7 @@ struct RecordCell: View {
                         .foregroundColor(.gray1)
                     }
                     
-//                    Text("광명시 러닝 메이트 구합니다")
+                    //                    Text("광명시 러닝 메이트 구합니다")
                     Text(record.title)
                         .lineLimit(1)
                         .customFontStyle(.gray1_B16)
@@ -223,26 +223,26 @@ struct RecordCell: View {
                     HStack(spacing: 10) {
                         HStack {
                             Image(.pin)
-//                            Text("서울숲카페거리")
+                            //                            Text("서울숲카페거리")
                             Text(record.location)
                                 .customFontStyle(.gray1_R12)
                                 .lineLimit(1)
                         }
                         
-//                        Spacer()
+                        //                        Spacer()
                         
                         HStack {
                             Image(.timerLine)
-//                            Text("10:02 AM")
+                            //                            Text("10:02 AM")
                             Text(formatTime(record.timestamp))
                                 .customFontStyle(.gray1_R12)
                         }
                         
-//                        Spacer()
+                        //                        Spacer()
                         
                         HStack {
                             Image(.arrowBoth)
-//                            Text("1.72km")
+                            //                            Text("1.72km")
                             Text("\(record.distance, specifier:"%.1f")km")
                                 .customFontStyle(.gray1_R12)
                         }
@@ -256,13 +256,13 @@ struct RecordCell: View {
                                 .foregroundColor(.gray1)
                             
                             Text("1")
-//                            Text(" ")
+                            //                            Text(" ")
                                 .customFontStyle(.gray1_M16)
                         }
                         
                         Spacer()
                         
-//                        Text("2024년 2월 12일")
+                        //                        Text("2024년 2월 12일")
                         Text(formatDate(record.timestamp))
                             .customFontStyle(.gray1_SB12)
                     }
@@ -282,19 +282,19 @@ struct RecordCell: View {
     }
     
     func formatTime(_ timestamp: Timestamp) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "hh:mm a"
-    dateFormatter.amSymbol = "AM"
-    dateFormatter.pmSymbol = "PM"
-    return dateFormatter.string(from: timestamp.dateValue())
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        return dateFormatter.string(from: timestamp.dateValue())
     }
     
     func formatDate(_ timestamp: Timestamp) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy년 MM월 dd일"
-    dateFormatter.amSymbol = "AM"
-    dateFormatter.pmSymbol = "PM"
-    return dateFormatter.string(from: timestamp.dateValue())
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        return dateFormatter.string(from: timestamp.dateValue())
     }
 }
 
@@ -304,49 +304,49 @@ struct RecordLog : Identifiable, Hashable {
     let location: String
     let distance: Double
     let timestamp: Timestamp
-//    let date: Timestamp
+    //    let date: Timestamp
     let withMate: Bool
-//    let person: Int
-//    var user: User? // 백엔드에서 작업을 설정하는 방법 떄문에 var 이며 옵셔널이다?
-//    var person: Int?
+    //    let person: Int
+    //    var user: User? // 백엔드에서 작업을 설정하는 방법 떄문에 var 이며 옵셔널이다?
+    //    var person: Int?
 }
 
 extension RecordLog {
     
     
-//    static let mockData: [RunningRecord] = [
-//        .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: Timestamp(), withMate: false),
-//        .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: Timestamp(), withMate: false),
-//        .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: Timestamp(), withMate: false),
-//        .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: Timestamp(), withMate: false)
-//    ]
+    //    static let mockData: [RunningRecord] = [
+    //        .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: Timestamp(), withMate: false),
+    //        .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: Timestamp(), withMate: false),
+    //        .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: Timestamp(), withMate: false),
+    //        .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: Timestamp(), withMate: false)
+    //    ]
     
     static let mockData: [RecordLog] = {
-            let calendar = Calendar.current
-            
-            let feb1Components = DateComponents(year: 2024, month: 2, day: 1)
-            let feb1Date = calendar.date(from: feb1Components)!
-            let feb1Timestamp = Timestamp(date: feb1Date)
-            
-            let feb5Components = DateComponents(year: 2024, month: 2, day: 5)
-            let feb5Date = calendar.date(from: feb5Components)!
-            let feb5Timestamp = Timestamp(date: feb5Date)
-            
-            let jan12Components = DateComponents(year: 2024, month: 1, day: 12)
-            let jan12Date = calendar.date(from: jan12Components)!
-            let jan12Timestamp = Timestamp(date: jan12Date)
-            
-            let mar9Components = DateComponents(year: 2024, month: 3, day: 9)
-            let mar9Date = calendar.date(from: mar9Components)!
-            let mar9Timestamp = Timestamp(date: mar9Date)
-            
-            return [
-                .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: feb1Timestamp, withMate: false),
-                .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: feb5Timestamp, withMate: false),
-                .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: jan12Timestamp, withMate: false),
-                .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: mar9Timestamp, withMate: false)
-            ]
-        }()
+        let calendar = Calendar.current
+        
+        let feb1Components = DateComponents(year: 2024, month: 2, day: 1)
+        let feb1Date = calendar.date(from: feb1Components)!
+        let feb1Timestamp = Timestamp(date: feb1Date)
+        
+        let feb5Components = DateComponents(year: 2024, month: 2, day: 5)
+        let feb5Date = calendar.date(from: feb5Components)!
+        let feb5Timestamp = Timestamp(date: feb5Date)
+        
+        let jan12Components = DateComponents(year: 2024, month: 1, day: 12)
+        let jan12Date = calendar.date(from: jan12Components)!
+        let jan12Timestamp = Timestamp(date: jan12Date)
+        
+        let mar9Components = DateComponents(year: 2024, month: 3, day: 9)
+        let mar9Date = calendar.date(from: mar9Components)!
+        let mar9Timestamp = Timestamp(date: mar9Date)
+        
+        return [
+            .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: feb1Timestamp, withMate: false),
+            .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: feb5Timestamp, withMate: false),
+            .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: jan12Timestamp, withMate: false),
+            .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: mar9Timestamp, withMate: false)
+        ]
+    }()
 }
 
 //MARK: - 커스텀 캘린더
@@ -470,8 +470,8 @@ struct CustomDateFilter: View {
         .padding(.vertical, 10)
         .padding(.horizontal, 5)
         .background(value.day != -1 && isSelected ? .main : .white)
-//        .background(isSelected ? .main : .white)
-//        .background(isSelected && value.day == -1 ? .white : .white)
+        //        .background(isSelected ? .main : .white)
+        //        .background(isSelected && value.day == -1 ? .white : .white)
         .cornerRadius(30)
     }
     var formattedDate: String {
@@ -507,7 +507,7 @@ struct CustomDateFilter: View {
         return currentMonth
     }
     
-//    func extractDate() ->[DateValue]{
+    //    func extractDate() ->[DateValue]{
     func extractDate() ->[DateValue]{
         
         let calendar = Calendar.current
@@ -549,7 +549,7 @@ struct CustomDateFilter: View {
     
 }
 
-#Preview {
-    MyRecordView()
-//    RecordCell()
-}
+//#Preview {
+//    MyRecordView()
+////    RecordCell()
+//}

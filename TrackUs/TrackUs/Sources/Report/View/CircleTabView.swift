@@ -109,8 +109,6 @@ struct DailyCircleView: View {
     @ObservedObject var viewModel = ReportViewModel.shared
     @StateObject var authViewModel = AuthenticationViewModel.shared
     
-//    @State private var progress: CGFloat = 0.0
-    
     var runningLogForSelectedDate: [Runninglog] {
         guard let selectedDate = selectedDate else { return [] }
         return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
@@ -124,7 +122,7 @@ struct DailyCircleView: View {
         
         return CGFloat(progressPercentage)
     }
-
+    
     
     // 어제 날짜로 설정
     private var yesterdayDate: Date {
@@ -180,7 +178,6 @@ struct DailyCircleView: View {
                             .frame(width: 13, height: 13)
                             .foregroundColor(.blue1)
                     }
-                    //                    authViewModel.userInfo.setDailyGoal
                     Text("\(String(format: "%.1f", totalDistanceForSelectedDate / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
                         .customFontStyle(.gray1_H17)
                         .italic()
@@ -189,8 +186,6 @@ struct DailyCircleView: View {
             
             HStack {
                 VStack(spacing: 7) {
-                    //                    Text("151")
-                    //                    Text("\(totalCaloriesForSelectedDate)")
                     Text(String(format: "%.1f", totalCaloriesForSelectedDate))
                         .customFontStyle(.gray1_B20)
                         .italic()
@@ -201,8 +196,6 @@ struct DailyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    //                    Text("3.2km")
-                    //                    Text("\(totalDistanceForSelectedDate)")
                     Text(String(format: "%.2f", totalDistanceForSelectedDate / 1000.0) + "km")
                         .customFontStyle(.gray1_B20)
                         .italic()
@@ -213,8 +206,6 @@ struct DailyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    //                    Text("00:32")
-                    //                    Text("\(totalTimeForSelectedDate)")
                     Text("\(totalTimeForSelectedDate.asString(style: .positional))")
                         .customFontStyle(.gray1_B20)
                         .italic()
@@ -226,14 +217,12 @@ struct DailyCircleView: View {
                 
                 VStack(spacing: 7) {
                     Text("_'__'")
-                    //                    Text("\(averagePaceForSelectedDate)")
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("평균 페이스")
                         .customFontStyle(.gray2_R15)
                 }
             }
-//            .padding(.horizontal, 40)
             .padding(.horizontal, 30)
             .padding(.vertical, 30)
         }
@@ -274,10 +263,6 @@ struct DailyCircleView: View {
         let totalPace = runningLogForSelectedDate.reduce(0.0) { $0 + $1.pace }
         return totalPace / Double(runningLogForSelectedDate.count)
     }
-//    var averagePaceForSelectedDate: Double {
-//        let totalPace = runningLogForSelectedDate.reduce(0.0) { $0 + $1.pace }
-//        return totalPace / Double(runningLogForSelectedDate.count)
-//    }
     
     func currentMonthAndYearAndDate() -> String {
         let currentDate = Date()
@@ -290,7 +275,6 @@ struct DailyCircleView: View {
 //MARK: - 한달 운동량 원 그래프
 
 struct MonthlyCircleView: View {
-//    @State private var progress: CGFloat = 0.5
     @Binding var selectedDate: Date?
     
     @ObservedObject var viewModel = ReportViewModel.shared
@@ -322,15 +306,6 @@ struct MonthlyCircleView: View {
             return Date()
         }
     }
-//    
-//    // 이번 달 첫 번째 날짜
-//    private var firstDayOfSelectedMonth: Date {
-//        if let selectedDate = selectedDate {
-//            return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: selectedDate)) ?? Date()
-//        } else {
-//            return Date()
-//        }
-//    }
     
     // 이번 달 첫 번째 날짜
     private var firstDayOfSelectedMonth: Date {
@@ -355,7 +330,6 @@ struct MonthlyCircleView: View {
             HStack {
                 Button {
                     selectedDate = lastMonthDate
-//                    selectedDate = firstDayOfSelectedMonth
                 } label: {
                     Image(systemName: "arrowtriangle.left.fill")
                         .foregroundColor(.gray2)
@@ -367,7 +341,6 @@ struct MonthlyCircleView: View {
                 
                 Button {
                     selectedDate = nextMonthDate
-//                    selectedDate = firstDayOfNextMonth
                 } label: {
                     Image(systemName: "arrowtriangle.right.fill")
                         .foregroundColor(.gray2)
@@ -397,7 +370,6 @@ struct MonthlyCircleView: View {
             HStack {
                 VStack(spacing: 7) {
                     Text(String(format: "%.1f", averageCaloriesForSelectedMonth))
-//                    Text("\(averageCaloriesForSelectedMonth)")
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("칼로리")
@@ -408,7 +380,6 @@ struct MonthlyCircleView: View {
                 
                 VStack(spacing: 7) {
                     Text(String(format: "%.2f", averageDistanceForSelectedMonth / 1000.0) + "km")
-//                    Text("\(averageDistanceForSelectedMonth)")
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("킬로미터")
@@ -419,7 +390,6 @@ struct MonthlyCircleView: View {
                 
                 VStack(spacing: 7) {
                     Text("\(averageTimeForSelectedMonth.asString(style: .positional))")
-//                    Text("\(averageTimeForSelectedMonth)")
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("시간")
@@ -437,7 +407,6 @@ struct MonthlyCircleView: View {
                 }
                 
             }
-//            .padding(.horizontal, 40)
             .padding(.horizontal, 30)
             .padding(.vertical, 30)
         }
@@ -514,8 +483,6 @@ struct MonthlyCircleView: View {
 //MARK: - 원 그래프
 
 struct CircularProgressView: View {
-//    var totalDistance: Double
-//    var dailyGoal: Double
     var selectedDate: Date?  // selectedDate 추가
     var progress: CGFloat
     
@@ -523,7 +490,6 @@ struct CircularProgressView: View {
     
     var body: some View {
         // 선택된 날짜에 따라 진행률을 계산
-//        let progress = selectedDate != nil ? min((totalDistance / 1000.0) / dailyGoal, 1.0) : 0.0
         
         ZStack {
             // 원형 트랙

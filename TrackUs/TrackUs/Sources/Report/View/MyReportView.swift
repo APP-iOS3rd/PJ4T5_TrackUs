@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MyReportView: View {
-    @State private var selectedTab: CircleTab = .day
+    //    @State private var selectedTab: CircleTab = .day
+    @Binding var selectedTab: CircleTab
     @EnvironmentObject var router: Router
-    @State var selectedDate: Date? = Date()
+    @Binding var selectedDate: Date?
+    @Binding var selectedAge : AvgAge
     
     @ObservedObject var viewModel = ReportViewModel.shared
     
@@ -53,7 +55,7 @@ struct MyReportView: View {
                     .padding(.bottom, 20)
                 
                 // 그래프 View
-                AgeGraphView(selectedTab: selectedTab, selectedDate: $selectedDate)
+                AgeGraphView(selectedTab: selectedTab, selectedAge: $selectedAge, selectedDate: $selectedDate)
                     .padding(.top)
                     .modifier(BorderLineModifier())
                 
@@ -61,10 +63,10 @@ struct MyReportView: View {
             .padding(.vertical, 20)
             .padding(.horizontal, 16)
         }
-        .onAppear {
-            viewModel.fetchUserLog()
-            viewModel.fetchUserAgeLog()
-        }
+        //        .onAppear {
+        //            viewModel.fetchUserLog()
+        //            viewModel.fetchUserAgeLog()
+        //        }
     }
 }
 
