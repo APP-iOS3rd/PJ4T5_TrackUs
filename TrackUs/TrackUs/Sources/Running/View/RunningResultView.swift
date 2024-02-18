@@ -14,7 +14,7 @@ struct RunningResultView: View {
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: runningRecord.coordinates)
+            RouteMapView(lineCoordinates: mapViewModel.lineCoordinates)
             
             VStack {
                 VStack(spacing: 20) {
@@ -41,14 +41,11 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            let difference = (runningRecord.distance / 1000.0) - settingViewModel.goalMinValue
-                            if difference > 0 {
-                                Text("목표보다 \(String(format: "%.2f", difference)) km 더 뛰었어요!")
-                                    .customFontStyle(.gray1_R12)
-                            } else {
-                                Text("목표보다 \(String(format: "%.2f", abs(difference))) km 덜 뛰었어요")
-                                    .customFontStyle(.gray1_R12)
-                            }
+                            
+                            
+                            Text("-")
+                                .customFontStyle(.gray1_R12)
+                            
                         }
                         
                         HStack {
@@ -59,14 +56,8 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            let difference = runningRecord.calorie - estimatedCalories
-                            if difference > 0 {
-                                Text("\(String(format: "%.1f", (difference)))kcal를 더 소모했어요!")
-                                    .customFontStyle(.gray1_R12)
-                            } else {
-                                Text("\(String(format: "%.1f", abs(difference)))kcal를 덜 소모했어요!")
-                                    .customFontStyle(.gray1_R12)
-                            }
+                            Text("-")
+                                .customFontStyle(.gray1_R12)
                         }
                         
                         HStack {
@@ -77,7 +68,7 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(elapsedTimeDifferenceText)
+                            Text("-")
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -95,7 +86,7 @@ struct RunningResultView: View {
                     }
                     
                     HStack {
-                        Text(feedbackMessage)
+                        Text("")
                             .customFontStyle(.gray1_R14)
                         Spacer()
                     }
