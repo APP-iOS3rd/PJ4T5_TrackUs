@@ -131,6 +131,7 @@ final class Router: ObservableObject {
             RunningResultView(mapViewModel: mapViewModel)
         case .recordDetail(let myRecord):
             MyRecordDetailView(runningLog: myRecord)
+        }
     }
     
     @ViewBuilder
