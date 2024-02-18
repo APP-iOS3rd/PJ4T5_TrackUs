@@ -14,8 +14,8 @@ struct RunningResultView: View {
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: mapViewModel.lineCoordinates)
-                .offset(y: 15)
+            RouteMapView(lineCoordinates: runningRecord.coordinates)
+            
             VStack {
                 VStack(spacing: 20) {
                     
@@ -41,8 +41,14 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text("-")
-                                .customFontStyle(.gray1_R12)
+                            let difference = (runningRecord.distance / 1000.0) - settingViewModel.goalMinValue
+                            if difference > 0 {
+                                Text("목표보다 \(String(format: "%.2f", difference)) km 더 뛰었어요!")
+                                    .customFontStyle(.gray1_R12)
+                            } else {
+                                Text("목표보다 \(String(format: "%.2f", abs(difference))) km 덜 뛰었어요")
+                                    .customFontStyle(.gray1_R12)
+                            }
                         }
                         
                         HStack {
@@ -53,8 +59,14 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text("-")
-                                .customFontStyle(.gray1_R12)
+                            let difference = runningRecord.calorie - estimatedCalories
+                            if difference > 0 {
+                                Text("\(String(format: "%.1f", (difference)))kcal를 더 소모했어요!")
+                                    .customFontStyle(.gray1_R12)
+                            } else {
+                                Text("\(String(format: "%.1f", abs(difference)))kcal를 덜 소모했어요!")
+                                    .customFontStyle(.gray1_R12)
+                            }
                         }
                         
                         HStack {
@@ -65,7 +77,7 @@ struct RunningResultView: View {
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text("-")
+                            Text(elapsedTimeDifferenceText)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -83,10 +95,11 @@ struct RunningResultView: View {
                     }
                     
                     HStack {
-                        Text("피드백 메세지 피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지피드백 메세지")
+                        Text(feedbackMessage)
                             .customFontStyle(.gray1_R14)
+                        Spacer()
                     }
-                    .fixedSize(horizontal: false, vertical: true)
+                    
                     
                     HStack(spacing: 28) {
                         MainButton(active: true, buttonText: "리포트로 이동", buttonColor: .gray1, minHeight: 45) {
@@ -101,8 +114,7 @@ struct RunningResultView: View {
                 }
                 .padding(20)
             }
-            
-            
+            .zIndex(2)
             .frame(maxWidth: .infinity)
             .background(.white)
             .clipShape(

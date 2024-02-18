@@ -14,7 +14,7 @@ class MapViewModel: ObservableObject {
     var mapView: MapView!
     var lineCoordinates = [CLLocationCoordinate2D]()
     private let locationManager = LocationManager.shared
-    private let authViewModel = AuthenticationViewModel.shared
+    internal let authViewModel = AuthenticationViewModel.shared
     private var locationTrackingCancellation: AnyCancelable?
     private var snapshotter: Snapshotter!
     private var lineAnnotation: PolylineAnnotation!
