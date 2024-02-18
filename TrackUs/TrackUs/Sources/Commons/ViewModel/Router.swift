@@ -126,7 +126,7 @@ final class Router: ObservableObject {
         case .withDrawal:
             Withdrawal()
         case .runningStart:
-            RunningLiveView()
+            RunningStartView()
         case .runningResult(let mapViewModel):
             RunningResultView(mapViewModel: mapViewModel)
         case .recordDetail(let myRecord):

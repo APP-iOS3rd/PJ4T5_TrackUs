@@ -32,7 +32,7 @@ struct RunningHomeView: View {
 extension RunningHomeView {
     var body: some View {
         GeometryReader { geometry in
-            MapBoxMapView()
+            LocationMeMapView()
                 .onTapGesture {
                     withAnimation {
                         isOpen = false
@@ -78,7 +78,7 @@ extension RunningHomeView {
                 }
                 
                 deltaY = gestureValue.translation.height
-
+                
             } onEnded: { _ in
                 let endPoint = geometry.size.height * 0.3
                 

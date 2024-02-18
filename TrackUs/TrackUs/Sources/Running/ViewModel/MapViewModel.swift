@@ -9,6 +9,8 @@ import SwiftUI
 import MapboxMaps
 import Combine
 import Firebase
+// AnyClancellble은 뷰컨에 있어야함
+//. 뷰모델에서 할일은 @Published 의 값을 갱신하는것 까지가 역할
 
 class MapViewModel: ObservableObject {
     var mapView: MapView!
