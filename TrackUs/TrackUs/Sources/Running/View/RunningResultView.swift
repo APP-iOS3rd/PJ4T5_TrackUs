@@ -9,52 +9,12 @@ import SwiftUI
 
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
-    @StateObject var mapViewModel = MapViewModel()
-    let runningRecord: RunningRecord
-    let settingViewModel = SettingPopupViewModel()
-    
-    var feedbackMessage: String {
-        let estimatedTimeDouble = Double(settingViewModel.estimatedTime)
-        let distanceInKilometers = runningRecord.distance / 1000.0
-        let goalMinValue = Double(settingViewModel.goalMinValue)
-
-        if distanceInKilometers > goalMinValue {
-            if runningRecord.elapsedTime < estimatedTimeDouble {
-                return "예상 시간보다 빠르게 도착했어요!"
-            } else {
-                return "예상 시간보다 느리게 도착했어요!"
-            }
-        } else {
-            return "목표 미도달"
-        }
-    }
-    
-    var estimatedCalories: Double {
-        let weightFactor = Double(mapViewModel.authViewModel.userInfo.weight ?? 70) * 0.035
-        let estimatedTime = Double(settingViewModel.estimatedTime)
-        let goalMinValue = Double(settingViewModel.goalMinValue)
-        return weightFactor + estimatedTime + goalMinValue
-    }
-    
-    var estimatedTimeText: String {
-        let totalSeconds = settingViewModel.estimatedTime * 60
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        return String(format: "%02d:%02d", minutes, seconds)
-    }
-    
-    var elapsedTimeDifferenceText: String {
-        let differenceInSeconds = Double(settingViewModel.estimatedTime * 60) - runningRecord.elapsedTime
-        let absoluteDifference = abs(differenceInSeconds)
-        let minutes = Int(absoluteDifference) / 60
-        let seconds = Int(absoluteDifference) % 60
-        let sign = differenceInSeconds < 0 ? "늦게" : "빨리"
-        return "예상 시간보다 \(String(format: "%02d:%02d", minutes, seconds)) \(sign) 끝났어요!"
-    }
+    @ObservedObject var mapViewModel: MapViewModel
+    @State private var showingPopup = false
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: runningRecord.coordinates)
+            RouteMapView(lineCoordinates: mapViewModel.lineCoordinates)
             
             VStack {
                 VStack(spacing: 20) {
@@ -77,47 +37,38 @@ struct RunningResultView: View {
                             Image(.shose)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + "km/" + String(format: "%.2f", settingViewModel.goalMinValue) + "km")
+                                Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + " km / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            let difference = (runningRecord.distance / 1000.0) - settingViewModel.goalMinValue
-                            if difference > 0 {
-                                Text("목표보다 \(String(format: "%.2f", difference)) km 더 뛰었어요!")
-                                    .customFontStyle(.gray1_R12)
-                            } else {
-                                Text("목표보다 \(String(format: "%.2f", abs(difference))) km 덜 뛰었어요")
-                                    .customFontStyle(.gray1_R12)
-                            }
+                            
+                            
+                            Text("-")
+                                .customFontStyle(.gray1_R12)
+                            
                         }
                         
                         HStack {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(String(format: "%.1f", runningRecord.calorie) + " kcal / \(estimatedCalories) kcal ")
+                                Text(String(format: "%.1f", mapViewModel.calorie) + " kcal / - ")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            let difference = runningRecord.calorie - estimatedCalories
-                            if difference > 0 {
-                                Text("\(String(format: "%.1f", (difference)))kcal를 더 소모했어요!")
-                                    .customFontStyle(.gray1_R12)
-                            } else {
-                                Text("\(String(format: "%.1f", abs(difference)))kcal를 덜 소모했어요!")
-                                    .customFontStyle(.gray1_R12)
-                            }
+                            Text("-")
+                                .customFontStyle(.gray1_R12)
                         }
                         
                         HStack {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text("\(runningRecord.elapsedTime.asString(style: .positional)) / \(estimatedTimeText)")
+                                Text("\(mapViewModel.elapsedTime.asString(style: .positional))")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(elapsedTimeDifferenceText)
+                            Text("-")
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -125,7 +76,7 @@ struct RunningResultView: View {
                             Image(.pace)
                             VStack(alignment: .leading) {
                                 Text("페이스")
-                                Text(runningRecord.paceMinutes == 0 && runningRecord.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", runningRecord.paceMinutes, runningRecord.paceSeconds))
+                                Text(mapViewModel.paceMinutes == 0 && mapViewModel.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", mapViewModel.paceMinutes, mapViewModel.paceSeconds))
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -135,13 +86,22 @@ struct RunningResultView: View {
                     }
                     
                     HStack {
-                        Text(feedbackMessage)
+                        Text("")
                             .customFontStyle(.gray1_R14)
                         Spacer()
                     }
                     
                     
-                    MainButton(buttonText: "리포트로 이동하기", action: {router.popToRoot()})
+                    HStack(spacing: 28) {
+                        MainButton(active: true, buttonText: "리포트로 이동", buttonColor: .gray1, minHeight: 45) {
+                            router.popToRoot()
+                        }
+                        
+                        MainButton(active: true, buttonText: "러닝 기록 저장", buttonColor: .main, minHeight: 45) {
+                            showingPopup = true
+                        }
+                        
+                    }
                 }
                 .padding(20)
             }
@@ -157,10 +117,76 @@ struct RunningResultView: View {
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
+        .ignoresSafeArea(.keyboard)
         .preventGesture()
+        .popup(isPresented: $showingPopup) {
+            SaveDataPopup(title: $mapViewModel.title, showingPopup: $showingPopup, mapViewModel: mapViewModel)
+        } customize: {
+            $0
+                .backgroundColor(.black.opacity(0.3))
+                .isOpaque(true)
+                .dragToDismiss(false)
+                .closeOnTap(false)
+        }
     }
 }
 
-//#Preview {
-//    RunningResultView()
-//}
+struct SaveDataPopup: View {
+    @Binding var title: String
+    @Binding var showingPopup: Bool
+    @FocusState private var titleTextFieldFocused: Bool
+    @ObservedObject var mapViewModel: MapViewModel
+    @EnvironmentObject var router: Router
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("러닝 기록 저장")
+                    .customFontStyle(.gray1_B16)
+                
+                Text("러닝기록 저장을 위해\n러닝의 이름을 설정해주세요.")
+                    .customFontStyle(.gray1_R14)
+                    .padding(.top, 8)
+                
+                VStack {
+                    TextField("저장할 러닝 이름을 입력해주세요.", text: $title)
+                        .customFontStyle(.gray1_R12)
+                        .padding(8)
+                        .frame(height: 32)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(titleTextFieldFocused ? .main : .gray2))
+                        .focused($titleTextFieldFocused)
+                }
+                .padding(.top, 16)
+                
+                HStack {
+                    Button(action: {
+                        showingPopup = false
+                    }, label: {
+                        Text("취소")
+                            .customFontStyle(.main_R16)
+                            .frame(minHeight: 40)
+                            .padding(.horizontal, 20)
+                            .overlay(Capsule().stroke(.main))
+                    })
+                    
+                    MainButton(active: true, buttonText: "확인", minHeight: 40) {
+                        mapViewModel.uploadRunningData { _ in
+                            showingPopup = false
+                            router.popToRoot()
+                        }
+                    }
+                    
+                }
+                .padding(.top, 20)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
+        }
+        
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.white)
+        .cornerRadius(12)
+        .padding(.horizontal, 60)
+    }
+}
