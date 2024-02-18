@@ -7,10 +7,8 @@
 
 import SwiftUI
 
+// MARK: - PAGE
 enum Page: Hashable, Identifiable {
-    static func == (lhs: Page, rhs: Page) -> Bool {
-        return lhs.hashValue == rhs.hashValue
-    }
     // Root
     case running
     case recruitment
@@ -25,15 +23,22 @@ enum Page: Hashable, Identifiable {
     case withDrawal
     // Home
     case runningStart
-    case runningResult(RunningRecord)
+    case runningResult(MapViewModel)
     // Report
     case recordDetail(Runninglog)
+}
+
+extension Page {
+    static func == (lhs: Page, rhs: Page) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
     
     var id: String {
         String(describing: self)
     }
 }
 
+// MARK: - FULL SCREEN
 enum FullScreenCover: String, Identifiable {
     case payment
     
@@ -42,6 +47,7 @@ enum FullScreenCover: String, Identifiable {
     }
 }
 
+// MARK: - SHEET
 enum Sheet: Hashable, Identifiable {
     static func == (lhs: Sheet, rhs: Sheet) -> Bool {
         return lhs.hashValue == rhs.hashValue
@@ -121,11 +127,10 @@ final class Router: ObservableObject {
             Withdrawal()
         case .runningStart:
             RunningLiveView()
-        case .runningResult(let runningRecord):
-            RunningResultView(runningRecord: runningRecord)
+        case .runningResult(let mapViewModel):
+            RunningResultView(mapViewModel: mapViewModel)
         case .recordDetail(let myRecord):
             MyRecordDetailView(runningLog: myRecord)
-        }
     }
     
     @ViewBuilder

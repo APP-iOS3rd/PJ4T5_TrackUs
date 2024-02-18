@@ -61,6 +61,7 @@ struct TrackingMapView: UIViewControllerRepresentable {
 // 경로를 보여주는 맵뷰
 struct RouteMapView: UIViewControllerRepresentable {
     let lineCoordinates: [CLLocationCoordinate2D]
+    
     func makeUIViewController(context: Context) -> UIViewController {
         return Coordinator(lineCoordinates: lineCoordinates)
     }

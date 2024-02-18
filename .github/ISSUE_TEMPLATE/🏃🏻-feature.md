@@ -1,5 +1,5 @@
 ---
-name: "\U0001F6E0️ Feature"
+name: "🏃🏻 Feature"
 about: 추가 예정인 Feature를 작성해주세요.
 title: "[Feat] 추가되는 Feature 간략한 설명을 입력해주세요."
 labels: ''
