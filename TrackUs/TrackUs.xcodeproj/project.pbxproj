@@ -16,6 +16,8 @@
 		610F882E2B77AC1800FB12A1 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */; };
 		610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610F882F2B77BD6300FB12A1 /* BarGraphView.swift */; };
 		6112431D2B7AA3110086EF40 /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6112431C2B7AA3110086EF40 /* CustomDatePicker.swift */; };
+		614278BA2B7E967C0016EDE9 /* MyRecordDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614278B92B7E967C0016EDE9 /* MyRecordDetailView.swift */; };
+		6187E4262B8112B6007DED5C /* ReportLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6187E4252B8112B6007DED5C /* ReportLoadingView.swift */; };
 		820330D62B700FAC00CB97F7 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 820330D52B700FAC00CB97F7 /* PopupView */; };
 		820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820330D72B70127800CB97F7 /* SettingPopup.swift */; };
 		821CD24D2B72C82900CE6D42 /* PreventionGestureModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */; };
@@ -169,7 +171,9 @@
 		610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
 		610F882F2B77BD6300FB12A1 /* BarGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphView.swift; sourceTree = "<group>"; };
 		6112431C2B7AA3110086EF40 /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
+		614278B92B7E967C0016EDE9 /* MyRecordDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyRecordDetailView.swift; sourceTree = "<group>"; };
 		6184278E2B6B7AE100C10E99 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		6187E4252B8112B6007DED5C /* ReportLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportLoadingView.swift; sourceTree = "<group>"; };
 		820330D72B70127800CB97F7 /* SettingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPopup.swift; sourceTree = "<group>"; };
 		821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreventionGestureModifier.swift; sourceTree = "<group>"; };
 		821CD24E2B72C8A600CE6D42 /* View+Gesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Gesture.swift"; sourceTree = "<group>"; };
@@ -353,6 +357,8 @@
 				610F882D2B77AC1800FB12A1 /* HorizontalGraph.swift */,
 				610F882F2B77BD6300FB12A1 /* BarGraphView.swift */,
 				6112431C2B7AA3110086EF40 /* CustomDatePicker.swift */,
+				614278B92B7E967C0016EDE9 /* MyRecordDetailView.swift */,
+				6187E4252B8112B6007DED5C /* ReportLoadingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -845,6 +851,7 @@
 				963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */,
 				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
+				6187E4262B8112B6007DED5C /* ReportLoadingView.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
 				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
@@ -889,6 +896,7 @@
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
 				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
 				828EA4BF2B7CB63100785D0F /* BorderLineModifier.swift in Sources */,
+				614278BA2B7E967C0016EDE9 /* MyRecordDetailView.swift in Sources */,
 				82AB28B92B6B528500D7734D /* FAQView.swift in Sources */,
 				8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */,
 				82ECF0BE2B67A707002CFD00 /* SelectPicker.swift in Sources */,
