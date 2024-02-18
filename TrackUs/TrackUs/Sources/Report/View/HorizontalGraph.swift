@@ -31,6 +31,10 @@ struct HorizontalGraph: View {
         guard let selectedDate = selectedDate else { return [] }
         return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
     }
+//    var runningLogForSelectedDate: [UserRunningLog] {
+//        guard let selectedDate = selectedDate else { return [] }
+//        return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
+//    }
     
     // 연령대 유저들의 날짜 확인
     var allUserRunningLogForSelectedDate: [Runninglog] {

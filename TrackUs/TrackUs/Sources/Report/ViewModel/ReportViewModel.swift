@@ -9,12 +9,27 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+//struct Runninglog : Hashable {
+//    var calorie: Double
+//    var distance: Double
+//    var elapsedTime: Int
+//    var pace: Double
+//    var timestamp: Date
+//}
+
+// 임시로 만들어놓은 데이터 하나로 합쳐야 함
 struct Runninglog : Hashable {
     var calorie: Double
     var distance: Double
-    var elapsedTime: Int
+//    var elapsedTime: Int
+    var elapsedTime: Double
     var pace: Double
     var timestamp: Date
+    var address: String?
+//    var coordinates: [GeoPoint]? = []
+    var coordinates: [GeoPoint]?
+    var routeImageUrl: String?
+    var title: String?
 }
 
 class ReportViewModel : ObservableObject {
@@ -27,6 +42,7 @@ class ReportViewModel : ObservableObject {
     static let shared = ReportViewModel()
     
     @Published var runningLog = [Runninglog]()
+//    @Published var runningLog = [UserRunningLog]()
     @Published var allUserRunningLog = [Runninglog]()
     @Published var userAge: Int = AvgAge.twenties.intValue
     
@@ -52,21 +68,61 @@ class ReportViewModel : ObservableObject {
                 return
             }
             
+//            for runningData in snapshot!.documents {
+//                if let calorie = runningData.data()["calorie"] as? Double,
+//                   let distance = runningData.data()["distance"] as? Double,
+//                   let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+//                   let pace = runningData.data()["pace"] as? Double,
+//                   let timestamp = runningData.data()["timestamp"] as? Timestamp {
+//                    let dateValue = timestamp.dateValue()
+//                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue)
+//                    self.runningLog.append(log)
+//
+//                }
+//            }
+            
+//            // 2번쨰
+//            for runningData in snapshot!.documents {
+//                if let calorie = runningData.data()["calorie"] as? Double,
+//                   let distance = runningData.data()["distance"] as? Double,
+//                   let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+//                   let pace = runningData.data()["pace"] as? Double,
+//                   let timestamp = runningData.data()["timestamp"] as? Timestamp,
+//                   let address = runningData.data()["address"] as? String,
+//                   let coordinates = runningData.data()["coordinates"] as? [GeoPoint],
+//                   let routeImageUrl = runningData.data()["routeImageUrl"] as? String,
+//                   let title = runningData.data()["title"] as? String {
+//                    let dateValue = timestamp.dateValue()
+//                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+//                    self.runningLog.append(log)
+//                }
+//            }
+            
+            //3번째
             for runningData in snapshot!.documents {
                 if let calorie = runningData.data()["calorie"] as? Double,
                    let distance = runningData.data()["distance"] as? Double,
-                   let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+                   let elapsedTime = runningData.data()["elapsedTime"] as? Double,
                    let pace = runningData.data()["pace"] as? Double,
                    let timestamp = runningData.data()["timestamp"] as? Timestamp {
                     let dateValue = timestamp.dateValue()
-                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue)
-                    self.runningLog.append(log)
                     
+                    // title과 address 필드의 값을 읽어옵니다. 값이 없는 경우 nil 처리.
+                    let title = runningData.data()["title"] as? String
+                    let address = runningData.data()["address"] as? String
+                    let routeImageUrl = runningData.data()["routeImageUrl"] as? String
+                    let coordinates = runningData.data()["coordinates"] as? [GeoPoint]
+                    
+                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+                    self.runningLog.append(log)
                 }
             }
             
+            
             self.userLogLoadingState = .loaded // 데이터 로드 완료
         }
+        
+//        print(runningLog)
     }
     
     //MARK: - 선택한 연령대 유저들의 러닝 정보 불러오기
@@ -93,18 +149,55 @@ class ReportViewModel : ObservableObject {
                         return
                     }
                     
+//                    for runningData in snapshot!.documents {
+//                        if let calorie = runningData.data()["calorie"] as? Double,
+//                           let distance = runningData.data()["distance"] as? Double,
+//                           let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+//                           let pace = runningData.data()["pace"] as? Double,
+//                           let timestamp = runningData.data()["timestamp"] as? Timestamp {
+//                            let dateValue = timestamp.dateValue()
+//                            let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue)
+//                            self.allUserRunningLog.append(log)
+//                            
+//                        }
+//                    }
+                    
+//                    for runningData in snapshot!.documents {
+//                        if let calorie = runningData.data()["calorie"] as? Double,
+//                           let distance = runningData.data()["distance"] as? Double,
+//                           let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+//                           let pace = runningData.data()["pace"] as? Double,
+//                           let timestamp = runningData.data()["timestamp"] as? Timestamp,
+//                           let address = runningData.data()["address"] as? String,
+//                           let coordinates = runningData.data()["coordinates"] as? [GeoPoint],
+//                           let routeImageUrl = runningData.data()["routeImageUrl"] as? String,
+//                           let title = runningData.data()["title"] as? String {
+//                            let dateValue = timestamp.dateValue()
+//                            let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+//                            self.allUserRunningLog.append(log)
+//                        }
+//                    }
+                    
+                    //3번째
                     for runningData in snapshot!.documents {
                         if let calorie = runningData.data()["calorie"] as? Double,
                            let distance = runningData.data()["distance"] as? Double,
-                           let elapsedTime = runningData.data()["elapsedTime"] as? Int,
+                           let elapsedTime = runningData.data()["elapsedTime"] as? Double,
                            let pace = runningData.data()["pace"] as? Double,
                            let timestamp = runningData.data()["timestamp"] as? Timestamp {
                             let dateValue = timestamp.dateValue()
-                            let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue)
-                            self.allUserRunningLog.append(log)
                             
+                            // title과 address 필드의 값을 읽어옵니다. 값이 없는 경우 nil로 처리.
+                            let title = runningData.data()["title"] as? String
+                            let address = runningData.data()["address"] as? String
+                            let routeImageUrl = runningData.data()["routeImageUrl"] as? String
+                            let coordinates = runningData.data()["coordinates"] as? [GeoPoint]
+                            
+                            let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+                            self.allUserRunningLog.append(log)
                         }
                     }
+                    
                     
                     self.userLogLoadingState = .loaded
                 }

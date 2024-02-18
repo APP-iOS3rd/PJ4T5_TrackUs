@@ -485,6 +485,7 @@ struct WeakGraphView: View {
     
     private func getDataForWeek(startDate: Date, endDate: Date) -> [AgeWeakAvg] {
         //        print("시작 날짜 \(startDate), 끝 날짜 \(endDate)")
+        print("여기서부터 시작!!!!!!!\(viewModel.runningLog) 여기까지가 끝!!!!!!")
         let runningLogForWeek = viewModel.runningLog.filter { $0.timestamp >= startDate && $0.timestamp <= endDate }
         var dataForWeek: [String: Double] = [:]
         let calendar = Calendar.current

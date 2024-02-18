@@ -28,8 +28,8 @@ struct ReportView: View {
             switch viewModel.userLogLoadingState {
             case .loading:
                 ReportLoadingView()
-                //                selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selec: selectedPicker)
-                //                    .redacted(reason: .placeholder)
+//                selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selectedTab: $selectedTab, selec: selectedPicker)
+//                                    .redacted(reason: .placeholder)
             case .loaded:
                 selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selectedTab: $selectedTab, selec: selectedPicker)
             case .error(_):

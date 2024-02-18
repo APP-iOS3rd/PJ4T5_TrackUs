@@ -18,12 +18,14 @@ enum RecordFilter: String, CaseIterable, Identifiable { // 나이대 피커
 
 struct MyRecordView: View {
     @EnvironmentObject var router: Router
+    @ObservedObject var viewModel = ReportViewModel.shared
     var vGridItems = [GridItem()]
     @State var filterSelect : RecordFilter = .all
     @State private var calendarButton = false
     @State private var selectedFilter: RecordFilter?
     @State private var gridDelete = false
     @Binding var selectedDate: Date?
+    @State var selectedRunningLog: Runninglog?
     
     var body: some View {
         ScrollView {
@@ -84,11 +86,29 @@ struct MyRecordView: View {
                     }
                     
                     // RecordCell
+//                    LazyVGrid(columns: vGridItems, spacing: 0) {
+//                        ForEach(RecordLog.fromRunningLogs(viewModel.runningLog), id: \.self) { item in
+//                            RecordCell(gridDelete: $gridDelete, record: item, isSelected: isRecordAvailableOnDate(record: item, selectedDate: selectedDate))
+//                            Divider()
+//                                .padding(.top, 24)
+//                                .edgesIgnoringSafeArea(.all)
+//                        }
+//                    }
                     LazyVGrid(columns: vGridItems, spacing: 0) {
-                        //                        ForEach(0...6, id: \.self) { item in
-                        ForEach(RecordLog.mockData) { item in
-                            //                            RecordCell(gridDelete: $gridDelete, record: item)
-                            RecordCell(gridDelete: $gridDelete, record: item, isSelected: isRecordAvailableOnDate(record: item, selectedDate: selectedDate))
+                        ForEach(viewModel.runningLog, id: \.self) { item in
+//                            RecordCell(gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
+//                                .onTapGesture {
+//                                    selectedRunningLog = item
+//                                    router.push(.recordDetail(selectedRunningLog!))
+//                                }
+                            
+                            Button {
+                                selectedRunningLog = item
+                                router.push(.recordDetail(selectedRunningLog!))
+                            } label: {
+                                RecordCell(gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
+                            }
+
                             Divider()
                                 .padding(.top, 24)
                                 .edgesIgnoringSafeArea(.all)
@@ -140,10 +160,10 @@ struct MyRecordView: View {
         })
     }
     
-    func isRecordAvailableOnDate(record: RecordLog, selectedDate: Date?) -> Bool {
+    func isRecordAvailableOnDate(runningLog: Runninglog, selectedDate: Date?) -> Bool {
         guard let selectedDate = selectedDate else { return false }
         let calendar = Calendar.current
-        let recordDate = calendar.startOfDay(for: record.timestamp.dateValue())
+        let recordDate = calendar.startOfDay(for: runningLog.timestamp)
         let selectedDateWithoutTime = calendar.startOfDay(for: selectedDate)
         return recordDate == selectedDateWithoutTime
     }
@@ -158,9 +178,10 @@ extension MyRecordView {
 
 //MARK: - RecordCell
 struct RecordCell: View {
+    @ObservedObject var viewModel = ReportViewModel.shared
     @State private var isDelete = false
     @Binding var gridDelete : Bool
-    let record : RecordLog
+    let runningLog : Runninglog
     let isSelected: Bool // 추가한 내용
     
     var body: some View {
@@ -216,7 +237,7 @@ struct RecordCell: View {
                     }
                     
                     //                    Text("광명시 러닝 메이트 구합니다")
-                    Text(record.title)
+                    Text(runningLog.title ?? "러닝")
                         .lineLimit(1)
                         .customFontStyle(.gray1_B16)
                     
@@ -224,7 +245,7 @@ struct RecordCell: View {
                         HStack {
                             Image(.pin)
                             //                            Text("서울숲카페거리")
-                            Text(record.location)
+                            Text(runningLog.address ?? "대한민국 서울시")
                                 .customFontStyle(.gray1_R12)
                                 .lineLimit(1)
                         }
@@ -234,7 +255,7 @@ struct RecordCell: View {
                         HStack {
                             Image(.timerLine)
                             //                            Text("10:02 AM")
-                            Text(formatTime(record.timestamp))
+                            Text(formatTime(runningLog.timestamp))
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -243,7 +264,7 @@ struct RecordCell: View {
                         HStack {
                             Image(.arrowBoth)
                             //                            Text("1.72km")
-                            Text("\(record.distance, specifier:"%.1f")km")
+                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
                                 .customFontStyle(.gray1_R12)
                         }
                     }
@@ -263,7 +284,7 @@ struct RecordCell: View {
                         Spacer()
                         
                         //                        Text("2024년 2월 12일")
-                        Text(formatDate(record.timestamp))
+                        Text(formatDate(runningLog.timestamp))
                             .customFontStyle(.gray1_SB12)
                     }
                 }
@@ -281,77 +302,51 @@ struct RecordCell: View {
         }
     }
     
-    func formatTime(_ timestamp: Timestamp) -> String {
+    func formatTime(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
-        return dateFormatter.string(from: timestamp.dateValue())
+        return dateFormatter.string(from: date)
     }
     
-    func formatDate(_ timestamp: Timestamp) -> String {
+    func formatDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy년 MM월 dd일"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
-        return dateFormatter.string(from: timestamp.dateValue())
+        return dateFormatter.string(from: date)
     }
 }
 
-struct RecordLog : Identifiable, Hashable {
-    let id: String
-    let title: String
-    let location: String
-    let distance: Double
-    let timestamp: Timestamp
-    //    let date: Timestamp
-    let withMate: Bool
-    //    let person: Int
-    //    var user: User? // 백엔드에서 작업을 설정하는 방법 떄문에 var 이며 옵셔널이다?
-    //    var person: Int?
-}
+//struct RecordLog: Identifiable, Hashable {
+//    let id: String
+//    let title: String
+//    let location: String
+//    let distance: Double
+//    let timestamp: Timestamp
+//    let withMate: Bool
+//
+//    init(from runningLog: Runninglog) {
+//        self.id = NSUUID().uuidString
+//        self.title = runningLog.title ?? "러닝"
+//        self.location = runningLog.address ?? "대한민국 서울시"
+//        self.distance = runningLog.distance
+//        self.timestamp = Timestamp(date: runningLog.timestamp)
+//        self.withMate = false // 기본값으로 설정하거나, runningLog에서 가져와야 할 데이터로 설정하세요.
+//    }
+//}
 
-extension RecordLog {
-    
-    
-    //    static let mockData: [RunningRecord] = [
-    //        .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: Timestamp(), withMate: false),
-    //        .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: Timestamp(), withMate: false),
-    //        .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: Timestamp(), withMate: false),
-    //        .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: Timestamp(), withMate: false)
-    //    ]
-    
-    static let mockData: [RecordLog] = {
-        let calendar = Calendar.current
-        
-        let feb1Components = DateComponents(year: 2024, month: 2, day: 1)
-        let feb1Date = calendar.date(from: feb1Components)!
-        let feb1Timestamp = Timestamp(date: feb1Date)
-        
-        let feb5Components = DateComponents(year: 2024, month: 2, day: 5)
-        let feb5Date = calendar.date(from: feb5Components)!
-        let feb5Timestamp = Timestamp(date: feb5Date)
-        
-        let jan12Components = DateComponents(year: 2024, month: 1, day: 12)
-        let jan12Date = calendar.date(from: jan12Components)!
-        let jan12Timestamp = Timestamp(date: jan12Date)
-        
-        let mar9Components = DateComponents(year: 2024, month: 3, day: 9)
-        let mar9Date = calendar.date(from: mar9Components)!
-        let mar9Timestamp = Timestamp(date: mar9Date)
-        
-        return [
-            .init(id: NSUUID().uuidString, title: "중랑의 아들과 함께하는 중랑천 여행", location: "서울시 중랑천", distance: 4.19, timestamp: feb1Timestamp, withMate: false),
-            .init(id: NSUUID().uuidString, title: "상봉동 뛰댕기기", location: "중랑구 상봉동", distance: 1.25, timestamp: feb5Timestamp, withMate: false),
-            .init(id: NSUUID().uuidString, title: "용산에서 메이트 모집을 합니다.", location: "서울시 용산구", distance: 6.7, timestamp: jan12Timestamp, withMate: false),
-            .init(id: NSUUID().uuidString, title: "바나나 우유를 좋아합니다", location: "경기도 동두천시 동두천길 동두천", distance: 2.3, timestamp: mar9Timestamp, withMate: false)
-        ]
-    }()
-}
+//extension RecordLog {
+//    static func fromRunningLogs(_ runningLogs: [Runninglog]) -> [RecordLog] {
+//        return runningLogs.map { RecordLog(from: $0) }
+//    }
+//}
 
 //MARK: - 커스텀 캘린더
 
 struct CustomDateFilter: View {
+    @ObservedObject var viewModel = ReportViewModel.shared
     //    @Binding var currentDate: Date
     @State var currentDate: Date = Date()
     @State var currentMonth: Int = 0
@@ -539,8 +534,8 @@ struct CustomDateFilter: View {
     
     func isMockDataAvailableOnDate(date: Date) -> Bool {
         let calendar = Calendar.current
-        for record in RecordLog.mockData { // 임시
-            if calendar.isDate(record.timestamp.dateValue(), inSameDayAs: date) {
+        for record in viewModel.runningLog { // 임시
+            if calendar.isDate(record.timestamp, inSameDayAs: date) {
                 return true
             }
         }

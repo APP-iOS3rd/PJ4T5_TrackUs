@@ -113,6 +113,10 @@ struct DailyCircleView: View {
         guard let selectedDate = selectedDate else { return [] }
         return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
     }
+//    var runningLogForSelectedDate: [UserRunningLog] {
+//        guard let selectedDate = selectedDate else { return [] }
+//        return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
+//    }
     
     var progressValue: CGFloat {
         guard let dailyGoal = authViewModel.userInfo.setDailyGoal else { return 0.5 } // 기본값
@@ -455,7 +459,8 @@ struct MonthlyCircleView: View {
         }
         
         let totalTime = runningLogForSelectedMonth.reduce(0) { $0 + $1.elapsedTime }
-        return Double(totalTime / runningLogForSelectedMonth.count)
+//        return Double(totalTime / runningLogForSelectedMonth.count)
+        return totalTime / Double(runningLogForSelectedMonth.count)
     }
     
     // 선택된 월의 러닝 데이터 필터링하여 평균 페이스 계산

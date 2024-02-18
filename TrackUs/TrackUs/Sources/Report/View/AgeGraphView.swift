@@ -43,6 +43,10 @@ struct AgeGraphView: View {
         guard let selectedDate = selectedDate else { return [] }
         return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
     }
+//    var runningLogForSelectedDate: [UserRunningLog] {
+//        guard let selectedDate = selectedDate else { return [] }
+//        return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
+//    }
     
     // 연령대
     var allUserRunningLogForSelectedDate: [Runninglog] {

@@ -26,6 +26,8 @@ enum Page: Hashable, Identifiable {
     // Home
     case runningStart
     case runningResult(RunningRecord)
+    // Report
+    case recordDetail(Runninglog)
     
     var id: String {
         String(describing: self)
@@ -121,6 +123,8 @@ final class Router: ObservableObject {
             RunningLiveView()
         case .runningResult(let runningRecord):
             RunningResultView(runningRecord: runningRecord)
+        case .recordDetail(let myRecord):
+            MyRecordDetailView(runningLog: myRecord)
         }
     }
     
