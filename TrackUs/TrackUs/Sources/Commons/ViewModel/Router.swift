@@ -24,6 +24,8 @@ enum Page: Hashable, Identifiable {
     // Home
     case runningStart
     case runningResult(MapViewModel)
+    // Report
+    case recordDetail(Runninglog)
 }
 
 extension Page {
@@ -127,6 +129,8 @@ final class Router: ObservableObject {
             RunningLiveView()
         case .runningResult(let mapViewModel):
             RunningResultView(mapViewModel: mapViewModel)
+        case .recordDetail(let myRecord):
+            MyRecordDetailView(runningLog: myRecord)
         }
     }
     

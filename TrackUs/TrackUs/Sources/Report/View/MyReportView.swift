@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct MyReportView: View {
-    @State private var selectedTab: CircleTab = .day
+    //    @State private var selectedTab: CircleTab = .day
+    @Binding var selectedTab: CircleTab
     @EnvironmentObject var router: Router
-    @State var selectedDate: Date? = Date()
+    @Binding var selectedDate: Date?
+    @Binding var selectedAge : AvgAge
+    
+    @ObservedObject var viewModel = ReportViewModel.shared
     
     var body: some View {
         ScrollView {
@@ -22,6 +26,7 @@ struct MyReportView: View {
                 } label: {
                     GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
                         .modifier(BorderLineModifier())
+                        .multilineTextAlignment(.leading)
                 }
                 //MARK: - 기간별 운동 정보
                 
@@ -50,7 +55,7 @@ struct MyReportView: View {
                     .padding(.bottom, 20)
                 
                 // 그래프 View
-                AgeGraphView(selectedTab: selectedTab, selectedDate: $selectedDate)
+                AgeGraphView(selectedTab: selectedTab, selectedAge: $selectedAge, selectedDate: $selectedDate)
                     .padding(.top)
                     .modifier(BorderLineModifier())
                 
@@ -58,6 +63,10 @@ struct MyReportView: View {
             .padding(.vertical, 20)
             .padding(.horizontal, 16)
         }
+        //        .onAppear {
+        //            viewModel.fetchUserLog()
+        //            viewModel.fetchUserAgeLog()
+        //        }
     }
 }
 
