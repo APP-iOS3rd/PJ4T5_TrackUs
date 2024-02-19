@@ -16,6 +16,7 @@ import CryptoKit
 import SwiftUI
 
 enum AuthenticationState {
+    case startapp
     case unauthenticated
     case authenticating
     case signUpcating
@@ -48,7 +49,7 @@ class FirebaseManger: NSObject {
 class AuthenticationViewModel: NSObject, ObservableObject {
     static let shared = AuthenticationViewModel()
     
-    @Published var authenticationState: AuthenticationState = .unauthenticated
+    @Published var authenticationState: AuthenticationState = .startapp
     @Published var errorMessage: String = ""
     @Published var user: User?
     @Published var newUser: Bool = false
@@ -109,6 +110,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     func logOut() {
         do {
             try Auth.auth().signOut()
+            userInfo = UserInfo()
         }
         catch {
             print(error)
@@ -135,6 +137,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 }
             }
             self.authenticationState = .unauthenticated
+            userInfo = UserInfo()
             return true
         }
         catch {
@@ -327,7 +330,6 @@ extension AuthenticationViewModel {
     }
     // MARK: - 사용자 정보 저장 - 위 이미지 저장함수와 순차적으로 사용
     private func storeUserInformation() {
-        print(userInfo.runningStyle)
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
             return }
         // 해당부분 자료형 지정 필요

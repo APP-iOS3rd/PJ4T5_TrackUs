@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+class ChattingViewModel: ObservableObject {
+    
+    @Published var errorMessage = ""
+    
+    
+}

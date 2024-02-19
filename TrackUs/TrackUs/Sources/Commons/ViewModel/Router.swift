@@ -26,6 +26,8 @@ enum Page: Hashable, Identifiable {
     // Home
     case runningStart
     case runningResult(RunningRecord)
+    // Chat
+    case chatting(uid: String)
     
     var id: String {
         String(describing: self)
@@ -102,7 +104,7 @@ final class Router: ObservableObject {
         case .recruitment:
             RecruitmentView()
         case .chat:
-            ChattingView()
+            ChattingListView()
         case .report:
             ReportView()
         case .profile:
@@ -121,6 +123,8 @@ final class Router: ObservableObject {
             RunningLiveView()
         case .runningResult(let runningRecord):
             RunningResultView(runningRecord: runningRecord)
+        case .chatting(let title):
+            ChattingView(chatTitle: title)
         }
     }
     
