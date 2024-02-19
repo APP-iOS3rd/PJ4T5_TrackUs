@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import CoreLocation
 
 //struct Runninglog : Hashable {
 //    var calorie: Double
@@ -19,6 +20,7 @@ import FirebaseFirestoreSwift
 
 // 임시로 만들어놓은 데이터 하나로 합쳐야 함
 struct Runninglog : Hashable {
+    var documentID: String? // 추가 문서ID
     var calorie: Double
     var distance: Double
 //    var elapsedTime: Int
@@ -48,6 +50,8 @@ class ReportViewModel : ObservableObject {
     
     @Published var userLogLoadingState = LoadingState.loading // 유저 로그 로딩상태
     
+    let db = Firestore.firestore()
+    
     
     //MARK: - 로그인한 유저의 러닝 정보 불러오기
     
@@ -61,7 +65,7 @@ class ReportViewModel : ObservableObject {
             return
         }
         
-        let db = Firestore.firestore()
+//        let db = Firestore.firestore()
         db.collection("users").document(uid).collection("runningRecords").getDocuments() { (snapshot, error) in
             if let error = error {
                 print("error fetching runningRecords: \(error.localizedDescription)")
@@ -100,6 +104,7 @@ class ReportViewModel : ObservableObject {
             
             //3번째
             for runningData in snapshot!.documents {
+                let documentID = runningData.documentID // 추가 문서 ID
                 if let calorie = runningData.data()["calorie"] as? Double,
                    let distance = runningData.data()["distance"] as? Double,
                    let elapsedTime = runningData.data()["elapsedTime"] as? Double,
@@ -113,16 +118,20 @@ class ReportViewModel : ObservableObject {
                     let routeImageUrl = runningData.data()["routeImageUrl"] as? String
                     let coordinates = runningData.data()["coordinates"] as? [GeoPoint]
                     
-                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
-                    self.runningLog.append(log)
+//                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+                    let log = Runninglog(documentID: documentID, calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
+                    
+                    if !self.runningLog.contains(log) {
+                        self.runningLog.append(log)
+                    }
+//                    self.runningLog.append(log)
                 }
             }
             
+            self.runningLog.sort { $0.timestamp > $1.timestamp }
             
             self.userLogLoadingState = .loaded // 데이터 로드 완료
         }
-        
-//        print(runningLog)
     }
     
     //MARK: - 선택한 연령대 유저들의 러닝 정보 불러오기
@@ -194,14 +203,43 @@ class ReportViewModel : ObservableObject {
                             let coordinates = runningData.data()["coordinates"] as? [GeoPoint]
                             
                             let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
-                            self.allUserRunningLog.append(log)
+                            
+                            if !self.allUserRunningLog.contains(log) {
+                                self.allUserRunningLog.append(log)
+                            }
+//                            self.allUserRunningLog.append(log)
                         }
                     }
                     
+                    self.allUserRunningLog.sort { $0.timestamp > $1.timestamp }
                     
                     self.userLogLoadingState = .loaded
                 }
             }
         }
+    }
+    
+    func deleteRunningLog(_ documentID: String) {
+        print("Deleting running log with documentID:", documentID)
+        
+        guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
+            print("error uid is nil")
+            return
+        }
+        
+        let docRef = db.collection("users").document(uid).collection("runningRecords").document(documentID)
+        docRef.delete() { error in
+            if let error = error {
+                print("삭제 실패:", error.localizedDescription)
+            } else {
+                print("삭제 성공")
+            }
+        }
+    }
+}
+
+extension GeoPoint {
+    func toCLLocationCoordinate2D() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
