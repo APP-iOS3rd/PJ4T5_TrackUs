@@ -110,7 +110,7 @@ extension TrackingModeMapView {
             self.countTextLabel.font = boldFont
             
             // Button & Button Controller
-            let buttonWidth = 85.0
+            let buttonWidth = 86.0
             let stopButtonImage = UIImage(systemName: "stop.fill")?.resizeWithWidth(width: 40.0)?.withTintColor(.gray1, renderingMode: .alwaysOriginal)
             let pauseButtonImage = UIImage(systemName: "pause.fill")?.resizeWithWidth(width: 40.0)?.withTintColor(.gray1, renderingMode: .alwaysOriginal)
             let playButtonImage = UIImage(systemName: "play.fill")?.resizeWithWidth(width: 40.0)?.withTintColor(.gray1, renderingMode: .alwaysOriginal)
@@ -313,6 +313,16 @@ extension TrackingModeMapView {
                 guard let self = self else { return }
                 self.kilometerLabel.text = String(format: "%.2fkm/-", distance)
             }.store(in: &cancellation)
+            
+            self.trackingViewModel.$elapsedTime.sink { [weak self] time in
+                guard let self = self else { return }
+                self.timeLabel.text = time.asString(style: .positional)
+            }.store(in: &cancellation)
+            
+            self.trackingViewModel.$calorie.sink { [weak self] calorie in
+                guard let self = self else { return }
+                self.calorieLable.text = String(format: "%.1f", calorie)
+            }.store(in: &cancellation)
         }
         
         // 맵뷰에 경로선 그리는 함수
@@ -329,6 +339,7 @@ extension TrackingModeMapView {
             self.kilometerStatusView.isHidden = false
             self.excerciesStatusView.isHidden = false
             self.startTracking()
+            self.trackingViewModel.startRecord()
         }
         
         // 일시중지 됬을때
@@ -369,12 +380,12 @@ extension TrackingModeMapView {
         
         // 일시중지 버튼이 눌렸을때
         @objc func pauseButtonTapped() {
-            self.trackingViewModel.isPause = true
+            self.trackingViewModel.stopRecord()
         }
         
         // 플레이 버튼이 눌렸을때
         @objc func playButtonTapped() {
-            self.trackingViewModel.isPause = false
+            self.trackingViewModel.startRecord()
         }
         
         // 중지 버튼이 눌렸을때
