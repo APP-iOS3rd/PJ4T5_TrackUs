@@ -377,6 +377,16 @@
 			path = API;
 			sourceTree = "<group>";
 		};
+		824F4DF42B83E62F00EFDF42 /* Item */ = {
+			isa = PBXGroup;
+			children = (
+				82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */,
+				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
+				820330D72B70127800CB97F7 /* SettingPopup.swift */,
+			);
+			path = Item;
+			sourceTree = "<group>";
+		};
 		82ECF0952B679E05002CFD00 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -431,6 +441,7 @@
 		82ECF0992B679EAA002CFD00 /* Running */ = {
 			isa = PBXGroup;
 			children = (
+				824F4DF42B83E62F00EFDF42 /* Item */,
 				82ECF0A62B67A041002CFD00 /* ViewModel */,
 				82ECF0A52B67A03C002CFD00 /* View */,
 			);
@@ -502,10 +513,7 @@
 			children = (
 				824DA8972B6FB92200B15B89 /* RunningHomeView.swift */,
 				823F27A42B827917005333F8 /* RunningStartView.swift */,
-				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
-				820330D72B70127800CB97F7 /* SettingPopup.swift */,
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
-				82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */,
 				824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */,
 			);
 			path = View;
