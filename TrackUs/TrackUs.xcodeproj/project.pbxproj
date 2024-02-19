@@ -44,6 +44,7 @@
 		82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */; };
 		824DA8982B6FB92200B15B89 /* RunningHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8972B6FB92200B15B89 /* RunningHomeView.swift */; };
 		824DA89A2B6FB95100B15B89 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824DA8992B6FB95100B15B89 /* BottomSheet.swift */; };
+		824F4DF12B83CDEA00EFDF42 /* TrackingModeMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */; };
 		8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */; };
 		82707A552B7DFCF000615443 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82707A542B7DFCF000615443 /* GoogleService-Info.plist */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
@@ -71,7 +72,6 @@
 		82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */; };
 		82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */; };
 		82FEE3DA2B74C3F300D85F89 /* MapViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */; };
-		82FEE3DC2B74C99D00D85F89 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FEE3DB2B74C99D00D85F89 /* MapViewModel.swift */; };
 		963AE4052B678EAC00E98BF4 /* TrackUsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */; };
 		963AE4072B678EAC00E98BF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963AE4062B678EAC00E98BF4 /* ContentView.swift */; };
 		963AE4092B678EAE00E98BF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963AE4082B678EAE00E98BF4 /* Assets.xcassets */; };
@@ -157,7 +157,6 @@
 		FE71D03E2B6B9C8E00F391AA /* RecruitmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71D03D2B6B9C8E00F391AA /* RecruitmentViewModel.swift */; };
 		FE71D0402B6B9C9600F391AA /* ChattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71D03F2B6B9C9600F391AA /* ChattingView.swift */; };
 		FE71D0422B6B9CA000F391AA /* ChattingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71D0412B6B9CA000F391AA /* ChattingViewModel.swift */; };
-		FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE90EECF2B6FDE0900A08E23 /* CountViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -192,6 +191,7 @@
 		82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		824DA8972B6FB92200B15B89 /* RunningHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningHomeView.swift; sourceTree = "<group>"; };
 		824DA8992B6FB95100B15B89 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
+		824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeMapView.swift; sourceTree = "<group>"; };
 		8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		82707A542B7DFCF000615443 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
@@ -218,7 +218,6 @@
 		82ECF0BF2B67A721002CFD00 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecruitmentCell.swift; sourceTree = "<group>"; };
 		82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewRepresentable.swift; sourceTree = "<group>"; };
-		82FEE3DB2B74C99D00D85F89 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		963AE4012B678EAC00E98BF4 /* TrackUs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackUs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		963AE4042B678EAC00E98BF4 /* TrackUsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackUsApp.swift; sourceTree = "<group>"; };
 		963AE4062B678EAC00E98BF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -245,7 +244,6 @@
 		FE71D03D2B6B9C8E00F391AA /* RecruitmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecruitmentViewModel.swift; sourceTree = "<group>"; };
 		FE71D03F2B6B9C9600F391AA /* ChattingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingView.swift; sourceTree = "<group>"; };
 		FE71D0412B6B9CA000F391AA /* ChattingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewModel.swift; sourceTree = "<group>"; };
-		FE90EECF2B6FDE0900A08E23 /* CountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -506,6 +504,7 @@
 				820330D72B70127800CB97F7 /* SettingPopup.swift */,
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
 				82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */,
+				824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -513,8 +512,6 @@
 		82ECF0A62B67A041002CFD00 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				FE90EECF2B6FDE0900A08E23 /* CountViewModel.swift */,
-				82FEE3DB2B74C99D00D85F89 /* MapViewModel.swift */,
 				FE1CD54F2B7DFDEA00F8A8BE /* SettingPopupViewModel.swift */,
 				823F27A62B827CCE005333F8 /* TrackingViewModel.swift */,
 			);
@@ -852,7 +849,6 @@
 				6187E4262B8112B6007DED5C /* ReportLoadingView.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
-				FE90EED02B6FDE0900A08E23 /* CountViewModel.swift in Sources */,
 				8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
 				610F882E2B77AC1800FB12A1 /* HorizontalGraph.swift in Sources */,
@@ -878,6 +874,7 @@
 				821CD24D2B72C82900CE6D42 /* PreventionGestureModifier.swift in Sources */,
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
 				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
+				824F4DF12B83CDEA00EFDF42 /* TrackingModeMapView.swift in Sources */,
 				82AB28B12B6B4DC200D7734D /* MenuItems.swift in Sources */,
 				824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
@@ -886,7 +883,6 @@
 				821CD24F2B72C8A600CE6D42 /* View+Gesture.swift in Sources */,
 				6112431D2B7AA3110086EF40 /* CustomDatePicker.swift in Sources */,
 				82AB28B72B6B512F00D7734D /* WebView.swift in Sources */,
-				82FEE3DC2B74C99D00D85F89 /* MapViewModel.swift in Sources */,
 				610F88282B775F5400FB12A1 /* MyRecordView.swift in Sources */,
 				FE71D03E2B6B9C8E00F391AA /* RecruitmentViewModel.swift in Sources */,
 				984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */,

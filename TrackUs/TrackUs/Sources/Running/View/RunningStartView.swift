@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct RunningStartView: View {
+    @EnvironmentObject var router: Router
+    
     var body: some View {
-        TrackingModeMapView()
+        TrackingModeMapView(router: router)
         .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(true)
         .preventGesture()

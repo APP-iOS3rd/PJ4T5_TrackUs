@@ -9,12 +9,11 @@ import SwiftUI
 
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
-    @ObservedObject var mapViewModel: MapViewModel
     @State private var showingPopup = false
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: mapViewModel.lineCoordinates)
+            LocationMeMapView()
             
             VStack {
                 VStack(spacing: 20) {
@@ -37,8 +36,7 @@ struct RunningResultView: View {
                             Image(.shose)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(String(format: "%.2f", mapViewModel.distance / 1000.0) + " km / - ")
-                                    .customFontStyle(.gray1_R14)
+                                Text("-")
                             }
                             Spacer()
                             
@@ -52,7 +50,7 @@ struct RunningResultView: View {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(String(format: "%.1f", mapViewModel.calorie) + " kcal / - ")
+                                Text("-")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -64,7 +62,7 @@ struct RunningResultView: View {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text("\(mapViewModel.elapsedTime.asString(style: .positional))")
+                                Text("-")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -76,7 +74,7 @@ struct RunningResultView: View {
                             Image(.pace)
                             VStack(alignment: .leading) {
                                 Text("페이스")
-                                Text(mapViewModel.paceMinutes == 0 && mapViewModel.paceSeconds == 0 ? "-'--''" : String(format: "%2d'%02d''", mapViewModel.paceMinutes, mapViewModel.paceSeconds))
+                                Text("-")
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
@@ -120,7 +118,7 @@ struct RunningResultView: View {
         .ignoresSafeArea(.keyboard)
         .preventGesture()
         .popup(isPresented: $showingPopup) {
-            SaveDataPopup(title: $mapViewModel.title, showingPopup: $showingPopup, mapViewModel: mapViewModel)
+            SaveDataPopup(showingPopup: $showingPopup)
         } customize: {
             $0
                 .backgroundColor(.black.opacity(0.3))
@@ -132,11 +130,11 @@ struct RunningResultView: View {
 }
 
 struct SaveDataPopup: View {
-    @Binding var title: String
+    @EnvironmentObject var router: Router
+    @State var title: String = ""
     @Binding var showingPopup: Bool
     @FocusState private var titleTextFieldFocused: Bool
-    @ObservedObject var mapViewModel: MapViewModel
-    @EnvironmentObject var router: Router
+    
     
     var body: some View {
         VStack(spacing: 0) {
@@ -171,10 +169,7 @@ struct SaveDataPopup: View {
                     })
                     
                     MainButton(active: true, buttonText: "확인", minHeight: 40) {
-                        mapViewModel.uploadRunningData { _ in
-                            showingPopup = false
-                            router.popToRoot()
-                        }
+                       
                     }
                     
                 }
