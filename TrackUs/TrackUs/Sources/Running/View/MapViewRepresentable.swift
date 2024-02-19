@@ -26,7 +26,6 @@ struct LocationMeMapView: UIViewControllerRepresentable {
     
     class Coordinator: UIViewController, GestureManagerDelegate {
         internal var mapView: MapView!
-        private var locationTrackingCancellation: AnyCancelable?
         private let locationManager = LocationManager.shared
         private lazy var locationButton = UIButton(frame: .zero)
         
@@ -42,7 +41,7 @@ struct LocationMeMapView: UIViewControllerRepresentable {
             
             mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
             mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
+            mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             try? mapView.mapboxMap.setCameraBounds(with: cameraBoundsOptions)
             self.view.addSubview(mapView)
             
@@ -69,7 +68,7 @@ struct LocationMeMapView: UIViewControllerRepresentable {
         }
         
         private func setupLocationButton() {
-            locationButton.addTarget(self, action: #selector(centerMapOnUser), for: .touchDown)
+            locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchDown)
             
             if #available(iOS 13.0, *) {
                 locationButton.setImage(UIImage(named: "locationButton"), for: .normal)
@@ -92,13 +91,13 @@ struct LocationMeMapView: UIViewControllerRepresentable {
                 locationButton.widthAnchor.constraint(equalToConstant: buttonWidth)
             ])
         }
-        @objc private func centerMapOnUser() {
-            guard let userLocation = locationManager.currentLocation?.coordinate else {
-                // 사용자의 위치를 가져올 수 없는 경우 예외 처리
-                print("사용자의 위치를 가져올 수 없습니다.")
+        
+        @objc private func locationButtonTapped() {
+            guard let currentLocation = locationManager.currentLocation?.coordinate else {
+                print("DEBUG: 유저 위치를 가져오기 실패")
                 return
             }
-            let camera = CameraOptions(center: userLocation, zoom: 14, bearing: 0, pitch: 0)
+            let camera = CameraOptions(center: currentLocation, zoom: 14, bearing: 0, pitch: 0)
             mapView.camera.ease(to: camera, duration: 1.3)
         }
     }
@@ -144,7 +143,7 @@ struct RouteMapView: UIViewControllerRepresentable {
             self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
             self.mapView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
             self.mapView.ornaments.options.scaleBar.visibility = .visible
-            self.mapView.mapboxMap.styleURI = StyleURI(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
+            self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             view.addSubview(mapView)
             
             drawRoute()
