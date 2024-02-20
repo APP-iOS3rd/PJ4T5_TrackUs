@@ -85,6 +85,7 @@ extension TrackingModeMapView {
             self.mapView.location.options.puckType = .puck2D(puckConfiguration)
             
             /// 경로선
+            
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: [])
             self.lineAnnotationManager = self.mapView.annotations.makePolylineAnnotationManager()
             self.lineAnnotationManager.annotations = [self.lineAnnotation]
@@ -102,12 +103,16 @@ extension TrackingModeMapView {
             self.kilometerStatusView.translatesAutoresizingMaskIntoConstraints = false
             
             // Label
-            let boldFont = UIFont.boldSystemFont(ofSize: 16.0)
-            self.countLabel.font = UIFont.italicSystemFont(ofSize: 128.0)
+            if let descriptor = UIFont.systemFont(ofSize: 128.0, weight: .bold).fontDescriptor.withSymbolicTraits([.traitBold, .traitItalic]) {
+                self.countLabel.font = UIFont(descriptor: descriptor, size: 0)
+            } else {
+                self.countLabel.font = UIFont.systemFont(ofSize: 128.0, weight: .bold)
+            }
             self.countLabel.textColor = .white
             self.countTextLabel.text = "잠시후 러닝이 시작됩니다!"
+            self.countTextLabel.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
             self.countTextLabel.textColor = .white
-            self.countTextLabel.font = boldFont
+            
             
             // Button & Button Controller
             let buttonWidth = 86.0
@@ -136,8 +141,11 @@ extension TrackingModeMapView {
             self.pauseButton.layer.shadowColor = UIColor.black.cgColor
             self.pauseButton.layer.shadowOpacity = 0.3
             
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(stopButtonTapped))
+            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(stopButtonLongPressed))
+            self.stopButton.addGestureRecognizer(tapGesture)
+            self.stopButton.addGestureRecognizer(longPressGesture)
             self.pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
-            self.stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
             self.playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
             
             self.buttonStackView.axis = .horizontal
@@ -159,6 +167,12 @@ extension TrackingModeMapView {
             
             self.kilometerLabel.text = "0.0km"
             self.kilometerLabel.textColor = .gray1
+            if let descriptor = UIFont.systemFont(ofSize: 20.0, weight: .bold).fontDescriptor.withSymbolicTraits([.traitBold, .traitItalic]) {
+                self.kilometerLabel.font = UIFont(descriptor: descriptor, size: 0)
+            } else {
+                self.kilometerLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+            }
+            
             let distanceToNowLabel = UILabel()
             let distanceToNowImage = UIImageView(image: UIImage(named: "Shose"))
             distanceToNowLabel.text = "현재까지 거리"
@@ -182,42 +196,16 @@ extension TrackingModeMapView {
             self.kilometerStatusView.axis = .horizontal
             
             // Exercise Status
-            let calorieStackCircle = UIStackView()
-            let paceStackCircle = UIStackView()
-            let timeStackCircle = UIStackView()
-            
             self.excerciesStatusView.translatesAutoresizingMaskIntoConstraints = false
             self.excerciesStatusView.axis = .horizontal
+            self.excerciesStatusView.alignment = .center
             self.excerciesStatusView.distribution = .equalSpacing
-            
-            let circleWidth = 85.0
-            calorieStackCircle.translatesAutoresizingMaskIntoConstraints = false
-            calorieStackCircle.axis = .vertical
-            calorieStackCircle.alignment = .center
-            calorieStackCircle.backgroundColor = .white
-            calorieStackCircle.layer.cornerRadius = circleWidth / 2.0
-            calorieStackCircle.clipsToBounds = true
-            calorieStackCircle.widthAnchor.constraint(equalToConstant: circleWidth).isActive = true
-            calorieStackCircle.heightAnchor.constraint(equalToConstant: circleWidth).isActive = true
+            // equalSpacing 본연의 크기대로 설정하되 간격을 동일하게...
             
             
-            paceStackCircle.translatesAutoresizingMaskIntoConstraints = false
-            paceStackCircle.axis = .vertical
-            paceStackCircle.alignment = .center
-            paceStackCircle.backgroundColor = .white
-            paceStackCircle.layer.cornerRadius = circleWidth / 2
-            paceStackCircle.clipsToBounds = true
-            paceStackCircle.widthAnchor.constraint(equalToConstant: circleWidth).isActive = true
-            paceStackCircle.heightAnchor.constraint(equalTo: paceStackCircle.widthAnchor).isActive = true
-            
-            timeStackCircle.translatesAutoresizingMaskIntoConstraints = false
-            timeStackCircle.axis = .vertical
-            timeStackCircle.alignment = .center
-            timeStackCircle.backgroundColor = .white
-            timeStackCircle.layer.cornerRadius = circleWidth / 2.0
-            timeStackCircle.clipsToBounds = true
-            timeStackCircle.widthAnchor.constraint(equalToConstant: circleWidth).isActive = true
-            timeStackCircle.heightAnchor.constraint(equalToConstant: circleWidth).isActive = true
+            let calorieStackView = addCircleStackView()
+            let paceStackView = addCircleStackView()
+            let timeStackView = addCircleStackView()
             
             let fireImage = UIImageView(image: UIImage(named: "Fire"))
             let paceImage = UIImageView(image: UIImage(named: "Pace"))
@@ -231,18 +219,32 @@ extension TrackingModeMapView {
             paceTextLabel.text = "페이스"
             timeTextLabel.text = "경과시간"
             
+            calorieTextLabel.textColor = .gray1
+            paceTextLabel.textColor = .gray1
+            timeTextLabel.textColor = .gray1
+            self.calorieLable.textColor = .gray1
+            self.paceLabel.textColor = .gray1
+            self.timeLabel.textColor = .gray1
+            
+            if let descriptor = UIFont.systemFont(ofSize: 20.0, weight: .bold).fontDescriptor.withSymbolicTraits([.traitBold, .traitItalic]) {
+                calorieLable.font = UIFont(descriptor: descriptor, size: 0)
+                paceLabel.font = UIFont(descriptor: descriptor, size: 0)
+                timeLabel.font = UIFont(descriptor: descriptor, size: 0)
+            } else {
+                calorieLable.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+                paceLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+                timeLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+            }
+            
             self.calorieLable.text = "0.0"
             self.paceLabel.text = "-'--''"
             self.timeLabel.text = "00:00"
             
-            calorieStackCircle.backgroundColor = .white
-            paceStackCircle.backgroundColor = .white
-            timeStackCircle.backgroundColor = .white
             
-            [fireImage, calorieTextLabel, calorieLable].forEach { calorieStackCircle.addArrangedSubview($0) }
-            [paceImage, paceTextLabel, paceLabel].forEach { paceStackCircle.addArrangedSubview($0) }
-            [timeImage, timeTextLabel, timeLabel].forEach { timeStackCircle.addArrangedSubview($0) }
-            [calorieStackCircle, paceStackCircle, timeStackCircle].forEach { excerciesStatusView.addArrangedSubview($0) }
+            [fireImage, calorieTextLabel, calorieLable].forEach { calorieStackView.addArrangedSubview($0) }
+            [paceImage, paceTextLabel, paceLabel].forEach { paceStackView.addArrangedSubview($0) }
+            [timeImage, timeTextLabel, timeLabel].forEach { timeStackView.addArrangedSubview($0) }
+            [calorieStackView, paceStackView, timeStackView].forEach { excerciesStatusView.addArrangedSubview($0) }
             
             excerciesStatusView.isHidden = true
             
@@ -261,7 +263,7 @@ extension TrackingModeMapView {
                 self.countLabel.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
                 self.countLabel.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor),
                 self.countTextLabel.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-                self.countTextLabel.topAnchor.constraint(equalTo: self.countLabel.lastBaselineAnchor, constant: 10),
+                self.countTextLabel.topAnchor.constraint(equalTo: self.countLabel.lastBaselineAnchor, constant: 20),
                 
                 self.stopButton.widthAnchor.constraint(equalToConstant: buttonWidth),
                 self.stopButton.heightAnchor.constraint(equalToConstant: buttonWidth),
@@ -286,6 +288,7 @@ extension TrackingModeMapView {
                 self.excerciesStatusView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
                 self.excerciesStatusView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             ])
+            
         }
         
         // 뷰에 갱신될 값들을 바인딩
@@ -301,12 +304,6 @@ extension TrackingModeMapView {
             self.trackingViewModel.$isPause.sink { [weak self] isPause in
                 guard let self = self else { return }
                 isPause ? self.updatedOnPause() : self.updatedOnPlay()
-            }.store(in: &cancellation)
-            
-            // 경로가 이동될때마다
-            self.trackingViewModel.$coordinates.sink { [weak self] coordinate in
-                guard let self = self else { return }
-                self.drawLine()
             }.store(in: &cancellation)
             
             self.trackingViewModel.$distance.sink { [weak self] distance in
@@ -332,7 +329,11 @@ extension TrackingModeMapView {
         
         // 맵뷰에 경로선 그리는 함수
         private func drawLine() {
+            print(self.trackingViewModel.coordinates.count, "개")
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: self.trackingViewModel.coordinates)
+            self.lineAnnotation.lineColor = StyleColor(UIColor.main)
+            self.lineAnnotation.lineWidth = 5
+            self.lineAnnotation.lineJoin = .round
             self.lineAnnotationManager.annotations = [self.lineAnnotation]
         }
         
@@ -372,7 +373,7 @@ extension TrackingModeMapView {
                 guard let location = newLocation.last, let mapView else { return }
                 
                 self.trackingViewModel.updateCoordinates(with: location.coordinate)
-                
+                self.drawLine()
                 mapView.camera.ease(
                     to: CameraOptions(center: location.coordinate, zoom: 15),
                     duration: 1.3)
@@ -396,9 +397,14 @@ extension TrackingModeMapView {
         
         // 중지 버튼이 눌렸을때
         @objc func stopButtonTapped() {
+            print("Tapped")
+        }
+        
+        @objc func stopButtonLongPressed() {
             self.cancellation.forEach { cancelable in
                 cancelable.cancel()
             }
+            HapticManager.instance.impact(style: .heavy)
             router.push(.runningResult)
         }
         
@@ -413,5 +419,25 @@ extension TrackingModeMapView {
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEndAnimatingFor gestureType: MapboxMaps.GestureType) {
             
         }
+        
+        func addCircleStackView() -> UIStackView {
+            let circleDiameter: CGFloat = 98.0
+            let circleView = UIStackView()
+            circleView.translatesAutoresizingMaskIntoConstraints = false
+            circleView.backgroundColor = .white
+            circleView.layer.cornerRadius = circleDiameter / 2.0
+            circleView.clipsToBounds = true
+            circleView.distribution = .equalSpacing
+            circleView.alignment = .center
+            circleView.axis = .vertical
+            circleView.layoutMargins = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
+            circleView.isLayoutMarginsRelativeArrangement = true
+            circleView.widthAnchor.constraint(equalToConstant: circleDiameter).isActive = true
+            circleView.heightAnchor.constraint(equalToConstant: circleDiameter).isActive = true
+            return circleView
+        }
     }
+    
+    
 }
+

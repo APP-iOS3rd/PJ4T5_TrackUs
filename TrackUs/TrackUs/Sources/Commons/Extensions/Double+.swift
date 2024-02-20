@@ -29,7 +29,7 @@ extension Double {
     func asString(unit: FormattedStyle) -> String {
         switch unit {
         case .pace:
-            guard self != 0.0  else { return "-'--''" }
+            guard self != 0.0 && self != .infinity && !self.isNaN  else { return "-'--''" }
             let formattedString = String(format: "%.3f", self)
             let paceInMinutes = formattedString[formattedString.startIndex]
             let paceInSecondsFirst = formattedString[formattedString.index(formattedString.startIndex, offsetBy: 2)]

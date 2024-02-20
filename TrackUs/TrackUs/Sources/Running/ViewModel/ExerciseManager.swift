@@ -82,8 +82,6 @@ final class ExerciseManager {
         
         let pace = timeInMinutes / distance
         
-        let paceInMinutesPerKilometer = 1 / pace
-        
         return pace
     }
 }
