@@ -12,8 +12,8 @@ import MapboxMaps
 
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 class TrackingViewModel: ObservableObject {
+    private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
-    
     @Published var count: Int = 3 // 카운트다운
     @Published var isPause: Bool = true // 러닝기록 상태
     // 러닝기록(넘겨주는 데이터)
@@ -65,8 +65,20 @@ class TrackingViewModel: ObservableObject {
         })
     }
     
+    // 기록중지
     func stopRecord() {
         self.isPause = true
         self.recordTimer.invalidate()
     }
 }
+
+extension TrackingViewModel: Hashable {
+    static func == (lhs: TrackingViewModel, rhs: TrackingViewModel) -> Bool {
+           lhs.id == rhs.id
+       }
+       
+       func hash(into hasher: inout Hasher) {
+           hasher.combine(id)
+       }
+}
+

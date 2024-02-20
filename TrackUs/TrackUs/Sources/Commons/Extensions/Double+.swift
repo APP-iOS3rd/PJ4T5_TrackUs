@@ -9,6 +9,8 @@ import Foundation
 
 enum FormattedStyle {
     case pace
+    case kilometer
+    case calorie
 }
 
 extension Double {
@@ -36,6 +38,10 @@ extension Double {
             let paceInSecondsThird = formattedString[formattedString.index(formattedString.startIndex, offsetBy: 3)]
             
             return "\(paceInMinutes)'\(paceInSecondsFirst)\(paceInSecondsThird)''"
+        case .kilometer:
+            return String(format: "%.2f km", self)
+        case .calorie:
+            return String(format: "%.1f kcal", self)
         }
     }
 }

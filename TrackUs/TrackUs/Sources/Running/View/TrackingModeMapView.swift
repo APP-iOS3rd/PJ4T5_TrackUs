@@ -405,7 +405,7 @@ extension TrackingModeMapView {
                 cancelable.cancel()
             }
             HapticManager.instance.impact(style: .heavy)
-            router.push(.runningResult)
+            router.push(.runningResult(trackingViewModel))
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
