@@ -8,9 +8,6 @@
 import SwiftUI
 import MapboxMaps
 
-// MARK: - 라이브트래킹
-
-
 // MARK: - 현재위치를 나타내는 맵뷰
 struct LocationMeMapView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
@@ -131,17 +128,19 @@ struct RouteMapView: UIViewControllerRepresentable {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+        
         override func viewDidLoad() {
             super.viewDidLoad()
             var centerPostion = lineCoordinates.first!
             if let updatedCenterPosition = self.calculateCenterCoordinate(for: lineCoordinates) {
                 centerPostion = updatedCenterPosition
             }
-            let cameraOptions = CameraOptions(center: centerPostion, zoom: 16)
-            let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
             
+            // TODO: - 줌레벨을 거리에 따라서 설정하도록 구현하기
+            let cameraOptions = CameraOptions(center: centerPostion, zoom: 12)
+            let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
             self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
-            self.mapView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+            self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.mapView.ornaments.options.scaleBar.visibility = .visible
             self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             view.addSubview(mapView)
@@ -182,7 +181,7 @@ struct RouteMapView: UIViewControllerRepresentable {
             
             let averageLatitude = totalLatitude / Double(coordinates.count)
             let averageLongitude = totalLongitude / Double(coordinates.count)
-            
+            print(averageLatitude, averageLongitude, "?")
             return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
         }
         

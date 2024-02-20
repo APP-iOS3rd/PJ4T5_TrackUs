@@ -22,6 +22,7 @@ struct RunningResultView: View {
         return  Double(settingViewModel.estimatedTime * 60).asString(style: .positional)
     }
     
+    // 하단 운동결과 피드백 메세지
     var feedbackMessageLabel: String {
         let estimatedTime = Double(settingViewModel.estimatedTime) // 예상시간
         let distanceInKilometers = trackingViewModel.distance // 킬로미터
@@ -42,6 +43,7 @@ struct RunningResultView: View {
         }
     }
     
+    // 목표값과 비교하여 수치로 알려줌
     var elapsedTimeDifferenceLabel: String {
         let differenceInSeconds = Double(settingViewModel.estimatedTime * 60) - trackingViewModel.elapsedTime
         if differenceInSeconds > 0  {
@@ -51,7 +53,7 @@ struct RunningResultView: View {
         }
     }
     
-    // 목표값과 비교하여 수치로 알려줌
+    
     var kilometerDifferenceLabel: String {
         let difference = (trackingViewModel.distance) - settingViewModel.goalMinValue
         if difference > 0 {
@@ -64,9 +66,9 @@ struct RunningResultView: View {
     var calorieDifferenceLabel: String {
         let difference = (trackingViewModel.calorie) - estimatedCalories
         if difference > 0 {
-            return "목표보다 \(difference.asString(unit: .calorie))를 더 소모했어요!"
+            return "\(difference.asString(unit: .calorie))를 더 소모했어요!"
         } else {
-            return "목표보다 \(abs(difference).asString(unit: .calorie))를 덜 소모했어요."
+            return "\(abs(difference).asString(unit: .calorie))를 덜 소모했어요."
         }
     }
     
@@ -159,6 +161,7 @@ extension RunningResultView {
                     HStack {
                         Text(feedbackMessageLabel)
                             .customFontStyle(.gray1_R14)
+                            .lineLimit(3)
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     
@@ -185,6 +188,7 @@ extension RunningResultView {
                     topTrailingRadius: 12
                 )
             )
+            .offset(y: -10)
         }
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
