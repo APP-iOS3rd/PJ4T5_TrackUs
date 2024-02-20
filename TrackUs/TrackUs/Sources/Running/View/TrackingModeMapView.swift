@@ -338,7 +338,6 @@ extension TrackingModeMapView {
             self.overlayView.isHidden = true
             self.kilometerStatusView.isHidden = false
             self.excerciesStatusView.isHidden = false
-            self.startTracking()
             self.trackingViewModel.startRecord()
         }
         
@@ -366,7 +365,9 @@ extension TrackingModeMapView {
             locationTrackingCancellation = mapView.location.onLocationChange.observe { [weak mapView] newLocation in
                 // 새로받아온 위치
                 guard let location = newLocation.last, let mapView else { return }
-                self.trackingViewModel.updateCoordinates(with: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude))
+                
+                self.trackingViewModel.updateCoordinates(with: location.coordinate)
+                
                 mapView.camera.ease(
                     to: CameraOptions(center: location.coordinate, zoom: 15),
                     duration: 1.3)

@@ -7,36 +7,71 @@
 
 import Foundation
 
-// 운동정보를 계산하는 유틸클래스
+/** 
+ 칼로리 계산
+ MET 값
+ 약강도 걷기(2.7km/h)/2.3 MET
+ 중강도 걷기(4.0km/h)/2.9 MET
+ 고강도 걷기(4.8km/h)/3.3 MET
+ 조깅(8.0km/h)/6.0 MET
+ 약강도 러닝(9.7km/h)/8.0 MET
+ 중강도 러닝(11.3km/h)/10.0 MET
+ 고강도 러닝(12.9km/h)/11.5 MET
+ 
+ totalcalorie  = MET * weight(kg) * time(hours)
+ */
 final class ExerciseManager {
     @MainActor
     static func calculatedCaloriesBurned(distance: Double, totalTime: Double) -> Double {
         let userInfo = AuthenticationViewModel.shared.userInfo
+        let MALE_AVG_HEIGHT = 171
+        let MALE_AVG_WEIGHT = 72
+        let FEMALE_AVG_HEIGHT = 158
+        let FEMALE_AVG_WEIGHT = 57
+        let ADULT_AGE = 20
+        
+        // 유저의 신체정보(미설정시 상단에 정의된 평균값으로 계산)
         let gender = userInfo.gender ?? true // t = male, f = female
-        let MALE_AVG_HEIGHT = 171, MALE_AVG_WEIGHT = 72, FEMALE_AVG_HEIGHT = 158, FEMALE_AVG_WEIGHT = 57
-        
-        var bmr: Double = 0.0
-        
         let myHeight = userInfo.height ?? (gender ? MALE_AVG_HEIGHT : FEMALE_AVG_HEIGHT)
         let myWeight = userInfo.weight ?? (gender ? MALE_AVG_WEIGHT : FEMALE_AVG_WEIGHT)
-        let myAge = userInfo.age ?? 20
+        let myAge = userInfo.age ?? ADULT_AGE
         
-        if gender { bmr =  88.362 + (13.397 * Double(myWeight)) + (4.799 * Double(myHeight)) - (5.677 * Double(myAge)) }
-        else { bmr = 447.593 + (9.247 * Double(myWeight)) + (3.098 * Double(myHeight)) - (4.330 * Double(myAge)) }
+        let WALKING_WEAK_INTENSITY = 2.7
+        let WALKING_MEDIUM_INTENSITY = 4.0
+        let WALKING_HIGH_INTENSITY = 4.8
+        let JOGGING_INTENSITY = 8.0
+        let RUNNING_WEAK_INTENSITY = 9.7
+        let RUNNING_MEDIUM_INTENSITY = 11.3
+        let RUNNING_HIGH_INTENSITY = 12.9
         
-        let tdee: Double
+        let speedPerMinutes = (distance * 1000.0) / (totalTime / 60.0)
+        let weightInKilogram = Double(myWeight)
+        let timeInHours = (totalTime / 60.0) / 60.0
         
-        let activityMultiplier: Double = 1.55
-
-        tdee = bmr * activityMultiplier
+        var MET: Double
         
-        let runningMET: Double = 8.0
+        switch speedPerMinutes {
+        case ..<WALKING_WEAK_INTENSITY:
+            MET = 2.3
+        case ..<WALKING_MEDIUM_INTENSITY:
+            MET = 2.9
+        case ..<WALKING_HIGH_INTENSITY:
+            MET = 3.3
+        case ..<JOGGING_INTENSITY:
+            MET = 6.0
+        case ..<RUNNING_WEAK_INTENSITY:
+            MET = 8.0
+        case ..<RUNNING_MEDIUM_INTENSITY:
+            MET = 10.0
+        case ..<RUNNING_HIGH_INTENSITY:
+            MET = 11.5
+        default:
+            MET = 12.0
+        }
         
-        let caloriesBurned = runningMET * (Double(myWeight) / 2.20462) * (totalTime / 60.0)
+        let caloriesBurned = MET * weightInKilogram * timeInHours
         
-        let totalCaloriesBurned = caloriesBurned + tdee
-        
-        return totalCaloriesBurned
+        return caloriesBurned
     }
 }
 

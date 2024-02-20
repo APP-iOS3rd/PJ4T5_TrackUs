@@ -36,7 +36,6 @@ class TrackingViewModel: ObservableObject {
             guard let self = self else { return }
             count -= 1
             if count == 0 {
-                self.isPause = false
                 self.countTimer.invalidate()
             }
         })
@@ -46,12 +45,13 @@ class TrackingViewModel: ObservableObject {
     @MainActor
     func updateCoordinates(with coordinate: CLLocationCoordinate2D) {
         self.coordinates.append(coordinate)
+        
         guard self.coordinates.count > 1 else { return }
         
         let newLocation = self.coordinates[self.coordinates.count - 1]
         let oldLocation = self.coordinates[self.coordinates.count - 2]
         
-        self.distance += newLocation.distance(to: oldLocation) / 1000
+        self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
         self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance, totalTime: self.elapsedTime)
     }
     
