@@ -12,6 +12,7 @@ class SettingPopupViewModel: ObservableObject {
     @Published var showingPopup = false
     @Published var goalMinValue: Double
     @Published var estimatedTime: Int
+    
     var authViewModel = AuthenticationViewModel.shared
     
     let goalMinValueKey = "GoalMinValue"

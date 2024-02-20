@@ -323,6 +323,11 @@ extension TrackingModeMapView {
                 guard let self = self else { return }
                 self.calorieLable.text = String(format: "%.1f", calorie)
             }.store(in: &cancellation)
+            
+            self.trackingViewModel.$pace.sink { [weak self] pace in
+                guard let self = self else { return }
+                self.paceLabel.text = pace.asString(unit: .pace)
+            }.store(in: &cancellation)
         }
         
         // 맵뷰에 경로선 그리는 함수

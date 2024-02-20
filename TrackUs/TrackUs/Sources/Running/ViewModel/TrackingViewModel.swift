@@ -53,6 +53,7 @@ class TrackingViewModel: ObservableObject {
         
         self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
         self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance, totalTime: self.elapsedTime)
+        self.pace = ExerciseManager.calculatedPace(distance: self.distance, totalTime: self.elapsedTime)
     }
     
     // 기록시작

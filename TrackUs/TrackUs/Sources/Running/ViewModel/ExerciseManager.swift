@@ -73,6 +73,19 @@ final class ExerciseManager {
         
         return caloriesBurned
     }
+    
+    // 페이스(pace) -> 1km를 가는데 걸리는 시간
+    // 5km 이동 30분 소요 = 30/5 = 6min/km
+    static func calculatedPace(distance: Double, totalTime: Double) -> Double {
+        let distanceInKilometer = distance
+        let timeInMinutes = totalTime / 60.0
+        
+        let pace = timeInMinutes / distance
+        
+        let paceInMinutesPerKilometer = 1 / pace
+        
+        return pace
+    }
 }
 
 
