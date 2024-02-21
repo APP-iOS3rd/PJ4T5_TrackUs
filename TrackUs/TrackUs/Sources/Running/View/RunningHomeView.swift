@@ -13,22 +13,26 @@ struct RunningHomeView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @State private var isOpen: Bool = false
-    @State private var maxHeight: CGFloat = 300
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
     @State private var showingAlert: Bool = false
+    @State private var maxHeight: CGFloat = 300
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
+    
     let cheeringPhrase = [
         "나만의 페이스로, 나만의 피니쉬라인까지.",
         "걸음마다 성장이 느껴지는 곳, 함께 뛰어요!",
         "새로운 기회는 당신의 발 아래에 있어요.",
         "나만의 런웨이에서 뛰어보세요."
     ].randomElement()!
-    
+}
+
+// MARK: - View
+extension RunningHomeView {
     var body: some View {
         GeometryReader { geometry in
-            MapBoxMapView()
+            LocationMeMapView()
                 .onTapGesture {
                     withAnimation {
                         isOpen = false
@@ -42,115 +46,17 @@ struct RunningHomeView: View {
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
-                    // MARK: - 프로필 & 러닝 시작
-                    VStack {
-                        HStack {
-                            KFImage(URL(string: authViewModel.userInfo.profileImageUrl ?? ""))
-                                .placeholder({ProgressView()})
-                                .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 48, height: 48)
-                                .clipShape(Circle())
-                            
-                            VStack(alignment: .leading) {
-                                Text("\(authViewModel.userInfo.username)님!")
-                                    .customFontStyle(.gray1_B16)
-                                
-                                Text(cheeringPhrase)
-                                    .customFontStyle(.gray1_R12)
-                            }
-                            
-                            Spacer()
-                            
-                            
-                            Button(action: {
-                                showingPopup = true
-                            }) {
-                                Circle()
-                                    .fill(.white.shadow(.drop(color: .divider, radius: 10)))
-                                    .frame(width: 28, height: 28)
-                                    .overlay(
-                                        Image(systemName: "gearshape")
-                                            .foregroundStyle(.gray1)
-                                    )
-                            }
-                            
-                            Button(action: startButtonTapped, label: {
-                                Text("러닝 시작")
-                                    .foregroundStyle(.white)
-                                    .font(.system(size: 12, weight: .bold))
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 7)
-                            })
-                            .background(.main)
-                            .clipShape(Capsule())
-                            .alert(isPresented: $showingAlert) {
-                                Alert(
-                                    title: Text("러닝을 시작하기 위해서 앱에서 위치를 엑세스할 수 있도록 허용해 주세요."),
-                                    message: Text("러닝을 추적하고 그 외 다른 서비스와 기능을 이용하기 위해서 정확한 위치 정보가 필요합니다."),
-                                    primaryButton: .destructive (
-                                        Text("취소"),
-                                        action: { }
-                                    ),
-                                    secondaryButton: .default (
-                                        Text("설정"),
-                                        action: {
-                                            if let appSettings = URL(string: "App-Prefs:root=LOCATION_SERVICES") {
-                                                UIApplication.shared.open(appSettings,options: [:],completionHandler: nil)
-                                            }
-                                        }
-                                    )
-                                )
-                            }
-                            
-                        }
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
-                        
-                        Divider()
-                            .background(.divider)
-                    }
+                    // 프로필 & 러닝시작
+                    profileHeader
+                        .padding(.horizontal, 16)
                     
+                    // 내주변 러닝메이트
+                    runningAroundMe
                     
-                    // MARK: - 내주변 러닝메이트
-                    VStack(spacing: 16) {
-                        HStack {
-                            Image("SmallFire")
-                                .resizable()
-                                .frame(width: 38, height: 38)
-                            
-                            VStack(alignment: .leading) {
-                                Text("혼자 하는 러닝이 지루하다면?")
-                                    .customFontStyle(.gray1_B16)
-                                
-                                Text("내 근처 러닝메이트와 함께 러닝을 진행해보세요!")
-                                    .customFontStyle(.gray1_R12)
-                            }
-                            .padding(.leading, 8)
-                            Spacer()
-                        }
-                        .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
-                        
-                        // 가로 스크롤
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                RunningRecruitmentCell()
-                                RunningRecruitmentCell()
-                                RunningRecruitmentCell()
-                                RunningRecruitmentCell()
-                            }
-                            .padding(10)
-                        }
-                        .padding(.leading, 6)
-                    }
-                    
-                    // MARK: - 러닝 리포트 확인하기
-                    VStack {
-                        GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
-                            .modifier(BorderLineModifier())
-                    }
-                    .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+                    // 러닝 리포트 확인하기
+                    GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
+                        .modifier(BorderLineModifier())
+                        .padding(.horizontal, 16)
                 }
                 .background(
                     GeometryReader { innerGeometry in
@@ -172,6 +78,7 @@ struct RunningHomeView: View {
                 }
                 
                 deltaY = gestureValue.translation.height
+                
             } onEnded: { _ in
                 let endPoint = geometry.size.height * 0.3
                 
@@ -209,7 +116,116 @@ struct RunningHomeView: View {
         }
         .edgesIgnoringSafeArea(.top)
     }
+}
+
+// MARK: - SubView's
+extension RunningHomeView {
+    // 프로필 헤더
+    var profileHeader: some View {
+        VStack {
+            HStack {
+                KFImage(URL(string: authViewModel.userInfo.profileImageUrl ?? ""))
+                    .placeholder({ProgressView()})
+                    .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 48, height: 48)
+                    .clipShape(Circle())
+                
+                VStack(alignment: .leading) {
+                    Text("\(authViewModel.userInfo.username)님!")
+                        .customFontStyle(.gray1_B16)
+                    
+                    Text(cheeringPhrase)
+                        .customFontStyle(.gray1_R12)
+                }
+                
+                Spacer()
+                
+                
+                Button(action: {
+                    showingPopup = true
+                }) {
+                    Circle()
+                        .fill(.white.shadow(.drop(color: .divider, radius: 10)))
+                        .frame(width: 28, height: 28)
+                        .overlay(
+                            Image(systemName: "gearshape")
+                                .foregroundStyle(.gray1)
+                        )
+                }
+                
+                Button(action: startButtonTapped, label: {
+                    Text("러닝 시작")
+                        .foregroundStyle(.white)
+                        .font(.system(size: 12, weight: .bold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 7)
+                })
+                .background(.main)
+                .clipShape(Capsule())
+                .alert(isPresented: $showingAlert) {
+                    Alert(
+                        title: Text("러닝을 시작하기 위해서 앱에서 위치를 엑세스할 수 있도록 허용해 주세요."),
+                        message: Text("러닝을 추적하고 그 외 다른 서비스와 기능을 이용하기 위해서 정확한 위치 정보가 필요합니다."),
+                        primaryButton: .destructive (
+                            Text("취소"),
+                            action: { }
+                        ),
+                        secondaryButton: .default (
+                            Text("설정"),
+                            action: {
+                                if let appSettings = URL(string: "App-Prefs:root=LOCATION_SERVICES") {
+                                    UIApplication.shared.open(appSettings,options: [:],completionHandler: nil)
+                                }
+                            }
+                        )
+                    )
+                }
+            }
+            .padding(.vertical, 10)
+            Divider()
+                .background(.divider)
+        }
+    }
     
+    // 내주변 러닝
+    var runningAroundMe: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image("SmallFire")
+                    .resizable()
+                    .frame(width: 38, height: 38)
+                
+                VStack(alignment: .leading) {
+                    Text("혼자 하는 러닝이 지루하다면?")
+                        .customFontStyle(.gray1_B16)
+                    
+                    Text("내 근처 러닝메이트와 함께 러닝을 진행해보세요!")
+                        .customFontStyle(.gray1_R12)
+                }
+                .padding(.leading, 8)
+                Spacer()
+            }
+            .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+            
+            // 가로 스크롤
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    RunningRecruitmentCell()
+                    RunningRecruitmentCell()
+                    RunningRecruitmentCell()
+                    RunningRecruitmentCell()
+                }
+                .padding(10)
+            }
+            .padding(.leading, 6)
+        }
+    }
+}
+
+// MARK: - Method's
+extension RunningHomeView {
     func startButtonTapped() {
         LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
             if authrionzationStatus == .authorizedWhenInUse {
@@ -220,4 +236,3 @@ struct RunningHomeView: View {
         }
     }
 }
-
