@@ -47,6 +47,11 @@
 		824F4DF12B83CDEA00EFDF42 /* TrackingModeMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */; };
 		824F4DF32B83D73600EFDF42 /* ExerciseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F4DF22B83D73500EFDF42 /* ExerciseManager.swift */; };
 		8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */; };
+		825A49BE2B8598ED0090D27E /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49BD2B8598ED0090D27E /* UIImage+.swift */; };
+		825A49C02B85A8B30090D27E /* DataLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49BF2B85A8B30090D27E /* DataLoadingView.swift */; };
+		825A49C42B85B2DC0090D27E /* LoadingModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C32B85B2DC0090D27E /* LoadingModifier.swift */; };
+		825A49C62B85B55B0090D27E /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C52B85B55B0090D27E /* View+.swift */; };
+		825A49C82B85C3CF0090D27E /* SaveDataPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */; };
 		82707A552B7DFCF000615443 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82707A542B7DFCF000615443 /* GoogleService-Info.plist */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
 		828EA4B42B7C507200785D0F /* RunningRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4B32B7C507200785D0F /* RunningRecord.swift */; };
@@ -195,6 +200,11 @@
 		824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeMapView.swift; sourceTree = "<group>"; };
 		824F4DF22B83D73500EFDF42 /* ExerciseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseManager.swift; sourceTree = "<group>"; };
 		8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		825A49BD2B8598ED0090D27E /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
+		825A49BF2B85A8B30090D27E /* DataLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoadingView.swift; sourceTree = "<group>"; };
+		825A49C32B85B2DC0090D27E /* LoadingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModifier.swift; sourceTree = "<group>"; };
+		825A49C52B85B55B0090D27E /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDataPopup.swift; sourceTree = "<group>"; };
 		82707A542B7DFCF000615443 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		828EA4B32B7C507200785D0F /* RunningRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecord.swift; sourceTree = "<group>"; };
@@ -383,6 +393,7 @@
 				82FEE3D92B74C3F300D85F89 /* MapViewRepresentable.swift */,
 				82EEA2342B6FF8FB00157752 /* RunningRecruitmentCell.swift */,
 				820330D72B70127800CB97F7 /* SettingPopup.swift */,
+				825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */,
 			);
 			path = Item;
 			sourceTree = "<group>";
@@ -515,6 +526,7 @@
 				823F27A42B827917005333F8 /* RunningStartView.swift */,
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
 				824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */,
+				825A49BF2B85A8B30090D27E /* DataLoadingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -563,6 +575,8 @@
 				8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */,
 				821CD24E2B72C8A600CE6D42 /* View+Gesture.swift */,
 				82DD119A2B79262B00467761 /* Double+.swift */,
+				825A49BD2B8598ED0090D27E /* UIImage+.swift */,
+				825A49C52B85B55B0090D27E /* View+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -593,6 +607,7 @@
 				823B9AE52B6821B700C9F772 /* CustomNavigationBarModifier.swift */,
 				821CD24C2B72C82900CE6D42 /* PreventionGestureModifier.swift */,
 				828EA4BE2B7CB63100785D0F /* BorderLineModifier.swift */,
+				825A49C32B85B2DC0090D27E /* LoadingModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -845,6 +860,7 @@
 				987B90BE2B69210B0099C7DA /* Font+.swift in Sources */,
 				989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */,
 				82FEE3DA2B74C3F300D85F89 /* MapViewRepresentable.swift in Sources */,
+				825A49C02B85A8B30090D27E /* DataLoadingView.swift in Sources */,
 				82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */,
 				822AE5F02B704AA500D90264 /* PreparingService.swift in Sources */,
 				82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */,
@@ -859,9 +875,11 @@
 				82ECF0BC2B67A6E9002CFD00 /* Color+.swift in Sources */,
 				988DDC732B687657002248A2 /* SelectButton.swift in Sources */,
 				6187E4262B8112B6007DED5C /* ReportLoadingView.swift in Sources */,
+				825A49C42B85B2DC0090D27E /* LoadingModifier.swift in Sources */,
 				98F1C2EE2B6A191A009382B1 /* SignUpView.swift in Sources */,
 				822AE5EE2B70370700D90264 /* RunningResultView.swift in Sources */,
 				8252D51C2B6CCD27006B4FE5 /* HapticManager.swift in Sources */,
+				825A49C82B85C3CF0090D27E /* SaveDataPopup.swift in Sources */,
 				823B9AE42B681A5900C9F772 /* MainTabView.swift in Sources */,
 				610F882E2B77AC1800FB12A1 /* HorizontalGraph.swift in Sources */,
 				98F1C2F42B6A2386009382B1 /* PhysicalView.swift in Sources */,
@@ -875,6 +893,7 @@
 				610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */,
 				FE1CD5502B7DFDEA00F8A8BE /* SettingPopupViewModel.swift in Sources */,
 				98F1C2FC2B6A242B009382B1 /* Description.swift in Sources */,
+				825A49BE2B8598ED0090D27E /* UIImage+.swift in Sources */,
 				610F882C2B77A44100FB12A1 /* AgeGraphView.swift in Sources */,
 				98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
@@ -895,6 +914,7 @@
 				821CD24F2B72C8A600CE6D42 /* View+Gesture.swift in Sources */,
 				6112431D2B7AA3110086EF40 /* CustomDatePicker.swift in Sources */,
 				82AB28B72B6B512F00D7734D /* WebView.swift in Sources */,
+				825A49C62B85B55B0090D27E /* View+.swift in Sources */,
 				610F88282B775F5400FB12A1 /* MyRecordView.swift in Sources */,
 				FE71D03E2B6B9C8E00F391AA /* RecruitmentViewModel.swift in Sources */,
 				984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */,

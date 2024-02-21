@@ -151,13 +151,11 @@ struct MyRecordDetailView: View {
 //                        NavigationBackButton()
 //                    }
             }
-            
-            Color.clear
-                .customNavigation {
-                    NavigationText(title: "러닝기록")
-                } left: {
-                    NavigationBackButton()
-                }
+            .customNavigation {
+                NavigationText(title: "러닝기록")
+            } left: {
+                NavigationBackButton()
+            }
         }
     }
     

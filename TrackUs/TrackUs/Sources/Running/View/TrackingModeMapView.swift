@@ -34,6 +34,7 @@ extension TrackingModeMapView {
         private var lineAnnotation: PolylineAnnotation!
         private var lineAnnotationManager: PolylineAnnotationManager!
         private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
+        private var snapshotter: Snapshotter!
         private let countLabel = UILabel()
         private let countTextLabel = UILabel()
         private let kilometerLabel = UILabel()
@@ -47,7 +48,6 @@ extension TrackingModeMapView {
         private var buttonStackView = UIStackView()
         private var kilometerStatusView = UIStackView()
         private let excerciesStatusView = UIStackView()
-        
         
         init(router: Router) {
             self.router = router
@@ -85,10 +85,16 @@ extension TrackingModeMapView {
             self.mapView.location.options.puckType = .puck2D(puckConfiguration)
             
             /// 경로선
-            
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: [])
             self.lineAnnotationManager = self.mapView.annotations.makePolylineAnnotationManager()
             self.lineAnnotationManager.annotations = [self.lineAnnotation]
+            
+            /// 스냅셔터
+            let snapshotterOption = MapSnapshotOptions(size: CGSize(width: self.view.bounds.width, height: self.view.bounds.height) , pixelRatio: UIScreen.main.scale)
+            let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.mapboxMap.cameraState)
+            self.snapshotter = Snapshotter(options: snapshotterOption)
+            self.snapshotter.setCamera(to: snapshotterCameraOptions)
+            self.snapshotter.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
         }
         
         // UI 설정
@@ -401,11 +407,45 @@ extension TrackingModeMapView {
         }
         
         @objc func stopButtonLongPressed() {
-            self.cancellation.forEach { cancelable in
-                cancelable.cancel()
+//        guard let updatedCenterPosition = locationManager.calculateCenterCoordinate(for: self.trackingViewModel.coordinates) else {
+//                    return
+//            }
+//            self.snapshotter.setCamera(to: CameraOptions(center: updatedCenterPosition, zoom: 14))
+//            snapshotter.start {(overlayHandler) in
+//                let context = overlayHandler.context
+//                if self.trackingViewModel.coordinates.count > 1 {
+//                    self.trackingViewModel.coordinates.enumerated().forEach { data in
+//                        guard data.offset > 0 else {
+//                            context.move(to: overlayHandler.pointForCoordinate(data.element))
+//                            return
+//                        }
+//                        context.addLine(to: overlayHandler.pointForCoordinate(data.element))
+//                    }
+//                }
+//                
+//                
+//                context.setStrokeColor(UIColor.main.cgColor)
+//                context.setLineWidth(5.0)
+//                context.setLineJoin(.round)
+//                context.setLineCap(.round)
+//                context.strokePath()
+//                
+//            } completion: {[weak self] result in
+//                guard case let .success(image) = result, let `self` = self else {
+//                    if case .failure(_) = result {}
+//                    return
+//                }
+//            }
+            if let image = UIImage.imageFromView(view: self.mapView) {
+                self.cancellation.forEach { cancelable in
+                    cancelable.cancel()
+                }
+                self.trackingViewModel.snapshot = image
+                HapticManager.instance.impact(style: .heavy)
+                router.push(.runningResult(trackingViewModel))
             }
-            HapticManager.instance.impact(style: .heavy)
-            router.push(.runningResult(trackingViewModel))
+            
+            
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
@@ -437,7 +477,6 @@ extension TrackingModeMapView {
             return circleView
         }
     }
-    
-    
 }
+
 

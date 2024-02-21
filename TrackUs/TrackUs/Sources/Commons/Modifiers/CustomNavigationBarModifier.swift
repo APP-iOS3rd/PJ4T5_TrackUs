@@ -43,6 +43,7 @@ struct CustomNavigationBarModifier<C, L, R>: ViewModifier where C: View, L: View
             
             Spacer()
         }
+        .background(.white)
         .navigationBarHidden(true)
     }
 }

@@ -11,7 +11,7 @@ struct RunningResultView: View {
     @EnvironmentObject var router: Router
     @State private var showingPopup = false
     let settingViewModel = SettingPopupViewModel()
-    let trackingViewModel: TrackingViewModel
+    @ObservedObject var trackingViewModel: TrackingViewModel
     
     // TODO: - 여러곳에서 사용할 수 있도록 로직분리
     var estimatedCalories: Double {
@@ -52,7 +52,6 @@ struct RunningResultView: View {
             return "예상 시간보다 \(abs(differenceInSeconds).asString(style: .positional)) 늦게 끝났어요"
         }
     }
-    
     
     var kilometerDifferenceLabel: String {
         let difference = (trackingViewModel.distance) - settingViewModel.goalMinValue
@@ -190,73 +189,33 @@ extension RunningResultView {
             )
             .offset(y: -10)
         }
-        .navigationBarHidden(true)
-        .edgesIgnoringSafeArea(.top)
-        .ignoresSafeArea(.keyboard)
-        .preventGesture()
         .popup(isPresented: $showingPopup) {
-            SaveDataPopup(showingPopup: $showingPopup)
+            SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
+                trackingViewModel.uploadRecordedData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
+                    self.hideKeyboard()
+                    self.showingPopup = false
+            }
         } customize: {
             $0
                 .backgroundColor(.black.opacity(0.3))
-                .isOpaque(true)
+                .isOpaque(false)
                 .dragToDismiss(false)
                 .closeOnTap(false)
+        }
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
+        .ignoresSafeArea(.keyboard)
+        .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
+        .preventGesture()
+        .onChange(of: trackingViewModel.newtworkStatus) { newValue in
+            if newValue == .success {
+                router.popToRoot()
+            }
         }
     }
 }
 
-struct SaveDataPopup: View {
-    @EnvironmentObject var router: Router
-    @State var title: String = ""
-    @Binding var showingPopup: Bool
-    @FocusState private var titleTextFieldFocused: Bool
-    
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 0) {
-                Text("러닝 기록 저장")
-                    .customFontStyle(.gray1_B16)
-                
-                Text("러닝기록 저장을 위해\n러닝의 이름을 설정해주세요.")
-                    .customFontStyle(.gray1_R14)
-                    .padding(.top, 8)
-                
-                VStack {
-                    TextField("저장할 러닝 이름을 입력해주세요.", text: $title)
-                        .customFontStyle(.gray1_R12)
-                        .padding(8)
-                        .frame(height: 32)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(titleTextFieldFocused ? .main : .gray2))
-                        .focused($titleTextFieldFocused)
-                }
-                .padding(.top, 16)
-                
-                HStack {
-                    Button(action: {
-                        showingPopup = false
-                    }, label: {
-                        Text("취소")
-                            .customFontStyle(.main_R16)
-                            .frame(minHeight: 40)
-                            .padding(.horizontal, 20)
-                            .overlay(Capsule().stroke(.main))
-                    })
-                    
-                    MainButton(active: true, buttonText: "확인", minHeight: 40) {
-                    }
-                }
-                .padding(.top, 20)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 20)
-        }
-        
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.white)
-        .cornerRadius(12)
-        .padding(.horizontal, 60)
-    }
-}
+
+       
+
+

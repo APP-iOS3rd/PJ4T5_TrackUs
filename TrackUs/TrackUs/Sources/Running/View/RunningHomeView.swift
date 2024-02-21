@@ -90,6 +90,7 @@ extension RunningHomeView {
                 deltaY = 0
             }
         }
+        
         // MARK: - 상단 팝업
         .popup(isPresented: $showingFloater) {
             GraphicTextCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!", resource: .clipboard)

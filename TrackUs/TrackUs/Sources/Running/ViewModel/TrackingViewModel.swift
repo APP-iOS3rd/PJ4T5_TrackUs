@@ -9,22 +9,33 @@ import UIKit
 import Combine
 import SwiftUI
 import MapboxMaps
+import Firebase
 
+enum NetworkStatus {
+    case none
+    case loading
+    case error
+    case success
+}
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 class TrackingViewModel: ObservableObject {
+    var snapshot: UIImage?
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     @Published var count: Int = 3 // 카운트다운
     @Published var isPause: Bool = true // 러닝기록 상태
+    @Published var newtworkStatus: NetworkStatus = .none
     // 러닝기록(넘겨주는 데이터)
+    @Published var title: String = ""
     @Published var coordinates: [CLLocationCoordinate2D] = []
     @Published var distance: Double = 0.0
     @Published var elapsedTime: Double = 0.0
     @Published var calorie: Double = 0.0
     @Published var pace: Double = 0.0
     
-    var countTimer: Timer = Timer()
-    var recordTimer: Timer = Timer()
+    
+    private var countTimer: Timer = Timer()
+    private var recordTimer: Timer = Timer()
     
     init() {
         initTimer()
@@ -70,15 +81,52 @@ class TrackingViewModel: ObservableObject {
         self.isPause = true
         self.recordTimer.invalidate()
     }
+    
+    // 데이터 추가(DB)
+    @MainActor
+    func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
+        self.newtworkStatus = .loading 
+        let uid = authViewModel.userInfo.uid
+        guard let image = snapshot else { return }
+        ImageUploader.uploadImage(image: image, type: .map) { url in
+            let firstCoordinate = self.coordinates.first!
+            let coordinate = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+            LocationManager.shared.convertToAddressWith(coordinate: coordinate) { address in
+                guard let address = address else { return }
+                
+                let data: [String : Any] = [
+                    "title": self.title == "" ? "\(address) 에서 러닝" : self.title,
+                    "distance": self.distance,
+                    "pace": self.pace,
+                    "calorie": self.calorie,
+                    "elapsedTime": self.elapsedTime,
+                    "coordinates": self.coordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "routeImageUrl": url,
+                    "address": address,
+                    "targetDistance": targetDistance,
+                    "exprectedTime": expectedTime * 60,
+                    "timestamp": Timestamp(date: Date()),
+                ]
+                
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
+                    if let error = error {
+                        print("DEBUG: failed upload Running records data in user collection")
+                        self.newtworkStatus = .error
+                    }
+                    self.newtworkStatus = .success
+                }
+            }
+        }
+    }
 }
 
 extension TrackingViewModel: Hashable {
     static func == (lhs: TrackingViewModel, rhs: TrackingViewModel) -> Bool {
-           lhs.id == rhs.id
-       }
-       
-       func hash(into hasher: inout Hasher) {
-           hasher.combine(id)
-       }
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 

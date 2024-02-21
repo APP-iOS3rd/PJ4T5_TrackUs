@@ -41,7 +41,8 @@ class SettingPopupViewModel: ObservableObject {
         
         else {
             estimatedTime = Int(goalMinValue * 10)
-            return }
+            return
+        }
         
         switch runningStyle {
         case .walking:
