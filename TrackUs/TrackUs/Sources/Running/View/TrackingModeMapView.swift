@@ -335,7 +335,6 @@ extension TrackingModeMapView {
         
         // 맵뷰에 경로선 그리는 함수
         private func drawLine() {
-            print(self.trackingViewModel.coordinates.count, "개")
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: self.trackingViewModel.coordinates)
             self.lineAnnotation.lineColor = StyleColor(UIColor.main)
             self.lineAnnotation.lineWidth = 5
@@ -403,7 +402,7 @@ extension TrackingModeMapView {
         
         // 중지 버튼이 눌렸을때
         @objc func stopButtonTapped() {
-            print("Tapped")
+            
         }
         
         @objc func stopButtonLongPressed() {
@@ -422,7 +421,6 @@ extension TrackingModeMapView {
 //                        context.addLine(to: overlayHandler.pointForCoordinate(data.element))
 //                    }
 //                }
-//                
 //                
 //                context.setStrokeColor(UIColor.main.cgColor)
 //                context.setLineWidth(5.0)

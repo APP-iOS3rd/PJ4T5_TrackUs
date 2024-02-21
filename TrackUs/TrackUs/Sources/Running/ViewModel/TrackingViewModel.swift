@@ -83,6 +83,8 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 데이터 추가(DB)
+    // throw 함수를 만들면서 throw가 되씅때 네트워크상태를 에러로 만들어보기
+    
     @MainActor
     func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
         self.newtworkStatus = .loading 

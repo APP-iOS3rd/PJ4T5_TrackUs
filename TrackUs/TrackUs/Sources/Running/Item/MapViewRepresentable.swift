@@ -108,7 +108,6 @@ struct RouteMapView: UIViewControllerRepresentable {
         return Coordinator(lineCoordinates: lineCoordinates)
     }
     
-    
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
