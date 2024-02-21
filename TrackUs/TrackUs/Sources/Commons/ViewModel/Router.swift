@@ -23,9 +23,11 @@ enum Page: Hashable, Identifiable {
     case withDrawal
     // Home
     case runningStart
-    case runningResult(MapViewModel)
+    case runningResult(TrackingViewModel)
     // Report
     case recordDetail(Runninglog)
+    // UserProfileView
+    case userProfile(String)
 }
 
 extension Page {
@@ -126,11 +128,13 @@ final class Router: ObservableObject {
         case .withDrawal:
             Withdrawal()
         case .runningStart:
-            RunningLiveView()
-        case .runningResult(let mapViewModel):
-            RunningResultView(mapViewModel: mapViewModel)
+            RunningStartView()
+        case .runningResult(let trackingViewModel):
+            RunningResultView(trackingViewModel: trackingViewModel)
         case .recordDetail(let myRecord):
             MyRecordDetailView(runningLog: myRecord)
+        case .userProfile(let userId):
+            UserProfileView(userUid: userId)
         }
     }
     

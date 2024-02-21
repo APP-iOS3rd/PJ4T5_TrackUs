@@ -73,7 +73,6 @@ class MapViewController: UIViewController, GestureManagerDelegate {
         
         let buttonWidth = 44.0
         locationButton.translatesAutoresizingMaskIntoConstraints = false
-//        locationButton.backgroundColor = UIColor(white: 0.97, alpha: 1)
         locationButton.layer.cornerRadius = buttonWidth/2
         locationButton.layer.shadowOffset = CGSize(width: -1, height: 1)
         locationButton.layer.shadowColor = UIColor.black.cgColor
