@@ -89,7 +89,7 @@ struct selectView : View {
             MyReportView(selectedTab: $selectedTab, selectedDate: $selectedDate, selectedAge: $selectedAge)
                 .transition(.move(edge: .leading))
         case .record:
-            MyRecordView(selectedDate: $selectedDate)
+            MyRecordView(selectedDate: $selectedDate, showTrackUsProButton: false)
                 .transition(.move(edge: .trailing))
             
         }
