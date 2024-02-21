@@ -106,6 +106,7 @@ class TrackingViewModel: ObservableObject {
                     "targetDistance": targetDistance,
                     "exprectedTime": expectedTime * 60,
                     "timestamp": Timestamp(date: Date()),
+                    "isGroup": false
                 ]
                 
                 Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in

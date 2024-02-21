@@ -56,9 +56,8 @@ struct SaveDataPopup: View {
             .padding(.vertical, 20)
         }
         
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(width: 290, alignment: .leading)
         .background(.white)
         .cornerRadius(12)
-        .padding(.horizontal, 60)
     }
 }

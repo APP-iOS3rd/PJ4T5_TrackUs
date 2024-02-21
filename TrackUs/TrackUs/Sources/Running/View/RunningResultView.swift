@@ -166,7 +166,7 @@ extension RunningResultView {
                     
                     
                     HStack(spacing: 28) {
-                        MainButton(active: true, buttonText: "리포트로 이동", buttonColor: .gray1, minHeight: 45) {
+                        MainButton(active: true, buttonText: "홈으로 가기", buttonColor: .gray1, minHeight: 45) {
                             router.popToRoot()
                         }
                         
