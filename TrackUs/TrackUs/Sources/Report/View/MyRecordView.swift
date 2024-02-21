@@ -26,17 +26,25 @@ struct MyRecordView: View {
     @State private var gridDelete = false
     @Binding var selectedDate: Date?
     @State var selectedRunningLog: Runninglog?
+    @State private var showTrackUsProButton: Bool
+    
+    init(selectedDate: Binding<Date?>, showTrackUsProButton: Bool) {
+        self._selectedDate = selectedDate
+        self._showTrackUsProButton = State(initialValue: showTrackUsProButton)
+    }
     
     var body: some View {
         ScrollView {
             ZStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    Button {
-                        router.present(fullScreenCover: .payment)
-                    } label: {
-                        GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
-                            .modifier(BorderLineModifier())
-                            .multilineTextAlignment(.leading)
+                    if showTrackUsProButton {
+                        Button {
+                            router.present(fullScreenCover: .payment)
+                        } label: {
+                            GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+                                .modifier(BorderLineModifier())
+                                .multilineTextAlignment(.leading)
+                        }
                     }
                     
                     VStack(alignment: .leading) {

@@ -26,6 +26,8 @@ enum Page: Hashable, Identifiable {
     case runningResult(TrackingViewModel)
     // Report
     case recordDetail(Runninglog)
+    // UserProfileView
+    case userProfile(String)
 }
 
 extension Page {
@@ -131,6 +133,8 @@ final class Router: ObservableObject {
             RunningResultView(trackingViewModel: trackingViewModel)
         case .recordDetail(let myRecord):
             MyRecordDetailView(runningLog: myRecord)
+        case .userProfile(let userId):
+            UserProfileView(userUid: userId)
         }
     }
     
