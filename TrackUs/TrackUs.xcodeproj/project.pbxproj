@@ -52,6 +52,8 @@
 		825A49C42B85B2DC0090D27E /* LoadingModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C32B85B2DC0090D27E /* LoadingModifier.swift */; };
 		825A49C62B85B55B0090D27E /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C52B85B55B0090D27E /* View+.swift */; };
 		825A49C82B85C3CF0090D27E /* SaveDataPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */; };
+		825A49CA2B864D600090D27E /* RunningMateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C92B864D600090D27E /* RunningMateDetailView.swift */; };
+		825A49CE2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */; };
 		82707A552B7DFCF000615443 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82707A542B7DFCF000615443 /* GoogleService-Info.plist */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
 		828EA4B42B7C507200785D0F /* RunningRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4B32B7C507200785D0F /* RunningRecord.swift */; };
@@ -207,6 +209,8 @@
 		825A49C32B85B2DC0090D27E /* LoadingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModifier.swift; sourceTree = "<group>"; };
 		825A49C52B85B55B0090D27E /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDataPopup.swift; sourceTree = "<group>"; };
+		825A49C92B864D600090D27E /* RunningMateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningMateDetailView.swift; sourceTree = "<group>"; };
+		825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+CLLocationCoordinate2D.swift"; sourceTree = "<group>"; };
 		82707A542B7DFCF000615443 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		828EA4B32B7C507200785D0F /* RunningRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecord.swift; sourceTree = "<group>"; };
@@ -531,6 +535,7 @@
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
 				824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */,
 				825A49BF2B85A8B30090D27E /* DataLoadingView.swift */,
+				825A49C92B864D600090D27E /* RunningMateDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -581,6 +586,7 @@
 				82DD119A2B79262B00467761 /* Double+.swift */,
 				825A49BD2B8598ED0090D27E /* UIImage+.swift */,
 				825A49C52B85B55B0090D27E /* View+.swift */,
+				825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -866,11 +872,13 @@
 				987B90BE2B69210B0099C7DA /* Font+.swift in Sources */,
 				989D12DA2B681E3C004F41CF /* MainButton.swift in Sources */,
 				82FEE3DA2B74C3F300D85F89 /* MapViewRepresentable.swift in Sources */,
+				825A49CE2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift in Sources */,
 				825A49C02B85A8B30090D27E /* DataLoadingView.swift in Sources */,
 				82494DD82B7AD67400FB3EB8 /* ImageUploader.swift in Sources */,
 				822AE5F02B704AA500D90264 /* PreparingService.swift in Sources */,
 				82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */,
 				FEEAEA0B2B8276E3001F1888 /* UserProfileView.swift in Sources */,
+				825A49CA2B864D600090D27E /* RunningMateDetailView.swift in Sources */,
 				610F88222B74D01E00FB12A1 /* NetworkManager.swift in Sources */,
 				82AB28B52B6B4F6B00D7734D /* NavigationText.swift in Sources */,
 				8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */,

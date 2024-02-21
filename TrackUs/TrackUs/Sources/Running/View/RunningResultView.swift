@@ -89,7 +89,7 @@ extension RunningResultView {
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: trackingViewModel.coordinates)
+            RouteMapView(coordinates: trackingViewModel.coordinates)
             
             VStack {
                 VStack(spacing: 20) {

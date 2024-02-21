@@ -8,6 +8,11 @@
 import SwiftUI
 import MapboxMaps
 
+enum MapType {
+    case standard
+    case pointer
+}
+
 // MARK: - 현재위치를 나타내는 맵뷰
 struct LocationMeMapView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
@@ -102,25 +107,28 @@ struct LocationMeMapView: UIViewControllerRepresentable {
 
 // MARK: - 경로를 보여주는 맵뷰
 struct RouteMapView: UIViewControllerRepresentable {
-    let lineCoordinates: [CLLocationCoordinate2D]
+    let coordinates: [CLLocationCoordinate2D]
+    
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return Coordinator(lineCoordinates: lineCoordinates)
+        return Coordinator(coordinates: coordinates)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(lineCoordinates: lineCoordinates)
+        return Coordinator(coordinates: coordinates)
     }
     
-    class Coordinator: UIViewController, GestureManagerDelegate {
+    final class Coordinator: UIViewController, GestureManagerDelegate {
         private var mapView: MapView!
-        private let lineCoordinates: [CLLocationCoordinate2D]
+        private var  mapType: MapType = .standard
+        private let coordinates: [CLLocationCoordinate2D]
         
-        init(lineCoordinates: [CLLocationCoordinate2D]) {
-            self.lineCoordinates = lineCoordinates
+        init(coordinates: [CLLocationCoordinate2D], mapType: MapType = .standard) {
+            self.mapType = mapType
+            self.coordinates = coordinates
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -130,33 +138,36 @@ struct RouteMapView: UIViewControllerRepresentable {
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            var centerPostion = lineCoordinates.first!
-            if let updatedCenterPosition = self.calculateCenterCoordinate(for: lineCoordinates) {
-                centerPostion = updatedCenterPosition
-            }
+            setupMapView()
+            drawRoute()
+        }
             
+        // 맵뷰 초기화
+        private func setupMapView() {
+            guard let centerPosition = self.coordinates.calculateCenterCoordinate() else {
+                return
+            }
             // TODO: - 줌레벨을 거리에 따라서 설정하도록 구현하기
-            let cameraOptions = CameraOptions(center: centerPostion, zoom: 12)
+            let cameraOptions = CameraOptions(center: centerPosition, zoom: 12)
             let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
             self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
             self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.mapView.ornaments.options.scaleBar.visibility = .visible
             self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             view.addSubview(mapView)
-            
-            drawRoute()
         }
         
-        func drawRoute() {
-            var lineAnnotation = PolylineAnnotation(lineCoordinates: lineCoordinates)
+        // 경로그려주기
+        private func drawRoute() {
+            var lineAnnotation = PolylineAnnotation(lineCoordinates: coordinates)
             lineAnnotation.lineColor = StyleColor(UIColor.main)
             lineAnnotation.lineWidth = 5
             lineAnnotation.lineJoin = .round
             let lineAnnotationManager = mapView.annotations.makePolylineAnnotationManager()
             lineAnnotationManager.annotations = [lineAnnotation]
             
-            let startCoordinate = self.lineCoordinates.first!
-            let endCoordinate = self.lineCoordinates.last!
+            let startCoordinate = self.coordinates.first!
+            let endCoordinate = self.coordinates.last!
             var startPointAnnotation = PointAnnotation(coordinate: startCoordinate)
             var endPointAnnotation = PointAnnotation(coordinate: endCoordinate)
             startPointAnnotation.image = .init(image: UIImage(named: "StartPin")!, name: "start-pin")
@@ -167,20 +178,6 @@ struct RouteMapView: UIViewControllerRepresentable {
             } else {
                 pointAnnotationManager.annotations = [startPointAnnotation, endPointAnnotation]
             }
-        }
-        
-        func calculateCenterCoordinate(for coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
-            guard !coordinates.isEmpty else {
-                return nil
-            }
-            
-            // 위도와 경도의 평균값 계산
-            let totalLatitude = coordinates.map { $0.latitude }.reduce(0, +)
-            let totalLongitude = coordinates.map { $0.longitude }.reduce(0, +)
-            
-            let averageLatitude = totalLatitude / Double(coordinates.count)
-            let averageLongitude = totalLongitude / Double(coordinates.count)
-            return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
