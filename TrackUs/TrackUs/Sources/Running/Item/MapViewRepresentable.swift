@@ -180,7 +180,6 @@ struct RouteMapView: UIViewControllerRepresentable {
             
             let averageLatitude = totalLatitude / Double(coordinates.count)
             let averageLongitude = totalLongitude / Double(coordinates.count)
-            print(averageLatitude, averageLongitude, "?")
             return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
         }
         

@@ -31,16 +31,7 @@ struct MainTabView: View {
                     Text("러닝")
                 }
                 .tag(Tab.running)
-                
-                router.buildScreen(page: .recruitment)
-                    .tabItem {
-                        Image("Recruitment")
-                            .renderingMode(.template)
-                        Text("모집")
-                    }
-                    .tag(Tab.recruitment)
-                
-                
+                                
                 router.buildScreen(page: .chat)
                     .tabItem {
                         Image("Chatting")

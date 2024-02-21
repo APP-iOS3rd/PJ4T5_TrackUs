@@ -11,7 +11,6 @@ import SwiftUI
 enum Page: Hashable, Identifiable {
     // Root
     case running
-    case recruitment
     case chat
     case report
     case profile
@@ -109,8 +108,6 @@ final class Router: ObservableObject {
         switch page {
         case .running:
             RunningHomeView()
-        case .recruitment:
-            RecruitmentView()
         case .chat:
             ChattingView()
         case .report:
