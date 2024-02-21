@@ -11,18 +11,19 @@ import SwiftUI
 struct ChatMessage: Identifiable {
     let id = UUID()
     let isCurrentUser: Bool // 현재 사용자가 작성한 메시지 여부
-    let message: String // 메시지 내용
+    let image: UIImage? = nil
+    let message: String? // 메시지 내용
     let time: String // 메시지 작성 시간
 }
 
 struct ChattingView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
+    @StateObject var chatViewModel = ChattingViewModel.shared
     
     @State private var sideMenuPresented: Bool = false
     @State private var sendMessage: String = ""
     
     @State private var sideMenuTranslation: CGFloat = 0
-    private let chatTitle: String
     
     @State var previousUser: Bool = false
     
@@ -44,10 +45,6 @@ struct ChattingView: View {
             ChatMessage(isCurrentUser: false, message: "저도 반가워요!", time: "10:13 AM")
         ]
     
-    init(chatTitle: String) {
-        self.chatTitle = chatTitle
-    }
-    
     var body: some View {
         ZStack(alignment: .trailing){
             VStack(alignment: .leading){
@@ -66,7 +63,7 @@ struct ChattingView: View {
                     .padding(.horizontal, 16)
             }
             .customNavigation {
-                Text(chatTitle)
+                Text(chatViewModel.currentChatRoom.title)
             } left: {
                 NavigationBackButton()
             } right: {
@@ -77,6 +74,7 @@ struct ChattingView: View {
                     }, label: {
                         // 이미지 추후 수정
                         Image(systemName: "line.3.horizontal")
+                            .foregroundStyle(.gray1)
                     })
             }
             //.padding(.horizontal, 16)
@@ -160,7 +158,8 @@ struct ChattingView: View {
             // 메세지 전송 버튼
             Button(
                 action: {
-                    
+                    chatViewModel.sendChatMessage(chatText: sendMessage, userInfo: authViewModel.userInfo)
+                    sendMessage = ""
                 }, label: {
                     Image(systemName: "paperplane.circle.fill")
                         .resizable()
@@ -202,7 +201,7 @@ struct ChatMessageView: View {
                         Text(message.time) // 메시지 작성 시간
                             .customFontStyle(.gray1_R12)
                     }
-                    Text(message.message) // 메시지 내용
+                    Text(message.message!) // 메시지 내용
                         .customFontStyle(message.isCurrentUser ? .white_M14 : .gray1_R14)
                         .padding(8)
                         .background(message.isCurrentUser ? .main : .gray3)
@@ -221,6 +220,7 @@ struct ChatMessageView: View {
     }
 }
 
+/// 사이드 메뉴
 struct SideMenuView: View {
     var body: some View {
             VStack(alignment: .leading, spacing: 0) {
@@ -280,5 +280,5 @@ struct SideMenuView: View {
 
 
 #Preview {
-    ChattingView(chatTitle: "채팅방 2")
+    ChattingView()
 }

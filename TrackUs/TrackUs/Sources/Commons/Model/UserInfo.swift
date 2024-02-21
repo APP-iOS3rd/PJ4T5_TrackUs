@@ -49,7 +49,7 @@ struct UserInfo : Codable {
         self.height = nil
         self.age = nil
         self.gender = nil
-        self.isProfilePublic = false
+        self.isProfilePublic = true
         self.isProSubscriber = false
         self.profileImageUrl = nil
         self.setDailyGoal = nil
