@@ -208,6 +208,7 @@ extension RunningResultView {
         .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
         .preventGesture()
         .onChange(of: trackingViewModel.newtworkStatus) { status in
+            print(status)
             if status == .success {
                 router.popToRoot()
             }

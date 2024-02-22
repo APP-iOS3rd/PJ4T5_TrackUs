@@ -84,7 +84,6 @@ class TrackingViewModel: ObservableObject {
     
     // 데이터 추가(DB)
     // throw 함수를 만들면서 throw가 되씅때 네트워크상태를 에러로 만들어보기
-    
     @MainActor
     func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
         self.newtworkStatus = .loading 
@@ -111,11 +110,7 @@ class TrackingViewModel: ObservableObject {
                     "isGroup": false
                 ]
                 
-                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
-                    if let error = error {
-                        print("DEBUG: failed upload Running records data in user collection")
-                        self.newtworkStatus = .error
-                    }
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { _ in
                     self.newtworkStatus = .success
                 }
             }

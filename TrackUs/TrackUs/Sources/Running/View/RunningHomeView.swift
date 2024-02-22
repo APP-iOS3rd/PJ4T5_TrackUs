@@ -47,14 +47,7 @@ extension RunningHomeView {
             
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
-                VStack(spacing: 20) {
-                    // 임시버튼
-                    Button(action: {
-                        router.push(.courseDrawing)
-                    }, label: {
-                        Text("코스만들기")
-                    })
-                    
+                VStack(spacing: 20) { 
                     // 프로필 & 러닝시작
                     profileHeader
                         .padding(.horizontal, 16)

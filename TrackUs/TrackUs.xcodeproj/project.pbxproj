@@ -77,6 +77,7 @@
 		82CB5F9E2B874B5000406FBF /* CourseDrawingMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5F9D2B874B5000406FBF /* CourseDrawingMapView.swift */; };
 		82CB5FA02B874C8300406FBF /* LocationMeMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5F9F2B874C8300406FBF /* LocationMeMapView.swift */; };
 		82CB5FA22B874D6500406FBF /* PathPreviewMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5FA12B874D6500406FBF /* PathPreviewMapView.swift */; };
+		82CB5FA42B87625100406FBF /* MapView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5FA32B87625100406FBF /* MapView+.swift */; };
 		82DD119B2B79262B00467761 /* Double+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DD119A2B79262B00467761 /* Double+.swift */; };
 		82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */; };
 		82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */; };
@@ -240,6 +241,7 @@
 		82CB5F9D2B874B5000406FBF /* CourseDrawingMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDrawingMapView.swift; sourceTree = "<group>"; };
 		82CB5F9F2B874C8300406FBF /* LocationMeMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMeMapView.swift; sourceTree = "<group>"; };
 		82CB5FA12B874D6500406FBF /* PathPreviewMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathPreviewMapView.swift; sourceTree = "<group>"; };
+		82CB5FA32B87625100406FBF /* MapView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapView+.swift"; sourceTree = "<group>"; };
 		82DD119A2B79262B00467761 /* Double+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+.swift"; sourceTree = "<group>"; };
 		82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
@@ -614,6 +616,7 @@
 				825A49C52B85B55B0090D27E /* View+.swift */,
 				825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */,
 				82CB5F962B87296A00406FBF /* CLLocation+.swift */,
+				82CB5FA32B87625100406FBF /* MapView+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -931,6 +934,7 @@
 				82EEA2352B6FF8FB00157752 /* RunningRecruitmentCell.swift in Sources */,
 				82ECF0B52B67A101002CFD00 /* LoginView.swift in Sources */,
 				82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */,
+				82CB5FA42B87625100406FBF /* MapView+.swift in Sources */,
 				823B9AE22B6818DB00C9F772 /* Router.swift in Sources */,
 				82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */,
 				82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */,
