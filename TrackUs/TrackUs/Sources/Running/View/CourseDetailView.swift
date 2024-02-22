@@ -20,12 +20,11 @@ struct CourseDetailView: View {
     var body: some View {
         VStack {
             ScrollView {
-                RouteMapView(coordinates: coordinates, mapType: .pointer)
+                PathPreviewMap(coordinates: coordinates, mapStyle: .numberd)
                     .frame(height: 230)
-                    .preventGesture()
                 
                 VStack(spacing: 0)   {
-                    courseDetail
+                    RunningStatsView(estimatedTime: 1423.0, calories: 323.0, distance: 3.0)
                         .padding(.top, 20)
                     
                     courseDetailLabels
@@ -52,31 +51,6 @@ struct CourseDetailView: View {
 }
 
 extension CourseDetailView {
-    // 상세 운동정보
-    var courseDetail: some View {
-        HStack {
-            Spacer()
-            VStack {
-                Image(.fire)
-                Text("예상 소모 칼로리")
-                    .foregroundStyle(Color.init(hex: 0x3d3d3d))
-                Text("326 kcal")
-                    .customFontStyle(.gray1_R14)
-            }
-            Spacer()
-            VStack {
-                Image(.time)
-                Text("예상 소요 시간")
-                    .foregroundStyle(Color.init(hex: 0x3d3d3d))
-                Text("00:30:00")
-                    .customFontStyle(.gray1_R14)
-            }
-            Spacer()
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .modifier(BorderLineModifier())
-    }
     
     // 제목, 부가설명 등등
     var courseDetailLabels: some View {

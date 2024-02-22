@@ -9,19 +9,8 @@ import SwiftUI
 
 struct CourseDrawingView: View {
     var body: some View {
-        ZStack {
             CourseDrawingMapView()
                 .edgesIgnoringSafeArea(.all)
-                
-            VStack {
-                
-            }
-            .customNavigation {
-                NavigationText(title: "코스등록")
-            } left: {
-                NavigationBackButton()
-            }
-        }
     }
 }
 

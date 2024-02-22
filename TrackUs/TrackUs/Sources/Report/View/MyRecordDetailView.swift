@@ -20,7 +20,7 @@ struct MyRecordDetailView: View {
         // 맵뷰(임시)
         ZStack {
             GeometryReader { geometry in
-                RouteMapView(coordinates: [CLLocationCoordinate2D(latitude: CLLocationDegrees(floatLiteral: 37.558177), longitude: CLLocationDegrees(floatLiteral: 126.997408))]) // ReportViewModel의 coordinates
+                PathPreviewMap(coordinates: [Constants.DEFAULT_LOCATION]) // ReportViewModel의 coordinates
                     .onTapGesture {
                         withAnimation {
                             isOpen = false

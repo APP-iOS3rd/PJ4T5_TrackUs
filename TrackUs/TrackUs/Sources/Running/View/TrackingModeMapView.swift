@@ -406,34 +406,6 @@ extension TrackingModeMapView {
         }
         
         @objc func stopButtonLongPressed() {
-//        guard let updatedCenterPosition = locationManager.calculateCenterCoordinate(for: self.trackingViewModel.coordinates) else {
-//                    return
-//            }
-//            self.snapshotter.setCamera(to: CameraOptions(center: updatedCenterPosition, zoom: 14))
-//            snapshotter.start {(overlayHandler) in
-//                let context = overlayHandler.context
-//                if self.trackingViewModel.coordinates.count > 1 {
-//                    self.trackingViewModel.coordinates.enumerated().forEach { data in
-//                        guard data.offset > 0 else {
-//                            context.move(to: overlayHandler.pointForCoordinate(data.element))
-//                            return
-//                        }
-//                        context.addLine(to: overlayHandler.pointForCoordinate(data.element))
-//                    }
-//                }
-//                
-//                context.setStrokeColor(UIColor.main.cgColor)
-//                context.setLineWidth(5.0)
-//                context.setLineJoin(.round)
-//                context.setLineCap(.round)
-//                context.strokePath()
-//                
-//            } completion: {[weak self] result in
-//                guard case let .success(image) = result, let `self` = self else {
-//                    if case .failure(_) = result {}
-//                    return
-//                }
-//            }
             if let image = UIImage.imageFromView(view: self.mapView) {
                 self.cancellation.forEach { cancelable in
                     cancelable.cancel()
