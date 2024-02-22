@@ -52,8 +52,9 @@
 		825A49C42B85B2DC0090D27E /* LoadingModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C32B85B2DC0090D27E /* LoadingModifier.swift */; };
 		825A49C62B85B55B0090D27E /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C52B85B55B0090D27E /* View+.swift */; };
 		825A49C82B85C3CF0090D27E /* SaveDataPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */; };
-		825A49CA2B864D600090D27E /* RunningMateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49C92B864D600090D27E /* RunningMateDetailView.swift */; };
 		825A49CE2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */; };
+		825A49D02B8667FB0090D27E /* RunningStyleBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49CF2B8667FB0090D27E /* RunningStyleBadge.swift */; };
+		825A49D22B8670F60090D27E /* UserProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825A49D12B8670F60090D27E /* UserProfileCell.swift */; };
 		82707A552B7DFCF000615443 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82707A542B7DFCF000615443 /* GoogleService-Info.plist */; };
 		8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */; };
 		828EA4B42B7C507200785D0F /* RunningRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828EA4B32B7C507200785D0F /* RunningRecord.swift */; };
@@ -69,6 +70,9 @@
 		82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28BA2B6B531B00D7734D /* PremiumPaymentView.swift */; };
 		82AB28BD2B6B56E100D7734D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28BC2B6B56E100D7734D /* SettingsView.swift */; };
 		82AB28C12B6B5B6600D7734D /* TeamIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB28C02B6B5B6600D7734D /* TeamIntroView.swift */; };
+		82CB5F952B87251200406FBF /* CourseDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5F942B87251200406FBF /* CourseDrawingView.swift */; };
+		82CB5F972B87296A00406FBF /* CLLocation+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5F962B87296A00406FBF /* CLLocation+.swift */; };
+		82CB5F992B8737A200406FBF /* CourseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB5F982B8737A200406FBF /* CourseDetailView.swift */; };
 		82DD119B2B79262B00467761 /* Double+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DD119A2B79262B00467761 /* Double+.swift */; };
 		82ECF0AB2B67A085002CFD00 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */; };
 		82ECF0AD2B67A0A2002CFD00 /* MyProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */; };
@@ -209,8 +213,9 @@
 		825A49C32B85B2DC0090D27E /* LoadingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModifier.swift; sourceTree = "<group>"; };
 		825A49C52B85B55B0090D27E /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		825A49C72B85C3CF0090D27E /* SaveDataPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDataPopup.swift; sourceTree = "<group>"; };
-		825A49C92B864D600090D27E /* RunningMateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningMateDetailView.swift; sourceTree = "<group>"; };
 		825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+CLLocationCoordinate2D.swift"; sourceTree = "<group>"; };
+		825A49CF2B8667FB0090D27E /* RunningStyleBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningStyleBadge.swift; sourceTree = "<group>"; };
+		825A49D12B8670F60090D27E /* UserProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileCell.swift; sourceTree = "<group>"; };
 		82707A542B7DFCF000615443 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8280E0A72B6CFE7C00D1FB1A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		828EA4B32B7C507200785D0F /* RunningRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningRecord.swift; sourceTree = "<group>"; };
@@ -225,6 +230,9 @@
 		82AB28BA2B6B531B00D7734D /* PremiumPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumPaymentView.swift; sourceTree = "<group>"; };
 		82AB28BC2B6B56E100D7734D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		82AB28C02B6B5B6600D7734D /* TeamIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamIntroView.swift; sourceTree = "<group>"; };
+		82CB5F942B87251200406FBF /* CourseDrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDrawingView.swift; sourceTree = "<group>"; };
+		82CB5F962B87296A00406FBF /* CLLocation+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+.swift"; sourceTree = "<group>"; };
+		82CB5F982B8737A200406FBF /* CourseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailView.swift; sourceTree = "<group>"; };
 		82DD119A2B79262B00467761 /* Double+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+.swift"; sourceTree = "<group>"; };
 		82ECF0AA2B67A085002CFD00 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		82ECF0AC2B67A0A2002CFD00 /* MyProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewModel.swift; sourceTree = "<group>"; };
@@ -535,7 +543,8 @@
 				822AE5ED2B70370700D90264 /* RunningResultView.swift */,
 				824F4DF02B83CDEA00EFDF42 /* TrackingModeMapView.swift */,
 				825A49BF2B85A8B30090D27E /* DataLoadingView.swift */,
-				825A49C92B864D600090D27E /* RunningMateDetailView.swift */,
+				82CB5F982B8737A200406FBF /* CourseDetailView.swift */,
+				82CB5F942B87251200406FBF /* CourseDrawingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -587,6 +596,7 @@
 				825A49BD2B8598ED0090D27E /* UIImage+.swift */,
 				825A49C52B85B55B0090D27E /* View+.swift */,
 				825A49CD2B8650DC0090D27E /* Array+CLLocationCoordinate2D.swift */,
+				82CB5F962B87296A00406FBF /* CLLocation+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -606,6 +616,8 @@
 				824038C92B6FD040000BADD5 /* MaxBoxMapView.swift */,
 				822AE5EF2B704AA500D90264 /* PreparingService.swift */,
 				828EA4BC2B7CB2BC00785D0F /* GraphicTextCard.swift */,
+				825A49CF2B8667FB0090D27E /* RunningStyleBadge.swift */,
+				825A49D12B8670F60090D27E /* UserProfileCell.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -878,7 +890,6 @@
 				822AE5F02B704AA500D90264 /* PreparingService.swift in Sources */,
 				82AB28BB2B6B531B00D7734D /* PremiumPaymentView.swift in Sources */,
 				FEEAEA0B2B8276E3001F1888 /* UserProfileView.swift in Sources */,
-				825A49CA2B864D600090D27E /* RunningMateDetailView.swift in Sources */,
 				610F88222B74D01E00FB12A1 /* NetworkManager.swift in Sources */,
 				82AB28B52B6B4F6B00D7734D /* NavigationText.swift in Sources */,
 				8280E0A82B6CFE7C00D1FB1A /* UINavigationController+.swift in Sources */,
@@ -906,10 +917,14 @@
 				82ECF0C02B67A721002CFD00 /* ButtonModifier.swift in Sources */,
 				82ECF0BA2B67A64B002CFD00 /* Constants.swift in Sources */,
 				610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */,
+				825A49D22B8670F60090D27E /* UserProfileCell.swift in Sources */,
 				FE9DEA8D2B851645006C77A8 /* PrivateUserView.swift in Sources */,
 				FE1CD5502B7DFDEA00F8A8BE /* SettingPopupViewModel.swift in Sources */,
 				98F1C2FC2B6A242B009382B1 /* Description.swift in Sources */,
 				825A49BE2B8598ED0090D27E /* UIImage+.swift in Sources */,
+				82CB5F992B8737A200406FBF /* CourseDetailView.swift in Sources */,
+				82CB5F972B87296A00406FBF /* CLLocation+.swift in Sources */,
+				825A49D02B8667FB0090D27E /* RunningStyleBadge.swift in Sources */,
 				610F882C2B77A44100FB12A1 /* AgeGraphView.swift in Sources */,
 				98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
@@ -937,6 +952,7 @@
 				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
 				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
 				828EA4BF2B7CB63100785D0F /* BorderLineModifier.swift in Sources */,
+				82CB5F952B87251200406FBF /* CourseDrawingView.swift in Sources */,
 				614278BA2B7E967C0016EDE9 /* MyRecordDetailView.swift in Sources */,
 				82AB28B92B6B528500D7734D /* FAQView.swift in Sources */,
 				8224637D2B68E7F6008D3DAA /* MyProfileView.swift in Sources */,

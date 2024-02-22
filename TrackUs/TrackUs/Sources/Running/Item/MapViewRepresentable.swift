@@ -105,20 +105,82 @@ struct LocationMeMapView: UIViewControllerRepresentable {
     }
 }
 
-// MARK: - 경로를 보여주는 맵뷰
-struct RouteMapView: UIViewControllerRepresentable {
-    let coordinates: [CLLocationCoordinate2D]
+// MARK: - 경로를 그려주는 맵뷰
+struct CourseDrawingMapView: UIViewControllerRepresentable {
     
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return Coordinator(coordinates: coordinates)
+        return Coordinator()
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(coordinates: coordinates)
+        return Coordinator()
+    }
+    
+    final class Coordinator: UIViewController, GestureManagerDelegate {
+        internal var mapView: MapView!
+        
+        init() {
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            setupMapView()
+        }
+
+        // 맵뷰 초기화
+        private func setupMapView() {
+            // 현재위치가 없는경우 정해진 위치(광화문)로 카메라 세팅
+            let center = LocationManager.shared.currentLocation?.asCLLocationCoordinate2D() ?? Constants.DEFAULT_LOCATION
+            
+            let cameraOptions = CameraOptions(center: center, zoom: 17)
+            let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
+            self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
+            self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.mapView.ornaments.options.scaleBar.visibility = .hidden
+            self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
+            
+            view.addSubview(mapView)
+        }
+
+        
+        func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {
+            
+        }
+        
+        func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEnd gestureType: MapboxMaps.GestureType, willAnimate: Bool) {
+            
+        }
+        
+        func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didEndAnimatingFor gestureType: MapboxMaps.GestureType) {
+            
+        }
+    }
+}
+
+
+// MARK: - 경로를 보여주는 맵뷰
+struct RouteMapView: UIViewControllerRepresentable {
+    let coordinates: [CLLocationCoordinate2D]
+    var mapType: MapType = .standard
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        return Coordinator(coordinates: coordinates, mapType: mapType)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(coordinates: coordinates, mapType: mapType)
     }
     
     final class Coordinator: UIViewController, GestureManagerDelegate {
@@ -139,9 +201,19 @@ struct RouteMapView: UIViewControllerRepresentable {
         override func viewDidLoad() {
             super.viewDidLoad()
             setupMapView()
-            drawRoute()
+            setupMapType()
         }
-            
+        
+        // 맵뷰 스타일 설정
+        private func setupMapType() {
+            switch self.mapType {
+            case .standard:
+                drawRouteOnlyLine()
+            case .pointer:
+                drawRouteWithNumberdTruns()
+            }
+        }
+        
         // 맵뷰 초기화
         private func setupMapView() {
             guard let centerPosition = self.coordinates.calculateCenterCoordinate() else {
@@ -158,26 +230,36 @@ struct RouteMapView: UIViewControllerRepresentable {
         }
         
         // 경로그려주기
-        private func drawRoute() {
+        private func drawRouteOnlyLine() {
+            self.drawPath()
+            if coordinates.first! == coordinates.last! {
+                self.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
+            } else {
+                self.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
+                self.makeMarkerWithUIImage(coordinate: self.coordinates.last!, imageName: "Puck")
+            }
+        }
+        
+        private func drawRouteWithNumberdTruns() {
+            self.drawPath()
+        }
+        
+        // 특정좌표에 이미지 마커를 추가
+        private func makeMarkerWithUIImage(coordinate: CLLocationCoordinate2D, imageName: String) {
+            let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+            var pointAnnotation = PointAnnotation(coordinate: coordinate)
+            pointAnnotation.image = .init(image: UIImage(named: imageName)!, name: imageName)
+            pointAnnotationManager.annotations.append(pointAnnotation)
+        }
+        
+        // 경로 그리기
+        private func drawPath() {
             var lineAnnotation = PolylineAnnotation(lineCoordinates: coordinates)
             lineAnnotation.lineColor = StyleColor(UIColor.main)
             lineAnnotation.lineWidth = 5
             lineAnnotation.lineJoin = .round
             let lineAnnotationManager = mapView.annotations.makePolylineAnnotationManager()
             lineAnnotationManager.annotations = [lineAnnotation]
-            
-            let startCoordinate = self.coordinates.first!
-            let endCoordinate = self.coordinates.last!
-            var startPointAnnotation = PointAnnotation(coordinate: startCoordinate)
-            var endPointAnnotation = PointAnnotation(coordinate: endCoordinate)
-            startPointAnnotation.image = .init(image: UIImage(named: "StartPin")!, name: "start-pin")
-            endPointAnnotation.image = .init(image: UIImage(named: "Puck")!, name: "end-pin")
-            let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-            if startCoordinate == endCoordinate {
-                pointAnnotationManager.annotations = [startPointAnnotation]
-            } else {
-                pointAnnotationManager.annotations = [startPointAnnotation, endPointAnnotation]
-            }
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {

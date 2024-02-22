@@ -23,6 +23,8 @@ enum Page: Hashable, Identifiable {
     // Home
     case runningStart
     case runningResult(TrackingViewModel)
+    case courseDetail
+    case courseDrawing
     // Report
     case recordDetail(Runninglog)
     // UserProfileView
@@ -118,6 +120,10 @@ final class Router: ObservableObject {
             ProfileEditView()
         case .runningRecorded:
             RunningRecordView()
+        case .courseDetail:
+            CourseDetailView()
+        case .courseDrawing:
+            CourseDrawingView()
         case .faq:
             FAQView()
         case .setting:

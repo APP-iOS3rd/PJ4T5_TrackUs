@@ -29,8 +29,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         getCurrentLocation()
     }
     
-    
-    
     func getCurrentLocation() {
         locationManager.startUpdatingLocation()
         currentLocation = locationManager.location

@@ -42,10 +42,19 @@ extension RunningHomeView {
                 .frame(height: geometry.size.height - 95)
                 .offset(y: min(offset, 0))
                 .animation(.interactiveSpring(), value: offset)
+                
+            
             
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
+                    // 임시버튼
+                    Button(action: {
+                        router.push(.courseDrawing)
+                    }, label: {
+                        Text("코스만들기")
+                    })
+                    
                     // 프로필 & 러닝시작
                     profileHeader
                         .padding(.horizontal, 16)
@@ -90,6 +99,8 @@ extension RunningHomeView {
                 deltaY = 0
             }
         }
+        
+
         // MARK: - 목표운동량 설정 팝업
         .popup(isPresented: $showingPopup) {
             SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
@@ -198,14 +209,17 @@ extension RunningHomeView {
             // 가로 스크롤
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
+                    ForEach(1..<14, id: \.self) { _ in
+                        Button(action: {
+                            router.push(.courseDetail)
+                        }, label: {
+                            RunningRecruitmentCell()
+                        })
+                    }
                 }
-                .padding(10)
+                .padding(.vertical, 8)
             }
-            .padding(.leading, 6)
+            .padding(.leading, 16)
         }
     }
 }

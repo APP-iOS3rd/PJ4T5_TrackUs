@@ -207,8 +207,8 @@ extension RunningResultView {
         .ignoresSafeArea(.keyboard)
         .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
         .preventGesture()
-        .onChange(of: trackingViewModel.newtworkStatus) { newValue in
-            if newValue == .success {
+        .onChange(of: trackingViewModel.newtworkStatus) { status in
+            if status == .success {
                 router.popToRoot()
             }
         }
