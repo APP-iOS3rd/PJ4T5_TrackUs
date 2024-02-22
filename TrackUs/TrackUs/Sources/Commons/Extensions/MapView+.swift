@@ -9,6 +9,7 @@ import MapboxMaps
 import UIKit
 
 extension MapView {
+  
     /// 이미지로 마커를 생성
      func makeMarkerWithUIImage(coordinate: CLLocationCoordinate2D, imageName: String) {
         let pointAnnotationManager = self.annotations.makePointAnnotationManager()
@@ -16,4 +17,11 @@ extension MapView {
         pointAnnotation.image = .init(image: UIImage(named: imageName)!, name: imageName)
         pointAnnotationManager.annotations.append(pointAnnotation)
     }
+    
+    func removeAllMarkers() {
+       let pointAnnotationManager = self.annotations.makePointAnnotationManager()
+       pointAnnotationManager.annotations.removeAll()
+    }
+    
+    
 }

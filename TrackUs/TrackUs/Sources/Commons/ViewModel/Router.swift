@@ -25,6 +25,7 @@ enum Page: Hashable, Identifiable {
     case runningResult(TrackingViewModel)
     case courseDetail
     case courseDrawing
+    case courseRegister(CourseRegViewModel)
     // Report
     case recordDetail(Runninglog)
     // UserProfileView
@@ -124,6 +125,8 @@ final class Router: ObservableObject {
             CourseDetailView()
         case .courseDrawing:
             CourseDrawingView()
+        case .courseRegister(let courseRegViewModel):
+            CourseRegisterView(courseRegViewModel: courseRegViewModel)
         case .faq:
             FAQView()
         case .setting:

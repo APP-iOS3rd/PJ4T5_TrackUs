@@ -79,6 +79,7 @@ struct PathPreviewMap: UIViewControllerRepresentable {
             self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.mapView.gestures.delegate = self
             self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
+            self.mapView.ornaments.options.scaleBar.visibility = .hidden
             view.addSubview(mapView)
         }
         
