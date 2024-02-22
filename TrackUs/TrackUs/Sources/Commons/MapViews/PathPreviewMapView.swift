@@ -20,26 +20,28 @@ struct PathPreviewMap: UIViewControllerRepresentable {
         case numberd
     }
     
-    let coordinates: [CLLocationCoordinate2D]
     var mapStyle: PathPreviewMap.MapStyle = .standard
+    var isUserInteractionEnabled: Bool = true
+    let coordinates: [CLLocationCoordinate2D]
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return Coordinator(coordinates: coordinates, mapStyle: mapStyle)
+        return Coordinator(coordinates: coordinates, mapStyle: mapStyle, isUserInteractionEnabled: isUserInteractionEnabled)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(coordinates: coordinates, mapStyle: mapStyle)
+        return Coordinator(coordinates: coordinates, mapStyle: mapStyle, isUserInteractionEnabled: isUserInteractionEnabled)
     }
     
     final class Coordinator: UIViewController, GestureManagerDelegate {
         private var mapView: MapView!
         private var  mapStyle: PathPreviewMap.MapStyle = .standard
         private let coordinates: [CLLocationCoordinate2D]
-        
-        init(coordinates: [CLLocationCoordinate2D], mapStyle: MapStyle = .standard) {
+        private let isUserInteractionEnabled: Bool
+        init(coordinates: [CLLocationCoordinate2D], mapStyle: MapStyle = .standard, isUserInteractionEnabled: Bool) {
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             self.mapStyle = mapStyle
             self.coordinates = coordinates
             super.init(nibName: nil, bundle: nil)
@@ -80,6 +82,9 @@ struct PathPreviewMap: UIViewControllerRepresentable {
             self.mapView.gestures.delegate = self
             self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             self.mapView.ornaments.options.scaleBar.visibility = .hidden
+            self.mapView.ornaments.options.compass = .init(visibility: .hidden)
+            self.mapView.isUserInteractionEnabled = isUserInteractionEnabled
+            
             view.addSubview(mapView)
         }
         

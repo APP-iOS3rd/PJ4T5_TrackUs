@@ -47,7 +47,8 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         
         lazy var completeButton: UIButton = {
             let button = UIButton()
-            button.setTitle("코스등록", for: .normal)
+            button.setTitle("코스 완성", for: .normal)
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.backgroundColor = .main
             button.setTitleColor(.white, for: .normal)
