@@ -92,6 +92,7 @@ struct LocationMeMapView: UIViewControllerRepresentable {
         }
         
         @objc private func locationButtonTapped() {
+            locationManager.getCurrentLocation()
             guard let currentLocation = locationManager.currentLocation?.coordinate else {
                 print("DEBUG: 유저 위치를 가져오기 실패")
                 return

@@ -51,8 +51,10 @@ struct PathPreviewMap: UIViewControllerRepresentable {
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            setupMapView()
+            setupCamera()
             setupMapType()
+            setBoundsOnCenter()
+            
         }
         
         // 맵뷰 스타일 설정
@@ -66,16 +68,16 @@ struct PathPreviewMap: UIViewControllerRepresentable {
         }
         
         // 맵뷰 초기화
-        private func setupMapView() {
+        private func setupCamera() {
             guard let centerPosition = self.coordinates.calculateCenterCoordinate() else {
                 return
             }
             // TODO: - 줌레벨을 거리에 따라서 설정하도록 구현하기
             let cameraOptions = CameraOptions(center: centerPosition, zoom: 12)
-            let myMapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
-            self.mapView = MapView(frame: view.bounds, mapInitOptions: myMapInitOptions)
+            let options = MapInitOptions(cameraOptions: cameraOptions)
+            self.mapView = MapView(frame: view.bounds, mapInitOptions: options)
             self.mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.mapView.ornaments.options.scaleBar.visibility = .visible
+            self.mapView.gestures.delegate = self
             self.mapView.mapboxMap.styleURI = .init(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z")
             view.addSubview(mapView)
         }
@@ -84,23 +86,15 @@ struct PathPreviewMap: UIViewControllerRepresentable {
         private func drawRouteOnlyLine() {
             self.drawPath()
             if coordinates.first! == coordinates.last! {
-                self.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
+                self.mapView.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
             } else {
-                self.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
-                self.makeMarkerWithUIImage(coordinate: self.coordinates.last!, imageName: "Puck")
+                self.mapView.makeMarkerWithUIImage(coordinate: self.coordinates.first!, imageName: "StartPin")
+                self.mapView.makeMarkerWithUIImage(coordinate: self.coordinates.last!, imageName: "Puck")
             }
         }
         
         private func drawRouteWithNumberdTruns() {
             self.drawPath()
-        }
-        
-        // 특정좌표에 이미지 마커를 추가
-        private func makeMarkerWithUIImage(coordinate: CLLocationCoordinate2D, imageName: String) {
-            let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-            var pointAnnotation = PointAnnotation(coordinate: coordinate)
-            pointAnnotation.image = .init(image: UIImage(named: imageName)!, name: imageName)
-            pointAnnotationManager.annotations.append(pointAnnotation)
         }
         
         // 경로 그리기
@@ -111,6 +105,27 @@ struct PathPreviewMap: UIViewControllerRepresentable {
             lineAnnotation.lineJoin = .round
             let lineAnnotationManager = mapView.annotations.makePolylineAnnotationManager()
             lineAnnotationManager.annotations = [lineAnnotation]
+        }
+        
+        // 경로를 계산한뒤 카메라를 중앙으로 배치하고 줌레벨 설정
+        private func setBoundsOnCenter() {
+            // 지도가 렌더링된 후에 업데이트 하기위해 실행지연
+            DispatchQueue.main.async {
+                let referenceCamera = CameraOptions(zoom: 5, bearing: 45)
+                
+                let camera = try? self.mapView.mapboxMap.camera(
+                    for: self.coordinates,
+                    camera: referenceCamera,
+                    coordinatesPadding: UIEdgeInsets(top: 40, left: 40, bottom: 40, right: 40),
+                    maxZoom: nil,
+                    offset: CGPoint(x: 0, y: 40)
+                )
+                
+                self.mapView.camera.ease (
+                    to: camera!,
+                    duration: 0
+                )
+            }
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {

@@ -20,7 +20,7 @@ struct CourseDetailView: View {
     var body: some View {
         VStack {
             ScrollView {
-                PathPreviewMap(coordinates: coordinates, mapStyle: .numberd)
+                PathPreviewMap(coordinates: coordinates)
                     .frame(height: 230)
                 
                 VStack(spacing: 0)   {
