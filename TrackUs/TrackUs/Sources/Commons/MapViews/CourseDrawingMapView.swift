@@ -146,8 +146,8 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
                 cleanUpDataSource()
                 
                 // 마커찍기
-                coordinate.forEach {
-                    self.addMarker(coordinate: $0)
+                coordinate.enumerated().forEach { (offset, value) in
+                    self.addMarker(coordinate: value, number: offset)
                 }
                 
                 // 경로 그리기
@@ -160,9 +160,9 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         }
         
         // 마커추가
-        private func addMarker(coordinate: CLLocationCoordinate2D) {
+        private func addMarker(coordinate: CLLocationCoordinate2D, number: Int) {
             var pointAnnotation = PointAnnotation(coordinate: coordinate)
-            pointAnnotation.image = .init(image: UIImage(named: "Puck")!, name: "Puck")
+            pointAnnotation.image = .init(image: UIImage(named: "point-\(number + 1)")!, name: "point-\(number)")
             pointAnnotationManager.annotations.append(pointAnnotation)
         }
         
@@ -172,6 +172,7 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         }
         
         @objc func completeButtonTapped() {
+            print(courseRegViewModel.coorinates.count)
             guard courseRegViewModel.coorinates.count >= 2 else {
                 let alert = UIAlertController(title: "알림", message: "경로를 2개 이상 생성해주세요.", preferredStyle: .alert)
                 let confirmAction = UIAlertAction(title: "확인", style: .default)

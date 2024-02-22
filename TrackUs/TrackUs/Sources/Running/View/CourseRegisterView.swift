@@ -32,6 +32,7 @@ extension CourseRegisterView {
         VStack {
             ScrollView {
                 PathPreviewMap(
+                    mapStyle: .numberd,
                     isUserInteractionEnabled: false,
                     coordinates: courseRegViewModel.coorinates
                 )
@@ -129,6 +130,7 @@ extension CourseRegisterView {
         .onTapGesture {
             self.hideKeyboard()
         }
+        .preventGesture()
     }
 }
 

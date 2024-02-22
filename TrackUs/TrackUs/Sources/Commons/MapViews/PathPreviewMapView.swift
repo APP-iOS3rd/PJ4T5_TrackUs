@@ -101,6 +101,9 @@ struct PathPreviewMap: UIViewControllerRepresentable {
         
         private func drawRouteWithNumberdTruns() {
             self.drawPath()
+            self.coordinates.enumerated().forEach { (offset, value) in
+                self.mapView.makeMarkerWithUIImage(coordinate: value, imageName: "point-\(offset +  1)")
+            }
         }
         
         // 경로 그리기
