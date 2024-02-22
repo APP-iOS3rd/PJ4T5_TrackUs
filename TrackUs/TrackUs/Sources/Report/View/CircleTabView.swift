@@ -183,6 +183,7 @@ struct DailyCircleView: View {
                             .foregroundColor(.blue1)
                     }
                     Text("\(String(format: "%.1f", totalDistanceForSelectedDate / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
+//                    Text("\((totalDistanceForSelectedDate / 1000.0).asString(unit: .kilometer)) / \(authViewModel.userInfo.setDailyGoal?.asString(unit: .kilometer) ?? String(0))")
                         .customFontStyle(.gray1_H17)
                         .italic()
                 }
@@ -191,6 +192,7 @@ struct DailyCircleView: View {
             HStack {
                 VStack(spacing: 7) {
                     Text(String(format: "%.1f", totalCaloriesForSelectedDate))
+//                    Text(totalCaloriesForSelectedDate.asString(unit: .calorie))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("칼로리")
@@ -200,7 +202,8 @@ struct DailyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    Text(String(format: "%.2f", totalDistanceForSelectedDate / 1000.0) + "km")
+//                    Text(String(format: "%.2f", totalDistanceForSelectedDate / 1000.0) + "km")
+                    Text((totalDistanceForSelectedDate / 1000.0).asString(unit: .kilometer))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("킬로미터")
@@ -220,7 +223,7 @@ struct DailyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    Text("_'__'")
+                    Text(averagePaceForSelectedDate.asString(unit: .pace))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("평균 페이스")
@@ -374,6 +377,7 @@ struct MonthlyCircleView: View {
             HStack {
                 VStack(spacing: 7) {
                     Text(String(format: "%.1f", averageCaloriesForSelectedMonth))
+//                    Text(averageCaloriesForSelectedMonth.asString(unit: .calorie))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("칼로리")
@@ -383,7 +387,8 @@ struct MonthlyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    Text(String(format: "%.2f", averageDistanceForSelectedMonth / 1000.0) + "km")
+//                    Text(String(format: "%.2f", averageDistanceForSelectedMonth / 1000.0) + "km")
+                    Text((averageDistanceForSelectedMonth / 1000.0).asString(unit: .kilometer))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("킬로미터")
@@ -403,7 +408,7 @@ struct MonthlyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-                    Text("_'__'")
+                    Text(averagePaceForSelectedMonth.asString(unit: .pace))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("평균 페이스")

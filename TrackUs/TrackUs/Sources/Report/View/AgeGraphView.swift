@@ -128,7 +128,7 @@ struct AgeGraphView: View {
                     .onChange(of: selectedAge) { newValue in
                         DispatchQueue.main.async {
                             viewModel.userAge = newValue.intValue
-                            viewModel.fetchUserAgeLog()
+                            viewModel.fetchUserAgeLog(selectedDate: selectedDate!)
                         }
                     }
                 }
@@ -190,9 +190,6 @@ struct AgeGraphView: View {
                 .presentationDetents([.height(250)])
                 .presentationDragIndicator(.hidden)
         })
-        //        .onAppear {
-        //            viewModel.fetchUserAgeLog()
-        //        }
     }
     
     var formattedDate: String {

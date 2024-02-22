@@ -26,19 +26,13 @@ struct MyRecordView: View {
     @State private var gridDelete = false
     @Binding var selectedDate: Date?
     @State var selectedRunningLog: Runninglog?
-    @State private var showTrackUsProButton: Bool
     @State var isDelete = false
-    
-    init(selectedDate: Binding<Date?>, showTrackUsProButton: Bool) {
-        self._selectedDate = selectedDate
-        self._showTrackUsProButton = State(initialValue: showTrackUsProButton)
-    }
+    @State private var isMenuOpen = false
     
     var body: some View {
         ScrollView {
             ZStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    if showTrackUsProButton {
                         Button {
                             router.present(fullScreenCover: .payment)
                         } label: {
@@ -46,9 +40,9 @@ struct MyRecordView: View {
                                 .modifier(BorderLineModifier())
                                 .multilineTextAlignment(.leading)
                         }
-                    }
                     
                     VStack(alignment: .leading) {
+//                        152.asString(unit: .pace)
                         Text("러닝 기록")
                             .customFontStyle(.gray1_B24)
                             .padding(.top, 24)
@@ -83,6 +77,9 @@ struct MyRecordView: View {
                                     .foregroundColor(.gray1)
                             )
                         }
+                        .onTapGesture {
+                            isMenuOpen = true
+                        }
                         
                         
                         Spacer()
@@ -94,7 +91,8 @@ struct MyRecordView: View {
                         }
                     }
                     LazyVGrid(columns: vGridItems, spacing: 0) {
-                        ForEach(viewModel.runningLog, id: \.documentID) { item in
+//                        ForEach(viewModel.runningLog, id: \.documentID) { item in
+                        ForEach(filteredRunningLog, id: \.documentID) { item in
                             VStack {
                                 ZStack {
                                     Button {
@@ -127,6 +125,9 @@ struct MyRecordView: View {
                                             }
                                             .foregroundColor(.gray1)
                                             .offset(y: -25)
+                                            .onTapGesture {
+                                                isMenuOpen = true
+                                            }
                                         }
 //                                    }
                                 }
@@ -140,6 +141,14 @@ struct MyRecordView: View {
                 }
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
+                
+                if isMenuOpen {
+                    Color.black.opacity(0.001)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            isMenuOpen = false
+                        }
+                }
             }
         }
         .popup(isPresented: $gridDelete) {
@@ -190,7 +199,7 @@ struct MyRecordView: View {
                     deleteRunningLog(selectedRunningLog: selectedRunningLog)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { // 팝업이 없어지면 화면 새로고침
-                        viewModel.fetchUserLog()
+                        viewModel.fetchUserLog(selectedDate: selectedDate!)
                     }
                 }
             }
@@ -220,6 +229,17 @@ struct MyRecordView: View {
             viewModel.deleteRunningLog(documentID)
         }
     }
+    
+    var filteredRunningLog: [Runninglog] {
+        switch selectedFilter {
+        case .personal:
+            return viewModel.runningLog.filter { $0.isGroup == false }
+        case .mate:
+            return viewModel.runningLog.filter { $0.isGroup == true }
+        default:
+            return viewModel.runningLog
+        }
+    }
 }
 
 extension MyRecordView {
@@ -235,7 +255,7 @@ struct RecordCell: View {
     @Binding var isDelete: Bool
     @Binding var gridDelete : Bool
     let runningLog : Runninglog
-    let isSelected: Bool // 추가한 내용
+    let isSelected: Bool
     
     var body: some View {
         VStack(spacing: 5) {
@@ -246,22 +266,26 @@ struct RecordCell: View {
                 
                 VStack(alignment: .leading) {
                     HStack {
-                        //                        Text("러닝메이트")
-                        //                            .foregroundColor(.white)
-                        //                            .font(.system(size: 11))
-                        //                            .fontWeight(.semibold)
-                        //                            .padding(.horizontal, 10)
-                        //                            .padding(.vertical, 3)
-                        //                            .background(Color.orange2)
-                        //                            .cornerRadius(25)
-                        Text("개인")
-                            .foregroundColor(.white)
-                            .font(.system(size: 11))
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 3)
-                            .background(Color.main)
-                            .cornerRadius(25)
+                        
+                        if runningLog.isGroup ?? false {
+                            Text("러닝메이트")
+                                .foregroundColor(.white)
+                                .font(.system(size: 11))
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(Color.orange2)
+                                .cornerRadius(25)
+                        } else {
+                            Text("개인")
+                                .foregroundColor(.white)
+                                .font(.system(size: 11))
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(Color.main)
+                                .cornerRadius(25)
+                        }
                         
                         Spacer()
                     }
@@ -296,7 +320,8 @@ struct RecordCell: View {
                         HStack {
                             Image(.arrowBoth)
                             //                            Text("1.72km")
-                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
+//                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
+                            Text("\((runningLog.distance / 1000.0).asString(unit: .kilometer))") // 수정된부분^^
 //                                .customFontStyle(.gray1_R12)
                                 .customFontStyle(.gray1_R9)
                         }
@@ -325,22 +350,6 @@ struct RecordCell: View {
             
         }
         .padding(.top, 24)
-//        .alert("알림", isPresented: $isDelete) {
-//            Button("삭제", role: .destructive) {
-//                gridDelete = true
-//                if let selectedRunningLog = selectedRunningLog,
-//                   let documentID = selectedRunningLog.documentID {
-//                    viewModel.deleteRunningLog(documentID)
-//                    print("Deleting running log with documentID:", documentID)
-//                    if let index = viewModel.runningLog.firstIndex(where: { $0.documentID == documentID }) {
-//                        viewModel.runningLog.remove(at: index)
-//                    }
-//                }
-//            }
-//            Button("취소", role: .cancel) {}
-//        } message: {
-//            Text("러닝 기록을 삭제하시겠습니까? \n 삭제한 러닝기록은 복구할 수 없습니다.")
-//        }
     }
     
     func formatTime(_ date: Date) -> String {
@@ -364,7 +373,6 @@ struct RecordCell: View {
 
 struct CustomDateFilter: View {
     @ObservedObject var viewModel = ReportViewModel.shared
-    //    @Binding var currentDate: Date
     @State var currentDate: Date = Date()
     @State var currentMonth: Int = 0
     @Binding var selectedDate: Date?
@@ -470,10 +478,6 @@ struct CustomDateFilter: View {
                                 .foregroundColor(isSelected ? .white : .main)
                                 .frame(width: 5, height: 5)
                                 .offset(y: 12)
-//                            Circle()
-//                                .foregroundColor(.orange2)
-//                                .frame(width: 5, height: 5)
-//                                .offset(y: 12)
                         }
                     }
                 }
@@ -482,8 +486,6 @@ struct CustomDateFilter: View {
         .padding(.vertical, 10)
         .padding(.horizontal, 5)
         .background(value.day != -1 && isSelected ? .main : .white)
-        //        .background(isSelected ? .main : .white)
-        //        .background(isSelected && value.day == -1 ? .white : .white)
         .cornerRadius(30)
     }
     var formattedDate: String {
