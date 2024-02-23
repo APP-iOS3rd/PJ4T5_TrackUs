@@ -234,7 +234,8 @@ struct SpeedBar: View {
                 Capsule().frame(width: maxWidth, height: 12) // 그래프 높이
                     .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
 //                Capsule().frame(width: CGFloat(max(0, min(value * 2, Double(maxWidth)))), height: 15) // 원본
-                Capsule().frame(width: CGFloat(max(0, min(value, Double(maxWidth)))), height: 15)
+//                Capsule().frame(width: CGFloat(max(0, min(value, Double(maxWidth)))), height: 15)
+                Capsule().frame(width: CGFloat(max(0, min((value * 3), Double(maxWidth)))), height: 15)
                 
 //                Text("\(String(format: "%0.1f", speedValue / 10)) km/h") // 임시로 바그래프 조절을 위해 10을 나눔
                 Text(speedValue.asString(unit: .pace)) // 임시로 바그래프 조절을 위해 10을 나눔
@@ -242,7 +243,7 @@ struct SpeedBar: View {
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
 //                    .offset(x: +(value * 2) + 10)
-                    .offset(x: +(value) + 10)
+                    .offset(x: +(value * 3) + 10)
             }
         }
     }
@@ -262,14 +263,14 @@ struct DistanceBar: View {
                 
                 Capsule().frame(width: maxWidth, height: 12) // 그래프 높이
                     .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
-                Capsule().frame(width: CGFloat(max(0, min(value * 2, Double(maxWidth)))), height: 15)
+                Capsule().frame(width: CGFloat(max(0, min((value * 20), Double(maxWidth)))), height: 15)
                 
 //                Text("\(String(format: "%0.1f", DistanceValue)) km")
                 Text(DistanceValue.asString(unit: .kilometer))
                     .customFontStyle(.gray1_R9)
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
-                    .offset(x: +(value * 2) + 10)
+                    .offset(x: +(value * 20) + 10)
             }
         }
     }

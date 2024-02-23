@@ -321,7 +321,8 @@ struct RecordCell: View {
                             Image(.arrowBoth)
                             //                            Text("1.72km")
 //                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
-                            Text("\((runningLog.distance / 1000.0).asString(unit: .kilometer))") // 수정된부분^^
+//                            Text("\((runningLog.distance / 1000.0).asString(unit: .kilometer))") // 수정된부분^^
+                            Text("\((runningLog.distance).asString(unit: .kilometer))") // 수정된부분^^
 //                                .customFontStyle(.gray1_R12)
                                 .customFontStyle(.gray1_R9)
                         }

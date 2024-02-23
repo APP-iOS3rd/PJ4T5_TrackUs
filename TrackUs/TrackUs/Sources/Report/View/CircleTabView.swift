@@ -117,7 +117,8 @@ struct DailyCircleView: View {
     var progressValue: CGFloat {
         guard let dailyGoal = authViewModel.userInfo.setDailyGoal else { return 0.5 } // 기본값
         
-        let distanceInKm = totalDistanceForSelectedDate / 1000.0 // 러닝 데이터의 총 거리 (km)
+//        let distanceInKm = totalDistanceForSelectedDate / 1000.0 // 러닝 데이터의 총 거리 (km)
+        let distanceInKm = totalDistanceForSelectedDate // 러닝 데이터의 총 거리 (km)
         let progressPercentage = min(distanceInKm / dailyGoal, 1.0) // 진행률 (0.0 ~ 1.0)
         
         return CGFloat(progressPercentage)
@@ -283,7 +284,8 @@ struct MonthlyCircleView: View {
     var progressValue: CGFloat {
         guard let dailyGoal = authViewModel.userInfo.setDailyGoal else { return 0.5 } // 기본값
         
-        let distanceInKm = averageDistanceForSelectedMonth / 1000.0 // 러닝 데이터의 총 거리 (km)
+//        let distanceInKm = averageDistanceForSelectedMonth / 1000.0 // 러닝 데이터의 총 거리 (km)
+        let distanceInKm = averageDistanceForSelectedMonth // 러닝 데이터의 총 거리 (km)
         let progressPercentage = min(distanceInKm / dailyGoal, 1.0) // 진행률 (0.0 ~ 1.0)
         
         return CGFloat(progressPercentage)
