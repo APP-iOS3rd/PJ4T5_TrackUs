@@ -10,124 +10,210 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+public struct Conversation: Identifiable, Hashable, Codable {
+    public let id: String
+    public var users: [User]
+    public var usersUnreadCountInfo: [String: Int]
+    public var isGroup: Bool
+    public var pictureURL: URL?
+    public var title: String
+
+    public var latestMessage: LatestMessageInChat?
+
+    public init(id: String, users: [User], usersUnreadCountInfo: [String: Int]? = nil, isGroup: Bool, pictureURL: URL? = nil, title: String = "", latestMessage: LatestMessageInChat? = nil) {
+        self.id = id
+        self.users = users
+        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: users.map { ($0.id, 0) } )
+        self.isGroup = isGroup
+        self.pictureURL = pictureURL
+        self.title = title
+        self.latestMessage = latestMessage
+    }
+
+    public var notMeUsers: [User] {
+        users.filter { $0.id != SessionManager.currentUserId }
+    }
+
+    public var displayTitle: String {
+        if !isGroup, let user = notMeUsers.first {
+            return user.name
+        }
+        return title
+    }
+}
+
+
+public struct FirestoreConversation: Codable, Identifiable, Hashable {
+    @DocumentID public var id: String?
+    public let users: [String]
+    public let usersUnreadCountInfo: [String: Int]?
+    public let isGroup: Bool
+    public let pictureURL: String?
+    public let title: String
+    public let latestMessage: FirestoreMessage?
+}
+
+let hasCurrentSessionKey = "hasCurrentSession"
+let currentUserKey = "currentUser"
+
+class SessionManager {
+
+    static let shared = SessionManager()
+
+    static var currentUserId: String {
+        shared.currentUser?.id ?? ""
+    }
+
+    static var currentUser: User? {
+        shared.currentUser
+    }
+
+    var deviceId: String {
+        UIDevice.current.identifierForVendor?.uuidString ?? ""
+    }
+
+    @Published private var currentUser: User?
+
+    func storeUser(_ user: User) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(user) {
+            UserDefaults.standard.set(encoded, forKey: currentUserKey)
+        }
+        UserDefaults.standard.set(true, forKey: hasCurrentSessionKey)
+        currentUser = user
+    }
+
+    func loadUser() {
+        if let data = UserDefaults.standard.data(forKey: "currentUser") {
+            currentUser = try? JSONDecoder().decode(User.self, from: data)
+        }
+    }
+
+    func logout() {
+        currentUser = nil
+        UserDefaults.standard.set(false, forKey: hasCurrentSessionKey)
+        UserDefaults.standard.removeObject(forKey: currentUserKey)
+    }
+}
+
+// 분리
+
+public struct User: Codable, Identifiable, Hashable {
+    public let id: String
+    public let name: String
+    public let avatarURL: URL?
+    public let isCurrentUser: Bool
+
+    public init(id: String, name: String, avatarURL: URL?, isCurrentUser: Bool) {
+        self.id = id
+        self.name = name
+        self.avatarURL = avatarURL
+        self.isCurrentUser = isCurrentUser
+    }
+}
+
+
+// ===================== 원래 코드 ===================================
+
+
 struct ChatRoom: Codable, Identifiable {
     var id: String  // 모집글 id와 동일
     var title: String    // 채팅방 이름
-    var members: [String: Member] // Firebase Realtime Database에는 배열이 아닌 딕셔너리로 저장됩니다.
-    var messages: [String: Message]? // Firebase Realtime Database에는 배열이 아닌 딕셔너리로 저장됩니다.
+    var gruop: Bool
+    var members: [Member]
+    var nonSelfMembers: [Member]    // 사용자 제외 member
+    //var messages: [Message]?
+    var usersUnreadCountInfo: [String: Int]     // 신규 메세지 갯수
+    public let latestMessage: LatestMessageInChat?  // 최근 메세지
         
-    init(snapshot: DataSnapshot) {
-        guard let value = snapshot.value as? [String: Any],
-              let id = value["id"] as? String,
-              let title = value["title"] as? String,
-              let membersData = value["members"] as? [String: Any] else {
-
-            fatalError("Failed to initialize ChatRoom from DataSnapshot")
-        }
-        
-        var members = [String: Member]()
-        for (key, memberData) in membersData {
-            if let memberDict = memberData as? [String: Any] {
-                let member = Member(dictionary: memberDict)
-                members[key] = member
-            }
-        }
-        
+    init(id: String, title: String, members: [Member], usersUnreadCountInfo: [String: Int]? = nil, gruop : Bool, latestMessage: LatestMessageInChat? = nil) {
         self.id = id
         self.title = title
         self.members = members
-        
-        // messages는 optional이므로 필요에 따라 초기화
-        if let messagesData = value["messages"] as? [String: Any] {
-            var messages = [String: Message]()
-            for (key, messageData) in messagesData {
-                if let messageDict = messageData as? [String: Any] {
-                    let message = Message(dictionary: messageDict)
-                    messages[key] = message
-                }
-            }
-            self.messages = messages
-        } else {
-            self.messages = nil
-        }
+        // 본인 제외 맴버 넣기
+        self.nonSelfMembers = members
+        self.gruop = gruop
+        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: members.map { ($0.uid, 0) } )
+        self.latestMessage = latestMessage
     }
-//    var members: [Member]
-//    var messages: [Message]?
-//    
-    init(id: String, title: String, members: [String: Member]) {
-        self.id = id
-        self.title = title
-        self.members = members
-    }
-    
-    func toDictionary() -> [String: Any] {
-        return [
-            "id": id,
-            "title": title,
-            "members": members
-        ]
-    }
-    
 }
 
-struct Member: Codable {
-    var owner: Bool
+// 채팅방 관련 정보
+public struct LatestMessageInChat: Hashable, Codable  {
+    //public var senderName: String
+    public var timestemp: Date?
+    public var text: String?
+}
+
+public struct FirestoreChatRoom: Codable, Identifiable, Hashable {
+    @DocumentID public var id: String?
+    public let title: String
+    public var gruop: Bool
+    public var members: [String]
+    //public var messages: [Message]?
+    public var usersUnreadCountInfo: [String: Int]?
+    public let latestMessage: FirestoreMessage?
+}
+
+public struct Member: Codable {
     var uid: String
     var userName: String
     var profileImageUrl: String?
     
-    init(owner: Bool = false,uid: String, userName: String, profileImageUrl: String? = nil) {
-        self.owner = owner
+    init(uid: String, userName: String, profileImageUrl: String? = nil) {
         self.uid = uid
         self.userName = userName
         self.profileImageUrl = profileImageUrl
     }
-    
-    init(dictionary: [String: Any]) {
-        self.owner = dictionary["owner"] as? Bool ?? false
-        self.uid = dictionary["uid"] as? String ?? ""
-        self.userName = dictionary["userName"] as? String ?? ""
-        self.profileImageUrl = dictionary["profileImageUrl"] as? String
-    }
+//    
+//    init(dictionary: [String: Any]) {
+//        self.uid = dictionary["uid"] as? String ?? ""
+//        self.userName = dictionary["userName"] as? String ?? ""
+//        self.profileImageUrl = dictionary["profileImageUrl"] as? String
+//    }
 }
 
 struct Message: Codable {
-    var userUid: String
-    var userName: String
-    var profileImageUrl: String?
-    var timestamp: Timestamp
+    var userId: String
+    var timestamp: Date
     var imageUrl: String?
-    var message: String?
+    var text: String?
     
-    
-    /// 메세지용
-    init(userUid: String, message: String, profileImageUrl: String?, userName: String,
-         createdAt: Timestamp = Timestamp(date: Date())) {
-        
-        self.userUid = userUid
-        self.profileImageUrl = profileImageUrl
-        self.userName = userName
-        self.timestamp = createdAt
-        self.message = message
-    }
-    
-    /// 이미지용
-    init(userUid: String, imageUrl: String, profileImageUrl: String?, userName: String,
-         createdAt: Timestamp = Timestamp(date: Date())) {
-        
-        self.userUid = userUid
-        self.profileImageUrl = profileImageUrl
+    init(userId: String, timestamp: Date = Date(), imageUrl: String? = nil, text: String? = nil) {
+        self.userId = userId
+        self.timestamp = timestamp
         self.imageUrl = imageUrl
-        self.userName = userName
-        self.timestamp = createdAt
-    }
-    
-    init(dictionary: [String: Any]) {
-        self.userUid = dictionary["userUid"] as? String ?? ""
-        self.userName = dictionary["userName"] as? String ?? ""
-        self.profileImageUrl = dictionary["profileImageUrl"] as? String
-        self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
-        self.imageUrl = dictionary["imageUrl"] as? String
-        self.message = dictionary["message"] as? String
+        self.text = text
+        
     }
 }
+
+extension Message {
+    var time: String {
+        DateFormatter.timeFormatter.string(from: timestamp)
+    }
+}
+
+// 날짜 변환
+extension DateFormatter {
+    static let timeFormatter = {
+        let formatter = DateFormatter()
+
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+
+        return formatter
+    }()
+
+    static func timeString(_ seconds: Int) -> String {
+        let hour = Int(seconds) / 3600
+        let minute = Int(seconds) / 60 % 60
+        let second = Int(seconds) % 60
+
+        if hour > 0 {
+            return String(format: "%02i:%02i:%02i", hour, minute, second)
+        }
+        return String(format: "%02i:%02i", minute, second)
+    }
+}
+

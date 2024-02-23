@@ -51,10 +51,13 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     
     @Published var authenticationState: AuthenticationState = .startapp
     @Published var errorMessage: String = ""
-    @Published var user: User?
-    @Published var newUser: Bool = false
-    @Published var checkBool: Bool?
+    @Published var user: Firebase.User?
     @Published var userInfo: UserInfo = UserInfo()
+    
+    // 외부 공유용 사용
+    static var currentUId: String {
+        shared.userInfo.uid
+    }
     
     // apple login 
     var window: UIWindow?

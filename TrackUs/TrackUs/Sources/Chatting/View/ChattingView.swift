@@ -63,7 +63,8 @@ struct ChattingView: View {
                     .padding(.horizontal, 16)
             }
             .customNavigation {
-                Text(chatViewModel.currentChatRoom.title)
+                Text("빌드용 이후 삭제")
+                //Text(chatViewModel.currentChatRoom.title)
             } left: {
                 NavigationBackButton()
             } right: {

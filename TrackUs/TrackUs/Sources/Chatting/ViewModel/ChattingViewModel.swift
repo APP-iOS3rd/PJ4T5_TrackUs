@@ -7,19 +7,20 @@
 //
 import Foundation
 import Firebase
-import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
 class ChattingViewModel: ObservableObject {
     static let shared = ChattingViewModel()
-    private var dbRef = Database.database().reference()
+    
+    private var db = FirebaseManger.shared.firestore.collection("chatRooms")
     private var storageRef = Storage.storage().reference()
     
     @Published var errorMessage = ""
     @Published var chatRooms: [ChatRoom] = []
-    @Published var chatMessages: [Message] = []
-    @Published var currentChatRoom: ChatRoom = ChatRoom(id: "", title: "", members: [:])
+    @Published var currentChatIndex: Int = 0
+    @Published var currentMessages: [Message]? = []
+    //@Published var currentChatRoom: ChatRoom = ChatRoom(id: "", title: "", members: [""])
     
     init() {
         fetchChatRooms(forUserUID: FirebaseManger().auth.currentUser?.uid)
@@ -27,43 +28,79 @@ class ChattingViewModel: ObservableObject {
     
     // 채팅방 생성
     func createChatRoom(chatRoom: ChatRoom) {
-        let chatRoomRef = dbRef.child("chatRooms").child(chatRoom.id)
-        chatRoomRef.setValue(chatRoom.toDictionary())
+        do {
+            try db.document(chatRoom.id).setData(from: chatRoom)
+        } catch {
+            print("Error adding document: \(error)")
+        }
     }
     
     // 채팅방 참여
     func joinChatRoom(chatRoomID: String, userUID: String) {
-        dbRef.child("chatRooms").child(chatRoomID).child("members").updateChildValues([userUID: true])
+        db.document(chatRoomID).updateData([
+            "members": FieldValue.arrayUnion([userUID])
+          ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
     }
     
     // 채팅방 나가기
     func leaveChatRoom(chatRoomID: String, userUID: String) {
-        dbRef.child("chatRooms").child(chatRoomID).child("members").child(userUID).removeValue()
+        db.document(chatRoomID).updateData([
+            "members": FieldValue.arrayRemove([userUID])
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
     }
     
     // 채팅방 삭제하기
     func deleteChatRoom(chatRoomID: String) {
-        dbRef.child("chatRooms").child(chatRoomID).removeValue()
+        db.document(chatRoomID).delete { error in
+            if let error = error {
+                print("Error removing document: \(error)")
+            }
+        }
     }
     
     // 채팅방 불러오기
     func fetchChatRooms(forUserUID userUID: String?) {
         guard let userUID = userUID else { return }
-        dbRef.child("chatRooms")
-            .queryOrdered(byChild: "members/\(userUID)")
-            .queryEqual(toValue: true)
-            .observe(.value, with: { snapshot in
-                var rooms: [ChatRoom] = []
-                for child in snapshot.children {
-                    if let snapshot = child as? DataSnapshot {
-                        let room = ChatRoom(snapshot: snapshot)
-                        rooms.append(room)
-                    }
+        db.whereField("members", arrayContains: userUID)
+            .addSnapshotListener {
+                querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching documents: \(error!)")
+                    return
                 }
-                self.chatRooms = rooms
+                
+                self.chatRooms = documents.compactMap { document in
+                    try? document.data(as: ChatRoom.self)
+                }
+                print(self.chatRooms)
             }
-                     )
     }
+    
+    // 채팅방 메세지 불러오기
+//    func startListeningMessages() {
+//        db.document(currentChatRoom.id).collection("messages")
+//            .addSnapshotListener { snapshot, error in
+//                guard let snapshot = snapshot else {
+//                    print("Error fetching documents: \(error!)")
+//                    return
+//                }
+//                snapshot.documentChanges.forEach { diff in
+//                    if diff.type == .added {
+//                        if let message = try? diff.document.data(as: Message.self) {
+//                            self.chatMessages.append(message)
+//                        }
+//                    }
+//                }
+//            }
+//    }
     
     // 이미지 업로드
     func uploadImage(image: UIImage, completion: @escaping (String?) -> Void) {
@@ -88,27 +125,37 @@ class ChattingViewModel: ObservableObject {
     
     // 채팅 메시지 전송
     func sendChatMessage(chatText: String, userInfo: UserInfo) {
+        if chatText.isEmpty { return }
         let messageData: [String: Any] = [
             "userUid": userInfo.uid,
             "message": chatText,
             "userName": userInfo.username,
             "profileImageUrl": userInfo.profileImageUrl as Any,
-            "timestamp": ServerValue.timestamp()
+            "timestamp": Date().timeIntervalSince1970 // 현재 시간을 타임스탬프로 변환
         ]
-        
-        let messageRef = dbRef.child("chatRooms").child(currentChatRoom.id).child("messages").childByAutoId()
-        messageRef.setValue(messageData)
+        //db.document(currentChatRoom.id).collection("messages").addDocument(data: messageData)
+        db.document(chatRooms[currentChatIndex].id).updateData([
+            "messages": FieldValue.arrayUnion([messageData])
+          ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
     }
     
-    // 채팅 메시지 받아오기
-    func startListeningMessages(forChatRoom chatRoomID: String) {
-        dbRef.child("chatRooms").child(chatRoomID).child("messages")
-            .observe(.childAdded) { snapshot in
-                guard let messageData = snapshot.value as? [String: Any] else {
-                    return
-                }
-                let message = Message(dictionary: messageData)
-                self.chatMessages.append(message)
-            }
+    
+    /// timestamp -> string 변환
+    func formatTransactionTimpestamp(_ timestamp: Timestamp?) -> String {
+        if let timestamp = timestamp {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            dateFormatter.timeStyle = .short
+            
+            let date = timestamp.dateValue()
+            dateFormatter.locale = Locale.current
+            let formatted = dateFormatter.string(from: date)
+            return formatted
+        }
+        return ""
     }
 }
