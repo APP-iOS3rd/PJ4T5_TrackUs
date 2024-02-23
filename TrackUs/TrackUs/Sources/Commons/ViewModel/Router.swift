@@ -7,13 +7,10 @@
 
 import SwiftUI
 
+// MARK: - PAGE
 enum Page: Hashable, Identifiable {
-    static func == (lhs: Page, rhs: Page) -> Bool {
-        return lhs.hashValue == rhs.hashValue
-    }
     // Root
     case running
-    case recruitment
     case chat
     case report
     case profile
@@ -25,15 +22,29 @@ enum Page: Hashable, Identifiable {
     case withDrawal
     // Home
     case runningStart
-    case runningResult(RunningRecord)
+    case runningResult(TrackingViewModel)
+    case courseDetail(Course)
+    case courseDrawing
+    case courseRegister(CourseRegViewModel)
     // Chat
     case chatting
+    // Report
+    case recordDetail(Runninglog)
+    // UserProfileView
+    case userProfile(String)
+}
+
+extension Page {
+    static func == (lhs: Page, rhs: Page) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
     
     var id: String {
         String(describing: self)
     }
 }
 
+// MARK: - FULL SCREEN
 enum FullScreenCover: String, Identifiable {
     case payment
     
@@ -42,6 +53,7 @@ enum FullScreenCover: String, Identifiable {
     }
 }
 
+// MARK: - SHEET
 enum Sheet: Hashable, Identifiable {
     static func == (lhs: Sheet, rhs: Sheet) -> Bool {
         return lhs.hashValue == rhs.hashValue
@@ -101,8 +113,6 @@ final class Router: ObservableObject {
         switch page {
         case .running:
             RunningHomeView()
-        case .recruitment:
-            RecruitmentView()
         case .chat:
             ChattingListView()
         case .report:
@@ -113,6 +123,12 @@ final class Router: ObservableObject {
             ProfileEditView()
         case .runningRecorded:
             RunningRecordView()
+        case .courseDetail(let course):
+            CourseDetailView(course: course)
+        case .courseDrawing:
+            CourseDrawingView()
+        case .courseRegister(let courseRegViewModel):
+            CourseRegisterView(courseRegViewModel: courseRegViewModel)
         case .faq:
             FAQView()
         case .setting:
@@ -120,9 +136,13 @@ final class Router: ObservableObject {
         case .withDrawal:
             Withdrawal()
         case .runningStart:
-            RunningLiveView()
-        case .runningResult(let runningRecord):
-            RunningResultView(runningRecord: runningRecord)
+            RunningStartView()
+        case .runningResult(let trackingViewModel):
+            RunningResultView(trackingViewModel: trackingViewModel)
+        case .recordDetail(let myRecord):
+            MyRecordDetailView(runningLog: myRecord)
+        case .userProfile(let userId):
+            UserProfileView(userUid: userId)
         case .chatting:
             ChattingView()
         }

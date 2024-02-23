@@ -29,8 +29,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         getCurrentLocation()
     }
     
-    
-    
     func getCurrentLocation() {
         locationManager.startUpdatingLocation()
         currentLocation = locationManager.location
@@ -48,6 +46,26 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             completion(.restricted)
         case .denied:
             completion(.denied)
+        }
+    }
+    
+    // 위도, 경도를 받아서 한글주소로 반환
+    func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String?) -> ()) {
+        let geoCoder = CLGeocoder()
+        let local: Locale = Locale(identifier: "Ko-kr")
+        geoCoder.reverseGeocodeLocation(coordinate, preferredLocale: local) { placemarks, error in
+            if error != nil {
+                completion(nil)
+                return
+            }
+            
+            if let address: [CLPlacemark] = placemarks {
+                guard let city = address.last?.administrativeArea, let state = address.last?.subLocality else {
+                    completion(nil)
+                    return
+                }
+                completion("\(city) \(state)")
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+//import FirebaseFirestore
 
 enum ReportTab: String, CaseIterable {
     case report = "리포트"
@@ -15,14 +16,30 @@ enum ReportTab: String, CaseIterable {
 struct ReportView: View {
     @State private var selectedPicker: ReportTab = .report
     @Namespace private var animation
+    @State var selectedDate: Date? = Date()
+    @State var selectedAge : AvgAge = .twenties
+    @State private var selectedTab: CircleTab = .day
+    @ObservedObject var viewModel = ReportViewModel.shared
     
     var body: some View {
         VStack {
             animate()
-            selectView(selec: selectedPicker)
+            
+            switch viewModel.userLogLoadingState {
+            case .loading:
+                ReportLoadingView()
+            case .loaded:
+                selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selectedTab: $selectedTab, selec: selectedPicker)
+            case .error(_):
+                Text("ERROR")
+            }
         }
         .customNavigation {
             NavigationText(title: "리포트")
+        }
+        .onAppear {
+            viewModel.fetchUserLog(selectedDate: selectedDate!)
+            viewModel.fetchUserAgeLog(selectedDate: selectedDate!)
         }
     }
     
@@ -59,14 +76,19 @@ struct ReportView: View {
 }
 
 struct selectView : View {
+    @Binding var selectedDate: Date?
+    @Binding var selectedAge : AvgAge
+    @Binding var selectedTab: CircleTab
     var selec : ReportTab
     
     var body: some View {
         switch selec {
         case .report:
-            MyReportView()
+            MyReportView(selectedTab: $selectedTab, selectedDate: $selectedDate, selectedAge: $selectedAge)
+                .transition(.move(edge: .leading))
         case .record:
-            MyRecordView()
+            MyRecordView(selectedDate: $selectedDate)
+                .transition(.move(edge: .trailing))
             
         }
     }
