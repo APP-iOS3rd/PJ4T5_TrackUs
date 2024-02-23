@@ -26,5 +26,6 @@ enum Constants {
 
     enum FirebasePath {
         static let COLLECTION_UESRS = Firestore.firestore().collection("users")
+        static let COLLECTION_GROUP_RUNNING = Firestore.firestore().collection("groupRunning")
     }
 }

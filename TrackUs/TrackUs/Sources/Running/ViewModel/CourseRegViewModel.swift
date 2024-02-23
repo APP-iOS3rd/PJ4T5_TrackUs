@@ -6,7 +6,7 @@
 //
 
 import MapboxMaps
-
+import Firebase
 /**
  코스등록 정보 뷰모델
  */
@@ -18,6 +18,7 @@ class CourseRegViewModel: ObservableObject {
     @Published var content: String = ""
     @Published var selectedDate: Date?
     @Published var estimatedTime: Int = 0
+    @Published var distance: Double = 0
     @Published var participants: Int = 1
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
@@ -53,9 +54,24 @@ class CourseRegViewModel: ObservableObject {
         self.participants -= 1
     }
     
-    
-    func uploadCourseData() {
-        
+    @MainActor
+    func uploadData() {
+        let uid = authViewModel.userInfo.uid
+        let data: [String: Any] = [
+            "uid": UUID().uuidString,
+            "title": self.title,
+            "content": self.content,
+            "startDate": self.selectedDate ?? Date(),
+            "distance": self.distance,
+            "participants": self.participants,
+            "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
+            "runningStyle": self.style.rawValue,
+            "members": [uid],
+            "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}
+        ]
+        Constants.FirebasePath.COLLECTION_GROUP_RUNNING.addDocument(data: data) { _ in
+            
+        }
     }
 }
 

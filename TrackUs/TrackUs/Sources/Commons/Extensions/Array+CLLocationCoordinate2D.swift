@@ -20,4 +20,8 @@ extension Array where Element == CLLocationCoordinate2D {
         let averageLongitude = totalLongitude / Double(self.count)
         return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
+    
+    func getTotalDistanceBetweenPoints() -> Int {
+        return 0
+    }
 }
