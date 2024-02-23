@@ -26,18 +26,13 @@ struct MyRecordView: View {
     @State private var gridDelete = false
     @Binding var selectedDate: Date?
     @State var selectedRunningLog: Runninglog?
-    @State private var showTrackUsProButton: Bool
-    
-    init(selectedDate: Binding<Date?>, showTrackUsProButton: Bool) {
-        self._selectedDate = selectedDate
-        self._showTrackUsProButton = State(initialValue: showTrackUsProButton)
-    }
+    @State var isDelete = false
+    @State private var isMenuOpen = false
     
     var body: some View {
         ScrollView {
             ZStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    if showTrackUsProButton {
                         Button {
                             router.present(fullScreenCover: .payment)
                         } label: {
@@ -45,9 +40,9 @@ struct MyRecordView: View {
                                 .modifier(BorderLineModifier())
                                 .multilineTextAlignment(.leading)
                         }
-                    }
                     
                     VStack(alignment: .leading) {
+//                        152.asString(unit: .pace)
                         Text("러닝 기록")
                             .customFontStyle(.gray1_B24)
                             .padding(.top, 24)
@@ -82,6 +77,9 @@ struct MyRecordView: View {
                                     .foregroundColor(.gray1)
                             )
                         }
+                        .onTapGesture {
+                            isMenuOpen = true
+                        }
                         
                         
                         Spacer()
@@ -92,39 +90,65 @@ struct MyRecordView: View {
                             Image("Calendar")
                         }
                     }
-                    
-                    // RecordCell
-//                    LazyVGrid(columns: vGridItems, spacing: 0) {
-//                        ForEach(RecordLog.fromRunningLogs(viewModel.runningLog), id: \.self) { item in
-//                            RecordCell(gridDelete: $gridDelete, record: item, isSelected: isRecordAvailableOnDate(record: item, selectedDate: selectedDate))
-//                            Divider()
-//                                .padding(.top, 24)
-//                                .edgesIgnoringSafeArea(.all)
-//                        }
-//                    }
                     LazyVGrid(columns: vGridItems, spacing: 0) {
-                        ForEach(viewModel.runningLog, id: \.self) { item in
-//                            RecordCell(gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
-//                                .onTapGesture {
-//                                    selectedRunningLog = item
-//                                    router.push(.recordDetail(selectedRunningLog!))
-//                                }
-                            
-                            Button {
-                                selectedRunningLog = item
-                                router.push(.recordDetail(selectedRunningLog!))
-                            } label: {
-                                RecordCell(gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
+//                        ForEach(viewModel.runningLog, id: \.documentID) { item in
+                        ForEach(filteredRunningLog, id: \.documentID) { item in
+                            VStack {
+                                ZStack {
+                                    Button {
+                                        selectedRunningLog = item
+                                        router.push(.recordDetail(selectedRunningLog!))
+                                    } label: {
+                                        RecordCell(isDelete: $isDelete, gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
+                                    }
+                                        HStack(alignment: .top) {
+                                            Spacer()
+                                            
+                                            Menu {
+                                                Button(role: .destructive ,action: {
+                                                    self.isDelete = true
+                                                    self.selectedRunningLog = item
+                                                }) {
+                                                    Text("러닝기록 삭제")
+                                                }
+                                                
+                                                Button {
+                                                    
+                                                } label: {
+                                                    Text("취소")
+                                                }
+                                                .foregroundColor(.gray1)
+                                            } label: {
+                                                Image(systemName: "ellipsis")
+                                                    .rotationEffect(.degrees(90))
+                                                    .frame(width: 40, height: 40)
+                                            }
+                                            .foregroundColor(.gray1)
+                                            .offset(y: -25)
+                                            .onTapGesture {
+                                                isMenuOpen = true
+                                            }
+                                        }
+//                                    }
+                                }
+                                
+                                Divider()
+                                    .padding(.top, 24)
+                                    .edgesIgnoringSafeArea(.all)
                             }
-
-                            Divider()
-                                .padding(.top, 24)
-                                .edgesIgnoringSafeArea(.all)
                         }
                     }
                 }
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
+                
+                if isMenuOpen {
+                    Color.black.opacity(0.001)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            isMenuOpen = false
+                        }
+                }
             }
         }
         .popup(isPresented: $gridDelete) {
@@ -156,7 +180,7 @@ struct MyRecordView: View {
                 .type(.floater())
                 .position(.bottom)
                 .animation(.smooth)
-                .autohideIn(2)
+                .autohideIn(1)
         }
         
         .sheet(isPresented: $calendarButton,onDismiss: {
@@ -166,6 +190,28 @@ struct MyRecordView: View {
                 .presentationDetents([.height(450)])
                 .presentationDragIndicator(.hidden)
         })
+        .alert("알림", isPresented: $isDelete) {
+            Button("삭제", role: .destructive) {
+                gridDelete = true
+                print("삭제버튼")
+                if let selectedRunningLog = selectedRunningLog {
+                    
+                    deleteRunningLog(selectedRunningLog: selectedRunningLog)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { // 팝업이 없어지면 화면 새로고침
+                        viewModel.fetchUserLog(selectedDate: selectedDate!)
+                    }
+                }
+            }
+            Button("취소", role: .cancel) {}
+        } message: {
+            Text("러닝 기록을 삭제하시겠습니까? \n 삭제한 러닝기록은 복구할 수 없습니다.")
+        }
+//        .refreshable {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+//                viewModel.fetchUserLog()
+//            }
+//        }
     }
     
     func isRecordAvailableOnDate(runningLog: Runninglog, selectedDate: Date?) -> Bool {
@@ -174,6 +220,25 @@ struct MyRecordView: View {
         let recordDate = calendar.startOfDay(for: runningLog.timestamp)
         let selectedDateWithoutTime = calendar.startOfDay(for: selectedDate)
         return recordDate == selectedDateWithoutTime
+    }
+    
+    func deleteRunningLog(selectedRunningLog: Runninglog) {
+        print("삭제 함수 시작")
+        if let documentID = selectedRunningLog.documentID {
+            print(documentID)
+            viewModel.deleteRunningLog(documentID)
+        }
+    }
+    
+    var filteredRunningLog: [Runninglog] {
+        switch selectedFilter {
+        case .personal:
+            return viewModel.runningLog.filter { $0.isGroup == false }
+        case .mate:
+            return viewModel.runningLog.filter { $0.isGroup == true }
+        default:
+            return viewModel.runningLog
+        }
     }
 }
 
@@ -187,61 +252,42 @@ extension MyRecordView {
 //MARK: - RecordCell
 struct RecordCell: View {
     @ObservedObject var viewModel = ReportViewModel.shared
-    @State private var isDelete = false
+    @Binding var isDelete: Bool
     @Binding var gridDelete : Bool
     let runningLog : Runninglog
-    let isSelected: Bool // 추가한 내용
+    let isSelected: Bool
     
     var body: some View {
         VStack(spacing: 5) {
             HStack(spacing: 10) {
-                Image(.mapPath)
-                    .resizable()
-                //                    .scaledToFill()
+                ImageView(urlString: runningLog.routeImageUrl)
                     .frame(width: 100, height: 100)
                     .cornerRadius(12)
-                //                    .padding(.horizontal)
                 
                 VStack(alignment: .leading) {
                     HStack {
-                        //                        Text("러닝메이트")
-                        //                            .foregroundColor(.white)
-                        //                            .font(.system(size: 11))
-                        //                            .fontWeight(.semibold)
-                        //                            .padding(.horizontal, 10)
-                        //                            .padding(.vertical, 3)
-                        //                            .background(Color.orange2)
-                        //                            .cornerRadius(25)
-                        Text("개인")
-                            .foregroundColor(.white)
-                            .font(.system(size: 11))
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 3)
-                            .background(Color.main)
-                            .cornerRadius(25)
+                        
+                        if runningLog.isGroup ?? false {
+                            Text("러닝메이트")
+                                .foregroundColor(.white)
+                                .font(.system(size: 11))
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(Color.orange2)
+                                .cornerRadius(25)
+                        } else {
+                            Text("개인")
+                                .foregroundColor(.white)
+                                .font(.system(size: 11))
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(Color.main)
+                                .cornerRadius(25)
+                        }
                         
                         Spacer()
-                        
-                        Menu {
-                            Button(role: .destructive ,action: {
-                                self.isDelete = true
-                            }) {
-                                Text("러닝기록 삭제")
-                            }
-                            
-                            Button {
-                                
-                            } label: {
-                                Text("취소")
-                            }
-                            .foregroundColor(.gray1)
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .rotationEffect(.degrees(90))
-                                .frame(width: 20, height: 20)
-                        }
-                        .foregroundColor(.gray1)
                     }
                     
                     //                    Text("광명시 러닝 메이트 구합니다")
@@ -254,7 +300,8 @@ struct RecordCell: View {
                             Image(.pin)
                             //                            Text("서울숲카페거리")
                             Text(runningLog.address ?? "대한민국 서울시")
-                                .customFontStyle(.gray1_R12)
+//                                .customFontStyle(.gray1_R12)
+                                .customFontStyle(.gray1_R9)
                                 .lineLimit(1)
                         }
                         
@@ -264,7 +311,8 @@ struct RecordCell: View {
                             Image(.timerLine)
                             //                            Text("10:02 AM")
                             Text(formatTime(runningLog.timestamp))
-                                .customFontStyle(.gray1_R12)
+//                                .customFontStyle(.gray1_R12)
+                                .customFontStyle(.gray1_R9)
                         }
                         
                         //                        Spacer()
@@ -272,8 +320,10 @@ struct RecordCell: View {
                         HStack {
                             Image(.arrowBoth)
                             //                            Text("1.72km")
-                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
-                                .customFontStyle(.gray1_R12)
+//                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
+                            Text("\((runningLog.distance / 1000.0).asString(unit: .kilometer))") // 수정된부분^^
+//                                .customFontStyle(.gray1_R12)
+                                .customFontStyle(.gray1_R9)
                         }
                     }
                     
@@ -300,14 +350,6 @@ struct RecordCell: View {
             
         }
         .padding(.top, 24)
-        .alert("알림", isPresented: $isDelete) {
-            Button("삭제", role: .destructive) {
-                gridDelete = true
-            }
-            Button("취소", role: .cancel) {}
-        } message: {
-            Text("러닝 기록을 삭제하시겠습니까? \n 삭제한 러닝기록은 복구할 수 없습니다.")
-        }
     }
     
     func formatTime(_ date: Date) -> String {
@@ -327,35 +369,10 @@ struct RecordCell: View {
     }
 }
 
-//struct RecordLog: Identifiable, Hashable {
-//    let id: String
-//    let title: String
-//    let location: String
-//    let distance: Double
-//    let timestamp: Timestamp
-//    let withMate: Bool
-//
-//    init(from runningLog: Runninglog) {
-//        self.id = NSUUID().uuidString
-//        self.title = runningLog.title ?? "러닝"
-//        self.location = runningLog.address ?? "대한민국 서울시"
-//        self.distance = runningLog.distance
-//        self.timestamp = Timestamp(date: runningLog.timestamp)
-//        self.withMate = false // 기본값으로 설정하거나, runningLog에서 가져와야 할 데이터로 설정하세요.
-//    }
-//}
-
-//extension RecordLog {
-//    static func fromRunningLogs(_ runningLogs: [Runninglog]) -> [RecordLog] {
-//        return runningLogs.map { RecordLog(from: $0) }
-//    }
-//}
-
 //MARK: - 커스텀 캘린더
 
 struct CustomDateFilter: View {
     @ObservedObject var viewModel = ReportViewModel.shared
-    //    @Binding var currentDate: Date
     @State var currentDate: Date = Date()
     @State var currentMonth: Int = 0
     @Binding var selectedDate: Date?
@@ -461,10 +478,6 @@ struct CustomDateFilter: View {
                                 .foregroundColor(isSelected ? .white : .main)
                                 .frame(width: 5, height: 5)
                                 .offset(y: 12)
-                            Circle()
-                                .foregroundColor(.orange2)
-                                .frame(width: 5, height: 5)
-                                .offset(y: 12)
                         }
                     }
                 }
@@ -473,8 +486,6 @@ struct CustomDateFilter: View {
         .padding(.vertical, 10)
         .padding(.horizontal, 5)
         .background(value.day != -1 && isSelected ? .main : .white)
-        //        .background(isSelected ? .main : .white)
-        //        .background(isSelected && value.day == -1 ? .white : .white)
         .cornerRadius(30)
     }
     var formattedDate: String {
