@@ -89,7 +89,7 @@ extension RunningResultView {
     
     var body: some View {
         VStack {
-            RouteMapView(lineCoordinates: trackingViewModel.coordinates)
+            PathPreviewMap(coordinates: trackingViewModel.coordinates)
             
             VStack {
                 VStack(spacing: 20) {
@@ -207,8 +207,9 @@ extension RunningResultView {
         .ignoresSafeArea(.keyboard)
         .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
         .preventGesture()
-        .onChange(of: trackingViewModel.newtworkStatus) { newValue in
-            if newValue == .success {
+        .onChange(of: trackingViewModel.newtworkStatus) { status in
+            print(status)
+            if status == .success {
                 router.popToRoot()
             }
         }

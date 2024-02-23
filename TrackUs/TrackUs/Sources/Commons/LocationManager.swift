@@ -29,8 +29,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         getCurrentLocation()
     }
     
-    
-    
     func getCurrentLocation() {
         locationManager.startUpdatingLocation()
         currentLocation = locationManager.location
@@ -69,20 +67,5 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 completion("\(city) \(state)")
             }
         }
-    }
-    
-    func calculateCenterCoordinate(for coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
-        guard !coordinates.isEmpty else {
-            return nil
-        }
-        
-        // 위도와 경도의 평균값 계산
-        let totalLatitude = coordinates.map { $0.latitude }.reduce(0, +)
-        let totalLongitude = coordinates.map { $0.longitude }.reduce(0, +)
-        
-        let averageLatitude = totalLatitude / Double(coordinates.count)
-        let averageLongitude = totalLongitude / Double(coordinates.count)
-        print(averageLatitude, averageLongitude, "?")
-        return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
 }

@@ -335,7 +335,6 @@ extension TrackingModeMapView {
         
         // 맵뷰에 경로선 그리는 함수
         private func drawLine() {
-            print(self.trackingViewModel.coordinates.count, "개")
             self.lineAnnotation = PolylineAnnotation(lineCoordinates: self.trackingViewModel.coordinates)
             self.lineAnnotation.lineColor = StyleColor(UIColor.main)
             self.lineAnnotation.lineWidth = 5
@@ -391,6 +390,46 @@ extension TrackingModeMapView {
             locationTrackingCancellation?.cancel()
         }
         
+        // 스냅샷을 찍기전 위치조정
+        private func cameraMoveBeforeCapture(completion: (() -> ())? = nil) {
+            // 시작마커 생성
+            guard let first = self.trackingViewModel.coordinates.first else { return }
+            self.mapView.makeMarkerWithUIImage(coordinate: first, imageName: "StartPin")
+            
+            
+            // 2. 적당한 줌레벨 설정
+            // 현재 경로를 기반으로 줌레벨 설정
+            let camera = try? self.mapView.mapboxMap.camera(
+                for: self.trackingViewModel.coordinates,
+                camera: self.mapView.mapboxMap.styleDefaultCamera,
+                coordinatesPadding: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
+                maxZoom: nil,
+                offset: nil
+            )
+            
+            // 3. 카메라 이동(애니메이션 x)
+            self.mapView.camera.ease (
+                to: camera!,
+                duration: 0
+            ) { _ in
+                    completion?()
+            }
+        }
+        
+        // 스냅샵 생성후 저장
+        private func takeSnapshotAndProceed() {
+            // 맵뷰의 렌더링이 정확히 끝나는 시점을 알기위해 스냅셔터 completion 이용
+            // 이미지 캡쳐는 UIKit 내장기능 이용
+            snapshotter.start { _ in
+
+            } completion: { _ in
+                if let image = UIImage.imageFromView(view: self.mapView) {
+                    self.trackingViewModel.snapshot = image
+                    self.router.push(.runningResult(self.trackingViewModel))
+                }
+            }
+        }
+        
         // 일시중지 버튼이 눌렸을때
         @objc func pauseButtonTapped() {
             self.trackingViewModel.stopRecord()
@@ -403,49 +442,14 @@ extension TrackingModeMapView {
         
         // 중지 버튼이 눌렸을때
         @objc func stopButtonTapped() {
-            print("Tapped")
+            
         }
         
+        // 중지버튼 롱프레스
         @objc func stopButtonLongPressed() {
-//        guard let updatedCenterPosition = locationManager.calculateCenterCoordinate(for: self.trackingViewModel.coordinates) else {
-//                    return
-//            }
-//            self.snapshotter.setCamera(to: CameraOptions(center: updatedCenterPosition, zoom: 14))
-//            snapshotter.start {(overlayHandler) in
-//                let context = overlayHandler.context
-//                if self.trackingViewModel.coordinates.count > 1 {
-//                    self.trackingViewModel.coordinates.enumerated().forEach { data in
-//                        guard data.offset > 0 else {
-//                            context.move(to: overlayHandler.pointForCoordinate(data.element))
-//                            return
-//                        }
-//                        context.addLine(to: overlayHandler.pointForCoordinate(data.element))
-//                    }
-//                }
-//                
-//                
-//                context.setStrokeColor(UIColor.main.cgColor)
-//                context.setLineWidth(5.0)
-//                context.setLineJoin(.round)
-//                context.setLineCap(.round)
-//                context.strokePath()
-//                
-//            } completion: {[weak self] result in
-//                guard case let .success(image) = result, let `self` = self else {
-//                    if case .failure(_) = result {}
-//                    return
-//                }
-//            }
-            if let image = UIImage.imageFromView(view: self.mapView) {
-                self.cancellation.forEach { cancelable in
-                    cancelable.cancel()
-                }
-                self.trackingViewModel.snapshot = image
-                HapticManager.instance.impact(style: .heavy)
-                router.push(.runningResult(trackingViewModel))
+            cameraMoveBeforeCapture {
+                self.takeSnapshotAndProceed()
             }
-            
-            
         }
         
         func gestureManager(_ gestureManager: MapboxMaps.GestureManager, didBegin gestureType: MapboxMaps.GestureType) {

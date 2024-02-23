@@ -42,10 +42,13 @@ extension RunningHomeView {
                 .frame(height: geometry.size.height - 95)
                 .offset(y: min(offset, 0))
                 .animation(.interactiveSpring(), value: offset)
+                
+            
             
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
+                    
                     // 프로필 & 러닝시작
                     profileHeader
                         .padding(.horizontal, 16)
@@ -90,20 +93,24 @@ extension RunningHomeView {
                 deltaY = 0
             }
         }
-        
         // MARK: - 상단 팝업
-        .popup(isPresented: $showingFloater) {
-            GraphicTextCard(title: "혼자 러닝하기 지루할때는?", subTitle: "이 곳에서 러닝 메이트를 모집해보세요!", resource: .clipboard)
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
-            
-        } customize: {
-            $0
-                .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
-                .position(.top)
-                .animation(.spring())
-                .closeOnTap(false)
-        }
+              .popup(isPresented: $showingFloater) {
+                  Button(action: {
+                      router.push(.courseDrawing)
+                  }) {
+                      GraphicTextCard(title: "내가 만드는 러닝코스", subTitle: "나만의 코스를 그리고 다른 러너와 함께 뛰어보세요!", resource: .pen)
+                          .cornerRadius(12)
+                          .padding(.horizontal, 16)
+                  }
+                  
+              } customize: {
+                  $0
+                      .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
+                      .position(.top)
+                      .animation(.spring())
+                      .closeOnTap(false)
+              }
+
         // MARK: - 목표운동량 설정 팝업
         .popup(isPresented: $showingPopup) {
             SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
@@ -212,14 +219,17 @@ extension RunningHomeView {
             // 가로 스크롤
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
-                    RunningRecruitmentCell()
+                    ForEach(1..<14, id: \.self) { _ in
+                        Button(action: {
+                            router.push(.courseDetail)
+                        }, label: {
+                            RunningRecruitmentCell()
+                        })
+                    }
                 }
-                .padding(10)
+                .padding(.vertical, 8)
             }
-            .padding(.leading, 6)
+            .padding(.leading, 16)
         }
     }
 }

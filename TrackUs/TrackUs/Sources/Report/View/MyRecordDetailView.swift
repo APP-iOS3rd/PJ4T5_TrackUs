@@ -92,8 +92,8 @@ struct MyRecordDetailView: View {
         // 맵뷰(임시)
         ZStack {
             GeometryReader { geometry in
-//                RouteMapView(lineCoordinates: [CLLocationCoordinate2D(latitude: CLLocationDegrees(floatLiteral: 37.558177), longitude: CLLocationDegrees(floatLiteral: 126.997408))]) // ReportViewModel의 coordinates
                 RouteMapView(lineCoordinates: runningLog?.coordinates?.map { $0.toCLLocationCoordinate2D() } ?? [])
+                
                     .onTapGesture {
                         withAnimation {
                             isOpen = false

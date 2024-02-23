@@ -8,13 +8,6 @@
 import SwiftUI
 
 extension Color {
-    init(hex: Int, opacity: Double = 1.0) {
-        let red = Double((hex >> 16) & 0xff) / 255
-        let green = Double((hex >> 8) & 0xff) / 255
-        let blue = Double((hex >> 0) & 0xff) / 255
-        
-        self.init(.sRGB, red: red, green: green, blue: blue, opacity: opacity)
-    }
     
     static let Main = Color("Main")
     static let Gray1 = Color("Gray1")
@@ -31,4 +24,11 @@ extension Color {
     static let circleRoundStart: Color = Color(hex: 0x47c6ff)
     static let circleRoundEnd: Color = Color(hex: 0x5a83ff)
     
+    init(hex: Int, opacity: Double = 1.0) {
+        let red = Double((hex >> 16) & 0xff) / 255
+        let green = Double((hex >> 8) & 0xff) / 255
+        let blue = Double((hex >> 0) & 0xff) / 255
+        
+        self.init(.sRGB, red: red, green: green, blue: blue, opacity: opacity)
+    }
 }
