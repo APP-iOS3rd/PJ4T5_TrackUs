@@ -28,8 +28,6 @@ struct ReportView: View {
             switch viewModel.userLogLoadingState {
             case .loading:
                 ReportLoadingView()
-//                selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selectedTab: $selectedTab, selec: selectedPicker)
-//                                    .redacted(reason: .placeholder)
             case .loaded:
                 selectView(selectedDate: $selectedDate, selectedAge: $selectedAge, selectedTab: $selectedTab, selec: selectedPicker)
             case .error(_):
@@ -40,8 +38,8 @@ struct ReportView: View {
             NavigationText(title: "리포트")
         }
         .onAppear {
-            viewModel.fetchUserLog()
-            viewModel.fetchUserAgeLog()
+            viewModel.fetchUserLog(selectedDate: selectedDate!)
+            viewModel.fetchUserAgeLog(selectedDate: selectedDate!)
         }
     }
     
@@ -89,7 +87,7 @@ struct selectView : View {
             MyReportView(selectedTab: $selectedTab, selectedDate: $selectedDate, selectedAge: $selectedAge)
                 .transition(.move(edge: .leading))
         case .record:
-            MyRecordView(selectedDate: $selectedDate, showTrackUsProButton: false)
+            MyRecordView(selectedDate: $selectedDate)
                 .transition(.move(edge: .trailing))
             
         }

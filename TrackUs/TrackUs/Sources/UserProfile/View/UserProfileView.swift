@@ -111,7 +111,7 @@ struct UserProfileContent: View {
         Spacer()
         
         if userInfo.isProfilePublic {
-            MyRecordView(selectedDate: $selectedDate, showTrackUsProButton: false)
+            MyRecordView(selectedDate: $selectedDate)
                 .padding(.top, -40)
         } else {
             PrivateUserView()
