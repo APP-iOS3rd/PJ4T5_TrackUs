@@ -12,6 +12,7 @@ import MapboxMaps
  */
 class CourseRegViewModel: ObservableObject {
     let id = UUID()
+    private let authViewModel = AuthenticationViewModel.shared
     @Published var coorinates = [CLLocationCoordinate2D]()
     @Published var title: String = ""
     @Published var content: String = ""
@@ -36,10 +37,12 @@ class CourseRegViewModel: ObservableObject {
         self.coorinates.removeAll()
     }
     
+    // 경로 되돌리기
     func revertPath() {
         self.coorinates.popLast()
     }
     
+    // 참여인원 설정
     func addParticipants() {
         guard participants < 10 else { return }
         self.participants += 1
@@ -48,6 +51,11 @@ class CourseRegViewModel: ObservableObject {
     func removeParticipants() {
         guard participants > 1 else { return }
         self.participants -= 1
+    }
+    
+    
+    func uploadCourseData() {
+        
     }
 }
 
