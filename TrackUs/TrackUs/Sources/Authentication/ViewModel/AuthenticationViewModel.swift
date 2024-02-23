@@ -175,7 +175,8 @@ extension AuthenticationViewModel {
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                            accessToken: accessToken.tokenString)
-            try await Auth.auth().signIn(with: credential)
+            let auth = try await Auth.auth().signIn(with: credential)
+            self.userInfo.uid = auth.user.uid
             return true
         }
         catch {
@@ -258,7 +259,8 @@ extension AuthenticationViewModel: ASAuthorizationControllerDelegate {
             // Sign in with Firebase.
             Task {
                 do {
-                    try await Auth.auth().signIn(with: credential)
+                    let auth = try await Auth.auth().signIn(with: credential)
+                    self.userInfo.uid = auth.user.uid
                 }
                 catch {
                     print("Error authenticating: \(error.localizedDescription)")
