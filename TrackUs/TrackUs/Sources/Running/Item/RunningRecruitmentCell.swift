@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct RunningRecruitmentCell: View {
+    let course: Course
+    
     var body: some View {
         VStack {
-            Image("MapPath")
+            Image("ProfileDefault")
                 .resizable()
                 .frame(height: 140)
             VStack(alignment: .leading, spacing: 6) {
-                Text("2024.01.12")
+                Text(course.startDate.formattedString())
                     .customFontStyle(.gray2_R12)
                 
-                Text("광명시 러닝 메이트 구합니다")
+                Text(course.title)
                     .customFontStyle(.gray1_B16)
                 
                 VStack(alignment: .leading, spacing: 2) {
@@ -25,7 +27,7 @@ struct RunningRecruitmentCell: View {
                         Label("서울숲 카페거리", systemImage: "location")
                             .customFontStyle(.gray2_L12)
                         Spacer()
-                        Label("3/6", systemImage: "person.2.fill")
+                        Label("\(course.members.count)/\(course.participants)", systemImage: "person.2.fill")
                             .customFontStyle(.gray2_L12)
                     }
                     HStack {
@@ -47,6 +49,6 @@ struct RunningRecruitmentCell: View {
     }
 }
 
-#Preview {
-    RunningRecruitmentCell()
-}
+//#Preview {
+//    RunningRecruitmentCell()
+//}

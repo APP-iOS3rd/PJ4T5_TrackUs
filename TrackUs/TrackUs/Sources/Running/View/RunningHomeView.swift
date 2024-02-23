@@ -12,11 +12,11 @@ import Kingfisher
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
+    @StateObject var courseViewModel = CourseViewModel()
     @State private var isOpen: Bool = false
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
     @State private var showingAlert: Bool = false
-    @State private var maxHeight: CGFloat = 300
     @State private var offset: CGFloat = 0
     @State private var deltaY: CGFloat = 0
     
@@ -46,7 +46,7 @@ extension RunningHomeView {
             
             
             // MARK: - Sheet
-            BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
+            BottomSheet(isOpen: $isOpen, maxHeight: 580, minHeight: 100) {
                 VStack(spacing: 20) {
                     
                     // 프로필 & 러닝시작
@@ -61,14 +61,6 @@ extension RunningHomeView {
                         .modifier(BorderLineModifier())
                         .padding(.horizontal, 16)
                 }
-                .background(
-                    GeometryReader { innerGeometry in
-                        Color.clear
-                            .onAppear {
-                                self.maxHeight = innerGeometry.size.height
-                            }
-                    }
-                )
             } onChanged: { gestureValue in
                 let newDeltaY = gestureValue.translation.height
                 let deltaHeight = abs(abs(newDeltaY) - abs(deltaY))
@@ -92,6 +84,9 @@ extension RunningHomeView {
                 }
                 deltaY = 0
             }
+        }
+        .onAppear {
+            courseViewModel.fetchCourseData()
         }
         // MARK: - 상단 팝업
               .popup(isPresented: $showingFloater) {
@@ -219,11 +214,11 @@ extension RunningHomeView {
             // 가로 스크롤
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(1..<14, id: \.self) { _ in
+                    ForEach(courseViewModel.courseList, id: \.self) { course in
                         Button(action: {
-                            router.push(.courseDetail)
+                            router.push(.courseDetail(course))
                         }, label: {
-                            RunningRecruitmentCell()
+                            RunningRecruitmentCell(course: course)
                         })
                     }
                 }

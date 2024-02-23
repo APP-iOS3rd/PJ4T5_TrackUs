@@ -9,18 +9,18 @@ import SwiftUI
 import MapboxMaps
 
 struct CourseDetailView: View {
+    @EnvironmentObject var router: Router
+    
+    let course: Course
     // 더미데이터 삭제예정
-    let coordinates: [CLLocationCoordinate2D] = [
-        CLLocationCoordinate2D(latitude: 37.566637, longitude: 126.97338),
-        CLLocationCoordinate2D(latitude: 37.566337, longitude: 126.97338),
-        CLLocationCoordinate2D(latitude: 37.566637, longitude: 126.97328),
-        CLLocationCoordinate2D(latitude: 37.566647, longitude: 126.97248),
-    ]
     
     var body: some View {
         VStack {
             ScrollView {
-                PathPreviewMap(coordinates: coordinates)
+                PathPreviewMap(
+                    mapStyle: .numberd,
+                    coordinates: course.coordinates
+                )
                     .frame(height: 230)
                 
                 VStack(spacing: 0)   {
@@ -56,14 +56,14 @@ extension CourseDetailView {
     var courseDetailLabels: some View {
         VStack {
             HStack {
-                Text("2024.01.12")
+                Text(course.startDate.formattedString())
                     .customFontStyle(.gray2_R12)
                 Spacer()
-                RunningStyleBadge(style: .running)
+                RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .running)
             }
             
             VStack(alignment: .leading) {
-                Text("30분 가볍게 러닝해요!")
+                Text(course.title)
                     .customFontStyle(.gray1_B20)
                 
                 HStack(spacing: 10) {
@@ -86,7 +86,7 @@ extension CourseDetailView {
                     }
                 }
                 
-            Text("서울숲카페거리에서 오전 10시 20분에 가볍게 30분정도 러닝하실 분을 모집합니다! 함께 재미있게 뛰어봐요! :)")
+                Text(course.content)
                     .customFontStyle(.gray1_R14)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -97,15 +97,19 @@ extension CourseDetailView {
     var participantList: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 2) {
-                Text("4명").customFontStyle(.main_B14)
+                Text("\(course.members.count)명").customFontStyle(.main_B14)
                 Text("의 TrackUS 회원이 이 러닝 모임에 참여중입니다!")
                     .customFontStyle(.gray2_R14)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
-                    ForEach(1..<4, id: \.self) { _ in
-                        UserProfileCell()
+                    ForEach(course.members, id: \.self) { userId in
+                        Button(action: {
+                            router.push(.userProfile(userId))
+                        }, label: {
+                            UserProfileCell()
+                        })
                     }
                 }
             }
@@ -114,6 +118,3 @@ extension CourseDetailView {
     }
 }
 
-#Preview {
-    CourseDetailView()
-}
