@@ -48,12 +48,7 @@ extension RunningHomeView {
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: maxHeight + 44, minHeight: 100) {
                 VStack(spacing: 20) {
-                    Button {
-                        router.push(.courseDrawing)
-                    } label: {
-                        Text("코스추가(임시)")
-                    }
-                        
+                    
                     // 프로필 & 러닝시작
                     profileHeader
                         .padding(.horizontal, 16)
@@ -98,7 +93,23 @@ extension RunningHomeView {
                 deltaY = 0
             }
         }
-        
+        // MARK: - 상단 팝업
+              .popup(isPresented: $showingFloater) {
+                  Button(action: {
+                      router.push(.courseDrawing)
+                  }) {
+                      GraphicTextCard(title: "내가 만드는 러닝코스", subTitle: "나만의 코스를 그리고 다른 러너와 함께 뛰어보세요!", resource: .pen)
+                          .cornerRadius(12)
+                          .padding(.horizontal, 16)
+                  }
+                  
+              } customize: {
+                  $0
+                      .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
+                      .position(.top)
+                      .animation(.spring())
+                      .closeOnTap(false)
+              }
 
         // MARK: - 목표운동량 설정 팝업
         .popup(isPresented: $showingPopup) {

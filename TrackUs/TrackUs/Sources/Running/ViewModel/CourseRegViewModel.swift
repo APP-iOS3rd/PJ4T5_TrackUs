@@ -22,9 +22,11 @@ class CourseRegViewModel: ObservableObject {
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
     @Published var style: RunningStyle = .walking
+    let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
+        guard self.coorinates.count <= MAXIMUM_NUMBER_OF_MARKERS else { return }
         self.coorinates.append(coordinate)
     }
     
