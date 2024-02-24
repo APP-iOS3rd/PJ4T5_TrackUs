@@ -28,7 +28,7 @@ class CourseRegViewModel: ObservableObject {
     
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
-        guard self.coorinates.count <= MAXIMUM_NUMBER_OF_MARKERS else { return }
+        guard self.coorinates.count < MAXIMUM_NUMBER_OF_MARKERS else { return }
         self.coorinates.append(coordinate)
     }
     

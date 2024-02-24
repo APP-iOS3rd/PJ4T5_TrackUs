@@ -16,13 +16,13 @@ struct CourseDetailView: View {
     
     var body: some View {
         VStack {
-            ScrollView {
-                PathPreviewMap(
-                    mapStyle: .numberd,
-                    coordinates: course.coordinates
-                )
-                    .frame(height: 230)
-                
+            PathPreviewMap(
+                mapStyle: .numberd,
+                coordinates: course.coordinates
+            )
+                .frame(height: 230)
+            
+            ScrollView {   
                 VStack(spacing: 0)   {
                     RunningStatsView(estimatedTime: 1423.0, calories: 323.0, distance: 3.0)
                         .padding(.top, 20)
