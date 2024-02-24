@@ -11,8 +11,11 @@ import Firebase
  코스등록 정보 뷰모델
  */
 class CourseRegViewModel: ObservableObject {
-    let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
+    let id = UUID()
+    let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
+    
+    @Published var style: RunningStyle = .walking
     @Published var coorinates = [CLLocationCoordinate2D]()
     @Published var title: String = ""
     @Published var content: String = ""
@@ -23,8 +26,8 @@ class CourseRegViewModel: ObservableObject {
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
-    @Published var style: RunningStyle = .walking
-    let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
+    @Published var image: UIImage?
+    
     
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
@@ -55,22 +58,27 @@ class CourseRegViewModel: ObservableObject {
     }
     
     @MainActor
-    func uploadData() {
+    func uploadCourseData() {
         let uid = authViewModel.userInfo.uid
-        let data: [String: Any] = [
-            "uid": UUID().uuidString,
-            "title": self.title,
-            "content": self.content,
-            "startDate": self.selectedDate ?? Date(),
-            "distance": self.distance,
-            "participants": self.participants,
-            "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
-            "runningStyle": self.style.rawValue,
-            "members": [uid],
-            "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}
-        ]
-        Constants.FirebasePath.COLLECTION_GROUP_RUNNING.addDocument(data: data) { _ in
-            
+        guard let image = self.image else { return }
+        ImageUploader.uploadImage(image: image, type: .map) { url in
+            let data: [String: Any] = [
+                "uid": UUID().uuidString,
+                "ownerUid": uid,
+                "title": self.title,
+                "content": self.content,
+                "startDate": self.selectedDate ?? Date(),
+                "distance": self.distance,
+                "participants": self.participants,
+                "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
+                "runningStyle": self.style.rawValue,
+                "members": [uid],
+                "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                "routeImageUrl": url
+            ]
+            Constants.FirebasePath.COLLECTION_GROUP_RUNNING.addDocument(data: data) { _ in
+                
+            }
         }
     }
 }

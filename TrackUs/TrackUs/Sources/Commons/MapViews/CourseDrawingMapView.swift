@@ -171,8 +171,24 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
             self.pointAnnotationManager.annotations.removeAll()
         }
         
+        private func cameraMoveBeforeCapture(completion: (() -> ())? = nil) {
+            let camera = try? self.mapView.mapboxMap.camera(
+                for: self.courseRegViewModel.coorinates,
+                camera: self.mapView.mapboxMap.styleDefaultCamera,
+                coordinatesPadding: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
+                maxZoom: nil,
+                offset: nil
+            )
+            
+            self.mapView.camera.ease (
+                to: camera!,
+                duration: 0
+            ) { _ in
+                    completion?()
+            }
+        }
+        
         @objc func completeButtonTapped() {
-            print(courseRegViewModel.coorinates.count)
             guard courseRegViewModel.coorinates.count >= 2 else {
                 let alert = UIAlertController(title: "알림", message: "경로를 2개 이상 생성해주세요.", preferredStyle: .alert)
                 let confirmAction = UIAlertAction(title: "확인", style: .default)
@@ -180,7 +196,14 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
                 present(alert, animated: true, completion: nil)
                 return
             }
-            router.push(.courseRegister(courseRegViewModel))
+            
+            cameraMoveBeforeCapture {
+                if let image = UIImage.imageFromView(view: self.mapView) {
+                    self.courseRegViewModel.image = image
+                    self.router.push(.courseRegister(self.courseRegViewModel))
+                }
+                
+            }
         }
         
         @objc func deleteButtonTapped() {

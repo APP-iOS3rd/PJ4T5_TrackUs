@@ -10,6 +10,7 @@ import MapboxMaps
 
 struct CourseDetailView: View {
     @EnvironmentObject var router: Router
+    @StateObject var userSearchViewModel = UserSearchViewModel()
     
     let course: Course
     // 더미데이터 삭제예정
@@ -22,7 +23,7 @@ struct CourseDetailView: View {
             )
                 .frame(height: 230)
             
-            ScrollView {   
+            ScrollView {
                 VStack(spacing: 0)   {
                     RunningStatsView(estimatedTime: 1423.0, calories: 323.0, distance: 3.0)
                         .padding(.top, 20)
@@ -96,23 +97,8 @@ extension CourseDetailView {
     // 참여자 리스트
     var participantList: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: 2) {
-                Text("\(course.members.count)명").customFontStyle(.main_B14)
-                Text("의 TrackUS 회원이 이 러닝 모임에 참여중입니다!")
-                    .customFontStyle(.gray2_R14)
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(course.members, id: \.self) { userId in
-                        Button(action: {
-                            router.push(.userProfile(userId))
-                        }, label: {
-                            UserProfileCell()
-                        })
-                    }
-                }
-            }
+           
+            UserList(users: userSearchViewModel.filterdUserData(uid: course.members), ownerUid: course.ownerUid)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

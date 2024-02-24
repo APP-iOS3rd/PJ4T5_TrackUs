@@ -110,7 +110,7 @@ extension CourseRegisterView {
             }
             
             MainButton(active: isTextFieldValid ,buttonText: "코스 등록하기") {
-                courseRegViewModel.uploadData()
+                courseRegViewModel.uploadCourseData()
                 router.popToRoot()
             }.padding(.horizontal, 16)
             

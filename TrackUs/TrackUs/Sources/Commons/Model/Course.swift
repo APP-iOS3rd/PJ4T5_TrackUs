@@ -12,6 +12,7 @@ import MapboxMaps
 struct Course: Decodable, Hashable {
     @DocumentID var id: String?
     let uid: String
+    let ownerUid: String
     let title: String
     let content: String
     let courseRoutes: [GeoPoint]
@@ -21,6 +22,7 @@ struct Course: Decodable, Hashable {
     let runningStyle: String
     let startDate: Date
     let members: [String]
+    let routeImageUrl: String
     
     var coordinates: [CLLocationCoordinate2D] {
         self.courseRoutes.map {CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)}

@@ -6,46 +6,66 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RunningRecruitmentCell: View {
     let course: Course
+    let user: UserInfo
     
     var body: some View {
-        VStack {
-            Image("ProfileDefault")
+        VStack(spacing: 0) {
+            KFImage(URL(string: course.routeImageUrl))
+                .placeholder({ProgressView()})
+                .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
                 .resizable()
                 .frame(height: 140)
+                .cornerRadius(12, corners: [.topLeft, .topRight])
+                
             VStack(alignment: .leading, spacing: 6) {
-                Text(course.startDate.formattedString())
-                    .customFontStyle(.gray2_R12)
+                RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .walking)
                 
                 Text(course.title)
                     .customFontStyle(.gray1_B16)
                 
                 VStack(alignment: .leading, spacing: 2) {
+                    Label("서울숲 카페거리", image: "Pin")
+                        .customFontStyle(.gray2_L12)
+                    
+                    Label(course.startDate.formattedString(), systemImage: "calendar")
+                        .customFontStyle(.gray2_L12)
+                    
                     HStack {
-                        Label("서울숲 카페거리", systemImage: "location")
+                        Label(course.distance.asString(unit: .kilometer), image: "arrowBoth")
                             .customFontStyle(.gray2_L12)
                         Spacer()
                         Label("\(course.members.count)/\(course.participants)", systemImage: "person.2.fill")
                             .customFontStyle(.gray2_L12)
                     }
-                    HStack {
-                        Label("10:02 AM", systemImage: "clock")
+                    
+                    HStack(spacing: 0) {
+                        KFImage(URL(string: user.profileImageUrl ?? ""))
+                            .placeholder({ProgressView()})
+                            .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 24, height: 24)
+                            .clipShape(Circle())
+                        
+                        Text(user.username)
                             .customFontStyle(.gray2_L12)
-                        Spacer()
-                        Label("1.72km", systemImage: "flag.2.crossed")
-                            .customFontStyle(.gray2_L12)
+                            .padding(.leading, 4)
+                        Image(.crown)
+                            .padding(.leading, 2)
                     }
                 }
             }
             .padding(12)
+            .background(.white)
+            .clipped()
+            .cornerRadius(12, corners: [.bottomLeft, .bottomRight])
+            .shadow(color: .divider, radius: 3, x: 0, y: 0)
         }
         .frame(width: 176)
-        .background(.white)
-        .cornerRadius(12)
-        .clipped()
-        .shadow(color: .divider, radius: 5, x: 0, y: 0)
     }
 }
 
