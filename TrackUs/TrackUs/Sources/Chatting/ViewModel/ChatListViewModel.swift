@@ -12,6 +12,7 @@ class ChatListViewModel: ObservableObject {
     
     // 채팅방 정보
     @Published var chatRooms: [ChatRoom] = []
+    @Published var users: [String: Member] = [:]
     
     // 같은 채팅방 쓰는 맴버들 정보
     //@Published var members: [Member] = []
@@ -23,19 +24,19 @@ class ChatListViewModel: ObservableObject {
     func subscribeToUpdates() {
         guard let currentUId = FirebaseManger().auth.currentUser?.uid else { return }
         ref.whereField("members", arrayContains: currentUId).addSnapshotListener() { [weak self] (snapshot, _) in
-            self?.storeChatRooms(snapshot)
+            self?.storeChatRooms(snapshot, currentUId)
         }
         
     }
     
     // 채팅방 Firebase 정보 가져오기
-    private func storeChatRooms(_ snapshot: QuerySnapshot?) {
+    private func storeChatRooms(_ snapshot: QuerySnapshot?, _ currentUId: String) {
         DispatchQueue.main.async { [weak self] in
             self?.chatRooms = snapshot?.documents
                 .compactMap { [weak self] document in
                     do {
                         let firestoreChatRoom = try document.data(as: FirestoreChatRoom.self)
-                        return self?.makeChatRooms(document.documentID, firestoreChatRoom)
+                        return self?.makeChatRooms(document.documentID, firestoreChatRoom, currentUId)
                     } catch {
                         print(error)
                     }
@@ -52,7 +53,7 @@ class ChatListViewModel: ObservableObject {
     }
     
     // ChatRoom타입에 맞게 변환
-    private func makeChatRooms(_ id: String, _ firestoreChatRoom: FirestoreChatRoom) -> ChatRoom {
+    private func makeChatRooms(_ id: String, _ firestoreChatRoom: FirestoreChatRoom, _ currentUId: String) -> ChatRoom {
         var message: LatestMessageInChat? = nil
         if let flm = firestoreChatRoom.latestMessage {
             message = LatestMessageInChat(
@@ -61,15 +62,15 @@ class ChatListViewModel: ObservableObject {
                 text: flm.text.isEmpty ? nil : flm.text
             )
         }
-           // 마지막 메세지 유저를 처음으로?? -> 이유는?
-        let members = firestoreChatRoom.members.compactMap { id in
-            // id 통해 userInfo 정보 가져오기
-                memberUserInfo(id: id)
+        let members = firestoreChatRoom.members
+        _ = firestoreChatRoom.members.map { memberId in
+            memberUserInfo(uid: memberId)
         }
         let chatRoom = ChatRoom(
             id: id,
             title: firestoreChatRoom.title,
             members: members,
+            nonSelfMembers: members.filter { $0 != currentUId },
             // 다 불러와야하나??? 저장때문에 불러오는거 아님 본인꺼만 불러오면 되는거 아닌가
             usersUnreadCountInfo: firestoreChatRoom.usersUnreadCountInfo,
             gruop: firestoreChatRoom.gruop,
@@ -80,17 +81,15 @@ class ChatListViewModel: ObservableObject {
     
     // 리스너 추가? 아님 별도로 기록?
     // 채팅방 멤버 닉네임, 프로필사진url 불러오기
-    private func memberUserInfo(id: String) -> Member {
-        var member = Member(uid: "", userName: "")
-        FirebaseManger.shared.firestore.collection("users").document(id).getDocument { documentSnapshot, error in
+    private func memberUserInfo(uid: String) {
+        FirebaseManger.shared.firestore.collection("users").document(uid).addSnapshotListener { documentSnapshot, error in
             guard let document = documentSnapshot else { return }
             do {
                 let userInfo = try document.data(as: UserInfo.self)
-                member = Member(uid: userInfo.uid, userName: userInfo.username, profileImageUrl: userInfo.profileImageUrl)
+                self.users[uid] = Member(uid: uid, userName: userInfo.username, profileImageUrl: userInfo.profileImageUrl)
             } catch {
                 print("Error decoding document: \(error)")
             }
         }
-        return member
     }
 }

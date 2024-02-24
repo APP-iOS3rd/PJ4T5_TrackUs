@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ChattingListView: View {
     @EnvironmentObject var router: Router
@@ -21,51 +22,149 @@ struct ChattingListView: View {
     var body: some View {
         List{
             ForEach(chatViewModel.chatRooms, id: \.id) { chatRoom in
-                HStack{
+                HStack(spacing: 12){
                     // 채팅방 이미지
-                    Image(.profileDefault)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 45)
+                    ChatRoomImage(members: chatRoom.nonSelfMembers, users: chatViewModel.users)
+                        .frame(width: 50, height: 50)
                     // 채팅 제목, 최근 메세지
-                    VStack(alignment: .leading){
+                    VStack(alignment: .leading, spacing: 4){
                         // 채팅 제목
-                        HStack{
+                        HStack(spacing: 4){
                             // 1:1 채팅 제목 받아오기 추가
                             if chatRoom.gruop {
                                 Text(chatRoom.title)
                                     .customFontStyle(.gray1_B16)
                             }else {
-//                                Text(chatRoom.members)
-//                                .customFontStyle(.gray1_B16)
+                                Text(chatViewModel.users[chatRoom.nonSelfMembers.first ?? ""]?.userName ?? "인식오류")
+                                .customFontStyle(.gray1_B16)
                             }
                             // 채팅방 인원수
-                            Image(systemName: "person.fill")
+                            Image(systemName: "person.2.fill")
+                                .customFontStyle(.gray2_L12)
                             Text("\(chatRoom.members.count)")
+                                .customFontStyle(.gray2_L12)
                         }
                         // 최신 메세지
                         Text(chatRoom.latestMessage?.text ?? "")
+                            .customFontStyle(.gray2_R12)
+                            .lineLimit(2)
                     }
                     Spacer()
                     
-                    VStack{
+                    VStack(alignment: .trailing, spacing: 0){
                         // 최신 메세지 시간
-                        Text("마지막 날짜")
+                        Text(chatRoom.latestMessage?.timestemp?.timeAgoFormat() ?? "")
+                            .customFontStyle(.gray1_R12)
+                        Spacer()
                         // 신규 메세지 갯수
-                        Text("메세지 갯수")
+                        usersUnreadCoun(count: chatRoom.usersUnreadCountInfo[authViewModel.userInfo.uid])
                     }
+                    .frame(height: 40)
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
+        .customNavigation(center: {
+            Text("채팅 목록")
+                .customFontStyle(.gray1_B16)
+        })
         .onAppear {
             // 채팅방 목록 리스너 등록
             chatViewModel.subscribeToUpdates()
         }
-//        .onReceive(DataVieModle.$conversations) { conversation in
-//            // ViewModel에서 받아온 채팅방 리스트 업데이트
-//            self.conversations = conversation
-//        }
+    }
+}
+
+/// 채팅방 프로필사진 목록
+struct ChatRoomImage: View {
+    let members: [String]
+    let users: [String: Member]
+    
+    var body: some View {
+        switch members.count {
+        case 1:
+            ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 50)
+        case 2:
+            ZStack {
+                ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 30)
+                    .offset(x: -11, y: 11)
+                ProfileImage(ImageUrl: users[members[1]]?.profileImageUrl, size: 30)
+                    .offset(x: 11, y: 11)
+            }
+        case 3:
+            VStack(spacing: 1) {
+                HStack(spacing: 1) {
+                    ForEach(members.prefix(2), id: \.self) { member in
+                        ProfileImage(ImageUrl: users[member]?.profileImageUrl, size: 25)
+                    }
+                }
+                ProfileImage(ImageUrl: users[members[2]]?.profileImageUrl, size: 25)
+            }
+        default:
+            VStack(spacing: 1) {
+                HStack(spacing: 1) {
+                    ForEach(members.prefix(2), id: \.self) { member in
+                        ProfileImage(ImageUrl: users[member]?.profileImageUrl, size: 25)
+                    }
+                }
+                HStack(spacing: 1) {
+                    ForEach(members.suffix(2), id: \.self) { member in
+                        ProfileImage(ImageUrl: users[member]?.profileImageUrl, size: 25)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// KFImage - Url 있으면 해당사진, 없으면 profileDefault 사진
+struct ProfileImage: View {
+    let ImageUrl: String?
+    let size: CGFloat
+    
+    var body: some View {
+        if let profileImageUrl = ImageUrl{
+            KFImage(URL(string: profileImageUrl))
+                .resizable()
+                .frame(width: size, height: size)
+                .clipShape(Circle())
+        }else {
+            Image(.profileDefault)
+                .resizable()
+                .frame(width: size, height: size)
+                .clipShape(Circle())
+        }
+    }
+}
+
+struct usersUnreadCoun: View {
+    let count: Int?
+    
+    var body: some View {
+        if let count = count{
+            if count != 0 && count <= 300 {
+                Text("\(count)")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 12, weight: .bold))
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 6)
+                    .frame(minWidth: 18)
+                    .background(
+                        Capsule()
+                            .foregroundStyle(.caution)
+                    )
+            }else if  count > 300 {
+                Text("300+")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 12, weight: .bold))
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 6)
+                    .background(
+                        Capsule()
+                            .foregroundStyle(.caution)
+                    )
+            }
+        }
     }
 }
 

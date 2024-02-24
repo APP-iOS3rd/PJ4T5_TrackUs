@@ -10,135 +10,32 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-public struct Conversation: Identifiable, Hashable, Codable {
-    public let id: String
-    public var users: [User]
-    public var usersUnreadCountInfo: [String: Int]
-    public var isGroup: Bool
-    public var pictureURL: URL?
-    public var title: String
-
-    public var latestMessage: LatestMessageInChat?
-
-    public init(id: String, users: [User], usersUnreadCountInfo: [String: Int]? = nil, isGroup: Bool, pictureURL: URL? = nil, title: String = "", latestMessage: LatestMessageInChat? = nil) {
-        self.id = id
-        self.users = users
-        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: users.map { ($0.id, 0) } )
-        self.isGroup = isGroup
-        self.pictureURL = pictureURL
-        self.title = title
-        self.latestMessage = latestMessage
-    }
-
-    public var notMeUsers: [User] {
-        users.filter { $0.id != SessionManager.currentUserId }
-    }
-
-    public var displayTitle: String {
-        if !isGroup, let user = notMeUsers.first {
-            return user.name
-        }
-        return title
-    }
-}
-
-
-public struct FirestoreConversation: Codable, Identifiable, Hashable {
-    @DocumentID public var id: String?
-    public let users: [String]
-    public let usersUnreadCountInfo: [String: Int]?
-    public let isGroup: Bool
-    public let pictureURL: String?
-    public let title: String
-    public let latestMessage: FirestoreMessage?
-}
-
-let hasCurrentSessionKey = "hasCurrentSession"
-let currentUserKey = "currentUser"
-
-class SessionManager {
-
-    static let shared = SessionManager()
-
-    static var currentUserId: String {
-        shared.currentUser?.id ?? ""
-    }
-
-    static var currentUser: User? {
-        shared.currentUser
-    }
-
-    var deviceId: String {
-        UIDevice.current.identifierForVendor?.uuidString ?? ""
-    }
-
-    @Published private var currentUser: User?
-
-    func storeUser(_ user: User) {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(user) {
-            UserDefaults.standard.set(encoded, forKey: currentUserKey)
-        }
-        UserDefaults.standard.set(true, forKey: hasCurrentSessionKey)
-        currentUser = user
-    }
-
-    func loadUser() {
-        if let data = UserDefaults.standard.data(forKey: "currentUser") {
-            currentUser = try? JSONDecoder().decode(User.self, from: data)
-        }
-    }
-
-    func logout() {
-        currentUser = nil
-        UserDefaults.standard.set(false, forKey: hasCurrentSessionKey)
-        UserDefaults.standard.removeObject(forKey: currentUserKey)
-    }
-}
-
-// 분리
-
-public struct User: Codable, Identifiable, Hashable {
-    public let id: String
-    public let name: String
-    public let avatarURL: URL?
-    public let isCurrentUser: Bool
-
-    public init(id: String, name: String, avatarURL: URL?, isCurrentUser: Bool) {
-        self.id = id
-        self.name = name
-        self.avatarURL = avatarURL
-        self.isCurrentUser = isCurrentUser
-    }
-}
-
-
-// ===================== 원래 코드 ===================================
-
-
+//MARK: - 채팅방 관련 정보
 struct ChatRoom: Codable, Identifiable {
     var id: String  // 모집글 id와 동일
     var title: String    // 채팅방 이름
     var gruop: Bool
-    var members: [Member]
-    var nonSelfMembers: [Member]    // 사용자 제외 member
+    var members: [String]
+    var nonSelfMembers: [String]    // 사용자 제외 member
     //var messages: [Message]?
     var usersUnreadCountInfo: [String: Int]     // 신규 메세지 갯수
     public let latestMessage: LatestMessageInChat?  // 최근 메세지
         
-    init(id: String, title: String, members: [Member], usersUnreadCountInfo: [String: Int]? = nil, gruop : Bool, latestMessage: LatestMessageInChat? = nil) {
+    init(id: String, title: String, members: [String], nonSelfMembers: [String],usersUnreadCountInfo: [String: Int]? = nil, gruop : Bool, latestMessage: LatestMessageInChat? = nil) {
         self.id = id
         self.title = title
         self.members = members
         // 본인 제외 맴버 넣기
-        self.nonSelfMembers = members
+        self.nonSelfMembers = nonSelfMembers
         self.gruop = gruop
-        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: members.map { ($0.uid, 0) } )
+        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: members.map { ($0, 0) } )
         self.latestMessage = latestMessage
     }
 }
 
-// 채팅방 관련 정보
+//MARK: - 채팅방 관련 세부 정보
+
+/// 마지막 채팅 정보
 public struct LatestMessageInChat: Hashable, Codable  {
     //public var senderName: String
     public var timestemp: Date?
@@ -165,12 +62,6 @@ public struct Member: Codable {
         self.userName = userName
         self.profileImageUrl = profileImageUrl
     }
-//    
-//    init(dictionary: [String: Any]) {
-//        self.uid = dictionary["uid"] as? String ?? ""
-//        self.userName = dictionary["userName"] as? String ?? ""
-//        self.profileImageUrl = dictionary["profileImageUrl"] as? String
-//    }
 }
 
 struct Message: Codable {
