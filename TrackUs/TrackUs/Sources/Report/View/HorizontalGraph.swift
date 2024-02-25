@@ -188,17 +188,20 @@ struct HorizontalGraph: View {
     
     // 월별 페이스
     var allUserAveragePaceForSelectedMonth: Double {
-        let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
-        
-        guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0
+            let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
+            
+            // 수정된 부분: 평균 계산 전에 0 값을 제외합니다.
+            let nonZeroPaces = runningLogForSelectedMonth.filter { $0.pace != 0 }
+            
+            guard !nonZeroPaces.isEmpty else {
+                return 0.0
+            }
+            
+            let totalPace = nonZeroPaces.reduce(0.0) { $0 + $1.pace }
+            let averagePace = totalPace / Double(nonZeroPaces.count)
+            
+            return averagePace.isNaN ? 0.0 : averagePace
         }
-        
-        let totalPace = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.pace }
-        let averagePace = totalPace / Double(runningLogForSelectedMonth.count)
-        
-        return averagePace.isNaN ? 0.0 : averagePace
-    }
     
     // 월별 거리
     var allUserAverageDistanceForSelectedMonth: Double {

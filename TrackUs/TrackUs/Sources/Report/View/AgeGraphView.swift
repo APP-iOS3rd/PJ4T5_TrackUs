@@ -73,7 +73,7 @@ struct AgeGraphView: View {
         let runningLogForSelectedMonth = viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 킬로미터를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalDistance = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.distance }
@@ -84,7 +84,7 @@ struct AgeGraphView: View {
         let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 킬로미터를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalDistance = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.distance }
@@ -222,10 +222,9 @@ struct AgeGraphView: View {
         let allUserAverageDistance = totalDistanceForSelectedDate
         let userAverageDistance = allUserAverageDistanceForSelectedDate
         
-        // 선택한 연령대에 해당하는 모든 사용자의 평균 운동량을 기준으로 상위 몇 %에 속하는지 계산
         if allUserAverageDistance > 0 {
-            let percentage = (1 - (userAverageDistance / allUserAverageDistance)) * 100
-            return max(0, percentage) // 음수가 나올 수 없도록 보정
+            let percentage = min(100, (userAverageDistance / allUserAverageDistance) * 100)
+            return max(0, percentage)
         } else {
             return 0.0
         }
@@ -239,10 +238,9 @@ struct AgeGraphView: View {
         let allUserAverageDistance = allUserAverageDistanceForSelectedMonth
         let userAverageDistance = averageDistanceForSelectedMonth
         
-        // 선택한 연령대에 해당하는 모든 사용자의 평균 운동량을 기준으로 상위 몇 %에 속하는지 계산
         if allUserAverageDistance > 0 {
-            let percentage = (1 - (userAverageDistance / allUserAverageDistance)) * 100
-            return max(0, percentage) // 음수가 나올 수 없도록 보정
+            let percentage = min(100, (userAverageDistance / allUserAverageDistance) * 100)
+            return max(0, percentage)
         } else {
             return 0.0
         }
