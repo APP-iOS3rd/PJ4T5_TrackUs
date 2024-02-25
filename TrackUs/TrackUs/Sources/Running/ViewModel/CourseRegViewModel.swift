@@ -83,7 +83,8 @@ class CourseRegViewModel: ObservableObject {
                     "startDate": self.selectedDate ?? Date(),
                     "distance": self.coorinates.caculateTotalDistance() / 1000.0,
                     "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
-                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}
+                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "createdAt": Date()
                 ]
                 
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
