@@ -69,10 +69,10 @@ struct HorizontalGraph: View {
                             .customFontStyle(.gray1_SB15)
                         
                         VStack {
-                            DistanceBar(value: totalDistanceForSelectedDate / 1000.0, DistanceValue: totalDistanceForSelectedDate / 1000.0) // 사용자 일일 러닝 거리
+                            DistanceBar(value: totalDistanceForSelectedDate, distanceValue: totalDistanceForSelectedDate) // 사용자 일일 러닝 거리
                                 .foregroundColor(.gray2)
                                 .padding(.bottom, 10)
-                            DistanceBar(value: allUserAverageDistanceForSelectedDate / 1000.0, DistanceValue: allUserAverageDistanceForSelectedDate / 1000.0) // 연령대 일일 러닝 거리 평균
+                            DistanceBar(value: allUserAverageDistanceForSelectedDate, distanceValue: allUserAverageDistanceForSelectedDate) // 연령대 일일 러닝 거리 평균
                                 .foregroundColor(.main)
                         }
                     }
@@ -97,10 +97,10 @@ struct HorizontalGraph: View {
                             .customFontStyle(.gray1_SB15)
                         
                         VStack {
-                            DistanceBar(value: averageDistanceForSelectedMonth / 1000.0, DistanceValue: averageDistanceForSelectedMonth / 1000.0) // 사용자 월 평균 러닝 거리
+                            DistanceBar(value: averageDistanceForSelectedMonth, distanceValue: averageDistanceForSelectedMonth) // 사용자 월 평균 러닝 거리
                                 .foregroundColor(.gray2)
                                 .padding(.bottom, 10)
-                            DistanceBar(value: allUserAverageDistanceForSelectedMonth / 1000.0, DistanceValue: allUserAverageDistanceForSelectedMonth / 1000.0) // 연령대 일일 러닝 거리 평균
+                            DistanceBar(value: allUserAverageDistanceForSelectedMonth, distanceValue: allUserAverageDistanceForSelectedMonth) // 연령대 일일 러닝 거리 평균
                                 .foregroundColor(.main)
                         }
                     }
@@ -175,14 +175,15 @@ struct HorizontalGraph: View {
         return totalDistance / Double(allUserRunningLogForSelectedDate.count)
     }
     
-    //일별 페이스
     var allUserAveragePaceForSelectedDate: Double {
         guard !allUserRunningLogForSelectedDate.isEmpty else {
             return 0.0
         }
         
         let totalPace = allUserRunningLogForSelectedDate.reduce(0.0) { $0 + $1.pace }
-        return totalPace / Double(allUserRunningLogForSelectedDate.count)
+        let averagePace = totalPace / Double(allUserRunningLogForSelectedDate.count)
+        
+        return averagePace.isNaN ? 0.0 : averagePace
     }
     
     // 월별 페이스
@@ -190,11 +191,13 @@ struct HorizontalGraph: View {
         let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 페이스를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalPace = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.pace }
-        return totalPace / Double(runningLogForSelectedMonth.count)
+        let averagePace = totalPace / Double(runningLogForSelectedMonth.count)
+        
+        return averagePace.isNaN ? 0.0 : averagePace
     }
     
     // 월별 거리
@@ -220,56 +223,60 @@ struct HorizontalGraph: View {
 }
 
 struct SpeedBar: View {
-    var value : Double
+    var value: Double
     var speedValue: Double
     
-    let maxWidth: CGFloat = 150
+    let maxWidth: CGFloat = 130 // 최대 너비
+    let minWidth: CGFloat = 10 // 최소 너비
     
     var body: some View {
-        
-        HStack {
-            
-            ZStack(alignment: .leading){
-                
-                Capsule().frame(width: maxWidth, height: 12) // 그래프 높이
-                    .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
-//                Capsule().frame(width: CGFloat(max(0, min(value * 2, Double(maxWidth)))), height: 15) // 원본
-                Capsule().frame(width: CGFloat(max(0, min(value, Double(maxWidth)))), height: 15)
-                
-//                Text("\(String(format: "%0.1f", speedValue / 10)) km/h") // 임시로 바그래프 조절을 위해 10을 나눔
-                Text(speedValue.asString(unit: .pace)) // 임시로 바그래프 조절을 위해 10을 나눔
-                    .customFontStyle(.gray1_R9)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-//                    .offset(x: +(value * 2) + 10)
-                    .offset(x: +(value) + 10)
+        GeometryReader { geometry in // GeometryReader를 사용하여 그래프의 크기를 얻습니다.
+            HStack {
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .frame(width: maxWidth, height: 12) // 고정 높이를 사용하여 너비 제한
+                        .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
+                    
+                    Capsule()
+                        .frame(width: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))), height: 15) // 최소 너비를 고려하여 동적으로 너비 설정
+//                        .foregroundColor(.blue)
+                    
+                    Text("\(String(format: "%0.1f", speedValue / 10)) km/h")
+                        .customFontStyle(.gray1_R9)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                        .offset(x: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))) + 5) // 텍스트를 더 오른쪽으로 이동시킵니다.
+                }
             }
         }
     }
 }
 
 struct DistanceBar: View {
-    var value : Double
-    var DistanceValue: Double
+    var value: Double
+    var distanceValue: Double
     
-    let maxWidth: CGFloat = 150
+    let maxWidth: CGFloat = 130 // 최대 너비
+    let minWidth: CGFloat = 10 // 최소 너비
     
     var body: some View {
-        
-        HStack {
-            
-            ZStack(alignment: .leading){
-                
-                Capsule().frame(width: maxWidth, height: 12) // 그래프 높이
-                    .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
-                Capsule().frame(width: CGFloat(max(0, min(value * 2, Double(maxWidth)))), height: 15)
-                
-//                Text("\(String(format: "%0.1f", DistanceValue)) km")
-                Text(DistanceValue.asString(unit: .kilometer))
-                    .customFontStyle(.gray1_R9)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                    .offset(x: +(value * 2) + 10)
+        GeometryReader { geometry in // GeometryReader를 사용하여 그래프의 크기를 얻습니다.
+            HStack {
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .frame(width: maxWidth, height: 12) // 고정 높이를 사용하여 너비 제한
+                        .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
+                    
+                    Capsule()
+                        .frame(width: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))), height: 15) // 최소 너비를 고려하여 동적으로 너비 설정
+//                        .foregroundColor(.green)
+                    
+                    Text(distanceValue.asString(unit: .kilometer))
+                        .customFontStyle(.gray1_R9)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                        .offset(x: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))) + 5) // 텍스트를 더 오른쪽으로 이동시킵니다.
+                }
             }
         }
     }
