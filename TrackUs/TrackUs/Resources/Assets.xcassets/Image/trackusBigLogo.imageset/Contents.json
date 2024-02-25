@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "TrackUsLogo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "trackusBigLogo.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

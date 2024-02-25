@@ -107,6 +107,7 @@ extension RunningHomeView {
                       .closeOnTap(false)
               }
         .edgesIgnoringSafeArea(.top)
+        
     }
 }
 
@@ -195,7 +196,7 @@ extension RunningHomeView {
                         HStack(spacing: 12) {
                             ForEach(courseViewModel.courseList, id: \.self) { course in
                                 Button(action: {
-                                    router.push(.courseDetail(course))
+                                    router.push(.courseDetail(course, courseViewModel))
                                 }, label: {
                                     RunningRecruitmentCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
                                 })

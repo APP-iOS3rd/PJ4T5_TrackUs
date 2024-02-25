@@ -28,7 +28,7 @@ struct RunningRecruitmentCell: View {
                     .customFontStyle(.gray1_B16)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Label("서울숲 카페거리", image: "Pin")
+                    Label(course.address, image: "Pin")
                         .customFontStyle(.gray2_L12)
                     
                     Label(course.startDate.formattedString(), systemImage: "calendar")

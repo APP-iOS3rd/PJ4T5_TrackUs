@@ -12,6 +12,7 @@ import Firebase
  */
 class CourseRegViewModel: ObservableObject {
     private let authViewModel = AuthenticationViewModel.shared
+    private let locationManager = LocationManager.shared
     let id = UUID()
     let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     
@@ -21,6 +22,7 @@ class CourseRegViewModel: ObservableObject {
     @Published var content: String = ""
     @Published var selectedDate: Date?
     @Published var estimatedTime: Int = 0
+    @Published var estimatedCalorie: Double = 0
     @Published var distance: Double = 0
     @Published var participants: Int = 1
     @Published var hours: Int = 0
@@ -28,7 +30,9 @@ class CourseRegViewModel: ObservableObject {
     @Published var seconds: Int = 0
     @Published var image: UIImage?
     
-    
+    var totalEstimatedTimeTime: Int {
+        (self.hours * 3600) + (self.minutes * 60) + (self.seconds)
+    }
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
         guard self.coorinates.count < MAXIMUM_NUMBER_OF_MARKERS else { return }
@@ -58,28 +62,37 @@ class CourseRegViewModel: ObservableObject {
     }
     
     @MainActor
-    func uploadCourseData() {
+    func uploadCourseData(completion: @escaping () -> ()) {
         let uid = authViewModel.userInfo.uid
         guard let image = self.image else { return }
-        ImageUploader.uploadImage(image: image, type: .map) { url in
-            let data: [String: Any] = [
-                "uid": UUID().uuidString,
-                "ownerUid": uid,
-                "title": self.title,
-                "content": self.content,
-                "startDate": self.selectedDate ?? Date(),
-                "distance": self.distance,
-                "participants": self.participants,
-                "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
-                "runningStyle": self.style.rawValue,
-                "members": [uid],
-                "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
-                "routeImageUrl": url
-            ]
-            Constants.FirebasePath.COLLECTION_GROUP_RUNNING.addDocument(data: data) { _ in
+        guard let startCoordinate = self.coorinates.first else { return }
+        let documentID = UUID().uuidString
+        locationManager.convertToAddressWith(coordinate: startCoordinate.asCLLocation()) { address in
+            guard let address = address else { return }
+            ImageUploader.uploadImage(image: image, type: .map) { url in
+                let data: [String: Any] = [
+                    "uid": documentID,
+                    "ownerUid": uid,
+                    "title": self.title,
+                    "content": self.content,
+                    "runningStyle": self.style.rawValue,
+                    "members": [uid],
+                    "routeImageUrl": url,
+                    "address": address,
+                    "participants": self.participants,
+                    "startDate": self.selectedDate ?? Date(),
+                    "distance": self.coorinates.caculateTotalDistance() / 1000.0,
+                    "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
+                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}
+                ]
                 
+                Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
+                    
+                }
+                completion()
             }
         }
+        
     }
 }
 
