@@ -122,28 +122,28 @@ struct ChattingView: View {
             }
             
             // 사진 촬영 업로드 버튼
-            Button(
-                action: {
-                    
-                }, label: {
-                    Image(systemName: "camera")
-                        .resizable()
-                        .foregroundStyle(.gray1)
-                        .frame(width: 20, height: 18)
-                        .padding(.vertical, 9)
-                })
-            
-            // 사진 업로드 버튼
-            Button(
-                action: {
-                    
-                }, label: {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .foregroundStyle(.gray1)
-                        .frame(width: 18, height: 18)
-                        .padding(.vertical, 9)
-                })
+//            Button(
+//                action: {
+//                    
+//                }, label: {
+//                    Image(systemName: "camera")
+//                        .resizable()
+//                        .foregroundStyle(.gray1)
+//                        .frame(width: 20, height: 18)
+//                        .padding(.vertical, 9)
+//                })
+//            
+//            // 사진 업로드 버튼
+//            Button(
+//                action: {
+//                    
+//                }, label: {
+//                    Image(systemName: "photo")
+//                        .resizable()
+//                        .foregroundStyle(.gray1)
+//                        .frame(width: 18, height: 18)
+//                        .padding(.vertical, 9)
+//                })
             // 메세지 전송 버튼
             Button(
                 action: {

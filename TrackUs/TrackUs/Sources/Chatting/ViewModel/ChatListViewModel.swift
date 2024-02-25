@@ -32,7 +32,7 @@ class ChatListViewModel: ObservableObject {
     // 탭바 신규 메세지 확인
     func updateNewMessage() -> Bool{
         // 채팅방들 중에서 현재 사용자의 unreadCount가 0이 아닌 경우를 확인
-        return chatRooms.contains { $0.usersUnreadCountInfo[currentUId, default: 0] != 0 }
+        return chatRooms.contains { $0.usersUnreadCountInfo[currentUId] != 0 }
         
 //        // 새로운 메시지 여부를 newMessage에 반영
 //        self.newMessage = hasNewMessage
@@ -44,7 +44,7 @@ class ChatListViewModel: ObservableObject {
     func createGroupChatRoom(trackId: String,title: String, uid: String) {
         let newChatRoom: [String: Any] = [
             "title": title,
-            "gruop": true,
+            "group": true,
             "members": [uid],
             "usersUnreadCountInfo": [uid: 0]
             //"latestMessage": nil
@@ -62,8 +62,8 @@ class ChatListViewModel: ObservableObject {
             }
         }
         
-        ref.document(chatRoomID).setData([
-            "usersUnreadCountInfo": [userUID: 0]
+        ref.document(chatRoomID).updateData([
+            "usersUnreadCountInfo.\(userUID)": 0
         ]) { error in
             if let error = error {
                 print("Error updating document: \(error)")
