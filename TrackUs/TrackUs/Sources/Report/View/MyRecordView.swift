@@ -33,16 +33,16 @@ struct MyRecordView: View {
         ScrollView {
             ZStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                        Button {
-                            router.present(fullScreenCover: .payment)
-                        } label: {
-                            GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
-                                .modifier(BorderLineModifier())
-                                .multilineTextAlignment(.leading)
-                        }
+                    Button {
+                        router.present(fullScreenCover: .payment)
+                    } label: {
+                        GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+                            .modifier(BorderLineModifier())
+                            .multilineTextAlignment(.leading)
+                    }
                     
                     VStack(alignment: .leading) {
-//                        152.asString(unit: .pace)
+                        //                        152.asString(unit: .pace)
                         Text("러닝 기록")
                             .customFontStyle(.gray1_B24)
                             .padding(.top, 24)
@@ -91,7 +91,7 @@ struct MyRecordView: View {
                         }
                     }
                     LazyVGrid(columns: vGridItems, spacing: 0) {
-//                        ForEach(viewModel.runningLog, id: \.documentID) { item in
+                        //                        ForEach(viewModel.runningLog, id: \.documentID) { item in
                         ForEach(filteredRunningLog, id: \.documentID) { item in
                             VStack {
                                 ZStack {
@@ -101,35 +101,35 @@ struct MyRecordView: View {
                                     } label: {
                                         RecordCell(isDelete: $isDelete, gridDelete: $gridDelete, runningLog: item, isSelected: isRecordAvailableOnDate(runningLog: item, selectedDate: selectedDate))
                                     }
-                                        HStack(alignment: .top) {
-                                            Spacer()
+                                    HStack(alignment: .top) {
+                                        Spacer()
+                                        
+                                        Menu {
+                                            Button(role: .destructive ,action: {
+                                                self.isDelete = true
+                                                self.selectedRunningLog = item
+                                            }) {
+                                                Text("러닝기록 삭제")
+                                            }
                                             
-                                            Menu {
-                                                Button(role: .destructive ,action: {
-                                                    self.isDelete = true
-                                                    self.selectedRunningLog = item
-                                                }) {
-                                                    Text("러닝기록 삭제")
-                                                }
+                                            Button {
                                                 
-                                                Button {
-                                                    
-                                                } label: {
-                                                    Text("취소")
-                                                }
-                                                .foregroundColor(.gray1)
                                             } label: {
-                                                Image(systemName: "ellipsis")
-                                                    .rotationEffect(.degrees(90))
-                                                    .frame(width: 40, height: 40)
+                                                Text("취소")
                                             }
                                             .foregroundColor(.gray1)
-                                            .offset(y: -25)
-                                            .onTapGesture {
-                                                isMenuOpen = true
-                                            }
+                                        } label: {
+                                            Image(systemName: "ellipsis")
+                                                .rotationEffect(.degrees(90))
+                                                .frame(width: 40, height: 40)
                                         }
-//                                    }
+                                        .foregroundColor(.gray1)
+                                        .offset(y: -25)
+                                        .onTapGesture {
+                                            isMenuOpen = true
+                                        }
+                                    }
+                                    //                                    }
                                 }
                                 
                                 Divider()
@@ -207,11 +207,11 @@ struct MyRecordView: View {
         } message: {
             Text("러닝 기록을 삭제하시겠습니까? \n 삭제한 러닝기록은 복구할 수 없습니다.")
         }
-//        .refreshable {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-//                viewModel.fetchUserLog()
-//            }
-//        }
+        //        .refreshable {
+        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+        //                viewModel.fetchUserLog()
+        //            }
+        //        }
     }
     
     func isRecordAvailableOnDate(runningLog: Runninglog, selectedDate: Date?) -> Bool {
@@ -300,7 +300,7 @@ struct RecordCell: View {
                             Image(.pin)
                             //                            Text("서울숲카페거리")
                             Text(runningLog.address ?? "대한민국 서울시")
-//                                .customFontStyle(.gray1_R12)
+                            //                                .customFontStyle(.gray1_R12)
                                 .customFontStyle(.gray1_R9)
                                 .lineLimit(1)
                         }
@@ -311,7 +311,7 @@ struct RecordCell: View {
                             Image(.timerLine)
                             //                            Text("10:02 AM")
                             Text(formatTime(runningLog.timestamp))
-//                                .customFontStyle(.gray1_R12)
+                            //                                .customFontStyle(.gray1_R12)
                                 .customFontStyle(.gray1_R9)
                         }
                         
@@ -319,32 +319,30 @@ struct RecordCell: View {
                         
                         HStack {
                             Image(.arrowBoth)
-                            //                            Text("1.72km")
-//                            Text("\(runningLog.distance / 1000.0, specifier:"%.2f")km")
-//                            Text("\((runningLog.distance / 1000.0).asString(unit: .kilometer))") // 수정된부분^^
                             Text("\((runningLog.distance).asString(unit: .kilometer))") // 수정된부분^^
-//                                .customFontStyle(.gray1_R12)
                                 .customFontStyle(.gray1_R9)
                         }
                     }
                     
                     HStack {
-                        HStack {
-                            Image(systemName: "person.2.fill")
-                                .resizable()
-                                .frame(width: 15, height: 12)
-                                .foregroundColor(.gray1)
-                            
-                            Text("1")
-                            //                            Text(" ")
-                                .customFontStyle(.gray1_M16)
-                        }
+                        Text(formatDate(runningLog.timestamp))
+                            .customFontStyle(.gray1_SB12)
+//                        HStack {
+//                            Image(systemName: "person.2.fill")
+//                                .resizable()
+//                                .frame(width: 15, height: 12)
+//                                .foregroundColor(.gray1)
+//                            
+//                            Text("1")
+//                            //                            Text(" ")
+//                                .customFontStyle(.gray1_M16)
+//                        }
                         
                         Spacer()
                         
                         //                        Text("2024년 2월 12일")
-                        Text(formatDate(runningLog.timestamp))
-                            .customFontStyle(.gray1_SB12)
+//                        Text(formatDate(runningLog.timestamp))
+//                            .customFontStyle(.gray1_SB12)
                     }
                 }
             }
@@ -378,6 +376,7 @@ struct CustomDateFilter: View {
     @State var currentMonth: Int = 0
     @Binding var selectedDate: Date?
     @Binding var isPickerPresented: Bool
+    let calendar = Calendar.current
     
     var body: some View {
         VStack(spacing: 35){
@@ -469,17 +468,33 @@ struct CustomDateFilter: View {
                     Text("\(value.day)")
                         .font(.system(size: 16))
                         .fontWeight(.semibold)
-                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .gray1 : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
+                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .black : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
                         .frame(width: 30)
                         .frame(height: 20)
+                    let hasGroupedRunning = viewModel.runningLog.contains { calendar.isDate($0.timestamp, inSameDayAs: value.date) && $0.isGroup == true }
+                    let hasPersonalRunning = viewModel.runningLog.contains { calendar.isDate($0.timestamp, inSameDayAs: value.date) && $0.isGroup == false }
                     
-                    if isMockDataAvailableOnDate(date: value.date) {
-                        HStack(spacing: 4) {
+                    if hasGroupedRunning && hasPersonalRunning {
+                        HStack(spacing: 5) {
+                            Circle()
+                                .foregroundColor(isSelected ? .white : .orange2)
+                                .frame(width: 5, height: 5)
+                            
                             Circle()
                                 .foregroundColor(isSelected ? .white : .main)
                                 .frame(width: 5, height: 5)
-                                .offset(y: 12)
                         }
+                        .offset(y: 12)
+                    } else if hasGroupedRunning {
+                        Circle()
+                            .foregroundColor(isSelected ? .white : .orange2)
+                            .frame(width: 5, height: 5)
+                            .offset(y: 12)
+                    } else if hasPersonalRunning {
+                        Circle()
+                            .foregroundColor(isSelected ? .white : .main)
+                            .frame(width: 5, height: 5)
+                            .offset(y: 12)
                     }
                 }
             }
