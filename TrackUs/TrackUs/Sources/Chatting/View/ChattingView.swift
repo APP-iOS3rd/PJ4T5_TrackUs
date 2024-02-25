@@ -10,6 +10,7 @@ import SwiftUI
 public var previoosUser1: String?
 
 struct ChattingView: View {
+    @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @StateObject var chatViewModel: ChatViewModel
     
@@ -73,7 +74,7 @@ struct ChattingView: View {
                         sideMenuPresented.toggle()
                     }
             }
-            SideMenuView(title: title, memberUid: chatViewModel.chatRoom.members, members: chatViewModel.members)
+            SideMenuView
                 .frame(width: 300)
                 .offset(x: sideMenuPresented ? sideMenuTranslation : 300, y: 0)
                 .animation(.easeInOut, value: sideMenuPresented)
@@ -98,7 +99,7 @@ struct ChattingView: View {
             
         }
         .onAppear {
-            title = chatViewModel.chatRoom.gruop ? chatViewModel.chatRoom.title : chatViewModel.members[chatViewModel.chatRoom.nonSelfMembers.first!]?.userName ?? "러너"
+            title = chatViewModel.chatRoom.group ? chatViewModel.chatRoom.title : chatViewModel.members[chatViewModel.chatRoom.nonSelfMembers.first!]?.userName ?? "러너"
             
         }
         .animation(.easeInOut, value: sideMenuPresented)
@@ -146,6 +147,8 @@ struct ChattingView: View {
             // 메세지 전송 버튼
             Button(
                 action: {
+                    
+                    
                     // 메세지 전송 함수
                     chatViewModel.sendChatMessage(chatText: sendMessage, uid: authViewModel.userInfo.uid)
                     sendMessage = ""
@@ -163,63 +166,59 @@ struct ChattingView: View {
         )
     }
     /// 사이드 메뉴
-//    var SideMenuView: some View {
-//        VStack(alignment: .leading, spacing: 0) {
-//            // 제목부분
-//            VStack(alignment: .leading, spacing: 6){
-//                Text(title)
-//                    .customFontStyle(.gray1_B16)
-//                HStack{
-//                    Image(systemName: "person.fill")
-//                        .resizable()
-//                        .foregroundStyle(.gray1)
-//                        .frame(width: 12, height: 12)
-//                    // 인원수
-//                    Text("\(chatViewModel.members.count)")
-//                        .customFontStyle(.gray1_R12)
-//                }
-//            }
-//            .padding(16)
-//            
-//            Rectangle()
-//                .frame(maxWidth: .infinity, maxHeight: 1)
-//                .foregroundStyle(.gray3)
-//            VStack(alignment: .leading, spacing: 6){
-//                Text("채팅밤 맴버")
-//                    .customFontStyle(.gray1_R12)
-//                // 참여 중인 사용자 프로필 정보
-//                ForEach(chatViewModel.chatRoom.members, id: \.self) { member in
-//                    ProfileImage(ImageUrl: chatViewModel.members[member]?.profileImageUrl, size: 40)
-//                    Text( chatViewModel.members[member]?.userName)
-//                        .customFontStyle(.gray1_M16)
-//                }
-//                HStack{
-//                    //ForEach
-//                    Image(.profileDefault)
-//                        .resizable()
-//                        .frame(width: 40, height: 40)
-//                        .clipShape(Circle())
-//                }
-//                
-//            }
-//            .padding(16)
-//            Spacer()
-//            
-//            Rectangle()
-//                .frame(maxWidth: .infinity, maxHeight: 1)
-//                .foregroundStyle(.gray3)
-//            Button(action: {
-//                // 나가기 기능
-//            }) {
-//                Image(systemName: "rectangle.portrait.and.arrow.forward")
-//                    .foregroundStyle(.gray1)
-//            }
-//            .padding(16)
-//        }
-//        //                .frame(maxWidth: 300, alignment: .leading)
-//        //                .background(Color.white)
-//        //                .transition(.move(edge: .trailing)) // 오른쪽에서 나오도록 애니메이션 적용
-//    }
+    var SideMenuView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // 제목부분
+            VStack(alignment: .leading, spacing: 6){
+                Text(title)
+                    .customFontStyle(.gray1_B16)
+                HStack{
+                    Image(systemName: "person.fill")
+                        .resizable()
+                        .foregroundStyle(.gray1)
+                        .frame(width: 12, height: 12)
+                    // 인원수
+                    Text("\(chatViewModel.members.count)")
+                        .customFontStyle(.gray1_R12)
+                }
+            }
+            .padding(16)
+            
+            Rectangle()
+                .frame(maxWidth: .infinity, maxHeight: 1)
+                .foregroundStyle(.gray3)
+            VStack(alignment: .leading, spacing: 6){
+                Text("채팅밤 맴버")
+                    .customFontStyle(.gray1_R12)
+                // 참여 중인 사용자 프로필 정보
+                ForEach(chatViewModel.chatRoom.members, id: \.self) { uid in
+                    HStack{
+                        ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
+                        Text("\(chatViewModel.members[uid]?.userName ?? "")")
+                            .customFontStyle(.gray1_M16)
+                    }
+                }
+            }
+            .padding(16)
+            Spacer()
+            
+            Rectangle()
+                .frame(maxWidth: .infinity, maxHeight: 1)
+                .foregroundStyle(.gray3)
+            Button(action: {
+                // 나가기 기능
+                chatViewModel.leaveChatRoom(chatRoomID: chatViewModel.chatRoom.id, userUID: authViewModel.userInfo.uid)
+                router.pop()
+            }) {
+                Image(systemName: "rectangle.portrait.and.arrow.forward")
+                    .foregroundStyle(.gray1)
+            }
+            .padding(16)
+        }
+        .frame(maxWidth: 300, alignment: .leading)
+        .background(Color.white)
+        .transition(.move(edge: .trailing)) // 오른쪽에서 나오도록 애니메이션 적용
+    }
 }
 
 struct ChatMessageView: View {
@@ -268,64 +267,5 @@ struct ChatMessageView: View {
             previousUser = previoosUser1 == message.sendMember.uid ? false : true
             previoosUser1 = message.sendMember.uid
         }
-    }
-}
-
-/// 사이드 메뉴
-struct SideMenuView: View {
-    let title: String
-    let memberUid: [String]
-    let members: [String : Member]
-    
-    var body: some View {
-            VStack(alignment: .leading, spacing: 0) {
-                // 제목부분
-                VStack(alignment: .leading, spacing: 6){
-                    Text(title)
-                        .customFontStyle(.gray1_B16)
-                    HStack{
-                        Image(systemName: "person.fill")
-                            .resizable()
-                            .foregroundStyle(.gray1)
-                            .frame(width: 12, height: 12)
-                        // 인원수
-                        Text("\(members.count)")
-                            .customFontStyle(.gray1_R12)
-                    }
-                }
-                .padding(16)
-                
-                Rectangle()
-                    .frame(maxWidth: .infinity, maxHeight: 1)
-                    .foregroundStyle(.gray3)
-                VStack(alignment: .leading, spacing: 6){
-                    Text("채팅밤 맴버")
-                        .customFontStyle(.gray1_R12)
-                    // 참여 중인 사용자 프로필 정보
-                    ForEach(memberUid, id: \.self) { memberUid in
-                        HStack{
-                            ProfileImage(ImageUrl: members[memberUid]?.profileImageUrl, size: 40)
-                            Text("\(members[memberUid]?.userName ?? "")")
-                                .customFontStyle(.gray1_M16)
-                        }
-                    }
-                }
-                .padding(16)
-                Spacer()
-                
-                Rectangle()
-                    .frame(maxWidth: .infinity, maxHeight: 1)
-                    .foregroundStyle(.gray3)
-                Button(action: {
-                    // 나가기 기능
-                }) {
-                    Image(systemName: "rectangle.portrait.and.arrow.forward")
-                        .foregroundStyle(.gray1)
-                }
-                .padding(16)
-            }
-            .frame(maxWidth: 300, alignment: .leading)
-            .background(Color.white)
-            .transition(.move(edge: .trailing)) // 오른쪽에서 나오도록 애니메이션 적용
     }
 }

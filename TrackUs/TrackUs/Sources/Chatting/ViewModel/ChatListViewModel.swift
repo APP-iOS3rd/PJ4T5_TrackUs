@@ -14,12 +14,57 @@ class ChatListViewModel: ObservableObject {
     @Published var chatRooms: [ChatRoom] = []
     @Published var users: [String: Member] = [:]
     
+    //@Publisher var newChat: Bool = false
+    
     // 같은 채팅방 쓰는 맴버들 정보
     //@Published var members: [Member] = []
     
     // 변환 방식 -> chatRoom -> currentUId 포함된 맴버 목록(uid) 불러오기 -> 포함된 userInfo 리스너 추가?
     private let ref = FirebaseManger().firestore.collection("chatRoom")
     
+    // 채팅방 생성 - 글쓰기 시점
+    func createGroupChatRoom(trackId: String,title: String, uid: String) {
+        let newChatRoom: [String: Any] = [
+            "title": title,
+            "gruop": true,
+            "members": [uid],
+            "usersUnreadCountInfo": [uid: 0]
+            //"latestMessage": nil
+        ]  as [String : Any]
+        ref.document(trackId).setData(newChatRoom)
+    }
+    
+    // 채팅방 참여
+    func joinChatRoom(chatRoomID: String, userUID: String) {
+        ref.document(chatRoomID).updateData([
+            "members": FieldValue.arrayUnion([userUID])
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
+        
+        ref.document(chatRoomID).setData([
+            "usersUnreadCountInfo": [userUID: 0]
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
+    }
+    
+    // 채팅방 나가기
+    func leaveChatRoom(chatRoomID: String, userUID: String) {
+        ref.document(chatRoomID).updateData([
+            "members": FieldValue.arrayRemove([userUID])
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            }
+        }
+    }
+    
+    // MARK: - 채팅방 리스너 관련
     // 채팅방 listener 추가
     func subscribeToUpdates() {
         guard let currentUId = FirebaseManger().auth.currentUser?.uid else { return }
@@ -73,7 +118,7 @@ class ChatListViewModel: ObservableObject {
             nonSelfMembers: members.filter { $0 != currentUId },
             // 다 불러와야하나??? 저장때문에 불러오는거 아님 본인꺼만 불러오면 되는거 아닌가
             usersUnreadCountInfo: firestoreChatRoom.usersUnreadCountInfo,
-            gruop: firestoreChatRoom.gruop,
+            group: firestoreChatRoom.group,
             latestMessage: message
         )
         return chatRoom

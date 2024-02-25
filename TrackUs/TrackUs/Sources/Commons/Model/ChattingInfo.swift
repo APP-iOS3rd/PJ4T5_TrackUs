@@ -14,20 +14,20 @@ import FirebaseFirestoreSwift
 struct ChatRoom: Codable, Identifiable {
     var id: String  // 모집글 id와 동일
     var title: String    // 채팅방 이름
-    var gruop: Bool
+    var group: Bool
     var members: [String]
     var nonSelfMembers: [String]    // 사용자 제외 member
     //var messages: [Message]?
     var usersUnreadCountInfo: [String: Int]     // 신규 메세지 갯수
     public let latestMessage: LatestMessageInChat?  // 최근 메세지
         
-    init(id: String, title: String, members: [String], nonSelfMembers: [String],usersUnreadCountInfo: [String: Int]? = nil, gruop : Bool, latestMessage: LatestMessageInChat? = nil) {
+    init(id: String, title: String, members: [String], nonSelfMembers: [String],usersUnreadCountInfo: [String: Int]? = nil, group : Bool, latestMessage: LatestMessageInChat? = nil) {
         self.id = id
         self.title = title
         self.members = members
         // 본인 제외 맴버 넣기
         self.nonSelfMembers = nonSelfMembers
-        self.gruop = gruop
+        self.group = group
         self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: members.map { ($0, 0) } )
         self.latestMessage = latestMessage
     }
@@ -45,7 +45,7 @@ public struct LatestMessageInChat: Hashable, Codable  {
 public struct FirestoreChatRoom: Codable, Identifiable, Hashable {
     @DocumentID public var id: String?
     public let title: String
-    public var gruop: Bool
+    public var group: Bool
     public var members: [String]
     //public var messages: [Message]?
     public var usersUnreadCountInfo: [String: Int]?

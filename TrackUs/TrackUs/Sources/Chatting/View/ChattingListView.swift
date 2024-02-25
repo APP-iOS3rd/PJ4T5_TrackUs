@@ -13,9 +13,6 @@ struct ChattingListView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @StateObject var chatViewModel = ChatListViewModel()
     
-    //@State private var chatRooms: [ChatRoom] = []
-    // 테스트용 채팅방
-    //let chatRoom1 = ChatRoom(id: "chat_id1", title: "Chat Room1 Title", members: [""])
     // 테스트 값 나중 대체
     private var numberChatroom = 5
     
@@ -34,7 +31,7 @@ struct ChattingListView: View {
                             // 채팅 제목
                             HStack(spacing: 4){
                                 // 1:1 채팅 제목 받아오기 추가
-                                if chatRoom.gruop {
+                                if chatRoom.group {
                                     Text(chatRoom.title)
                                         .customFontStyle(.gray1_B16)
                                 }else {
@@ -149,7 +146,8 @@ struct usersUnreadCoun: View {
     var body: some View {
         if let count = count{
             if count != 0 && count <= 300 {
-                Text("\(count)")
+                //Text("\(count)")
+                Text("N")
                     .foregroundStyle(.white)
                     .font(.system(size: 12, weight: .bold))
                     .padding(.vertical, 3)
@@ -160,7 +158,8 @@ struct usersUnreadCoun: View {
                             .foregroundStyle(.caution)
                     )
             }else if  count > 300 {
-                Text("300+")
+                //Text("300+")
+                Text("N")
                     .foregroundStyle(.white)
                     .font(.system(size: 12, weight: .bold))
                     .padding(.vertical, 4)

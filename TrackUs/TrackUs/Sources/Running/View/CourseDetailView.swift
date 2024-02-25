@@ -10,6 +10,7 @@ import MapboxMaps
 
 struct CourseDetailView: View {
     @EnvironmentObject var router: Router
+    @StateObject var chatViewModel = ChatListViewModel()
     
     let course: Course
     // 더미데이터 삭제예정
@@ -37,7 +38,7 @@ struct CourseDetailView: View {
                 .padding(.horizontal, 16)
             }
             MainButton(buttonText: "트랙 참가하기") {
-                
+                chatViewModel.createGroupChatRoom(trackId: "", title: course.title, uid: AuthenticationViewModel.currentUId)
             }
             .padding(.horizontal, 16)
         }

@@ -167,7 +167,6 @@
 		9846EB942B6CD15A0052BDA6 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9846EB932B6CD15A0052BDA6 /* GoogleSignInSwift */; };
 		984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984B3A452B73ADDD00C9831C /* UserInfo.swift */; };
 		986BB5A82B887B0F0016870D /* FirestoreMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986BB5A72B887B0F0016870D /* FirestoreMessage.swift */; };
-		986BB5AA2B887B430016870D /* DataStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986BB5A92B887B430016870D /* DataStorageManager.swift */; };
 		986BB5AC2B88DCF50016870D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986BB5AB2B88DCF50016870D /* ChatViewModel.swift */; };
 		986BB5AE2B88E1760016870D /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986BB5AD2B88E1760016870D /* ChatListViewModel.swift */; };
 		987B90BE2B69210B0099C7DA /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987B90BD2B69210B0099C7DA /* Font+.swift */; };
@@ -289,7 +288,6 @@
 		982D614F2B7CF844006C7444 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		984B3A452B73ADDD00C9831C /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		986BB5A72B887B0F0016870D /* FirestoreMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreMessage.swift; sourceTree = "<group>"; };
-		986BB5A92B887B430016870D /* DataStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageManager.swift; sourceTree = "<group>"; };
 		986BB5AB2B88DCF50016870D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		986BB5AD2B88E1760016870D /* ChatListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewModel.swift; sourceTree = "<group>"; };
 		987B90BD2B69210B0099C7DA /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
@@ -757,7 +755,6 @@
 			isa = PBXGroup;
 			children = (
 				FE71D0412B6B9CA000F391AA /* ChattingViewModel.swift */,
-				986BB5A92B887B430016870D /* DataStorageManager.swift */,
 				986BB5AD2B88E1760016870D /* ChatListViewModel.swift */,
 				986BB5AB2B88DCF50016870D /* ChatViewModel.swift */,
 			);
@@ -1011,7 +1008,6 @@
 				825A49D02B8667FB0090D27E /* RunningStyleBadge.swift in Sources */,
 				610F882C2B77A44100FB12A1 /* AgeGraphView.swift in Sources */,
 				98F1C2F22B6A2374009382B1 /* ProfileImageView.swift in Sources */,
-				986BB5AA2B887B430016870D /* DataStorageManager.swift in Sources */,
 				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
 				82CB5FA22B874D6500406FBF /* PathPreviewMapView.swift in Sources */,
 				82CB5FAA2B87B0FE00406FBF /* CourseRegViewModel.swift in Sources */,
