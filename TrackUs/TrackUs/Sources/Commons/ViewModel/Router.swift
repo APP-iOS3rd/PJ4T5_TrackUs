@@ -23,7 +23,7 @@ enum Page: Hashable, Identifiable {
     // Home
     case runningStart
     case runningResult(TrackingViewModel)
-    case courseDetail(Course)
+    case courseDetail(Course, CourseViewModel)
     case courseDrawing
     case courseRegister(CourseRegViewModel)
     // Report
@@ -121,8 +121,8 @@ final class Router: ObservableObject {
             ProfileEditView()
         case .runningRecorded:
             RunningRecordView()
-        case .courseDetail(let course):
-            CourseDetailView(course: course)
+        case .courseDetail(let course, let courseViewModel):
+            CourseDetailView(courseViewModel: courseViewModel, course: course)
         case .courseDrawing:
             CourseDrawingView()
         case .courseRegister(let courseRegViewModel):

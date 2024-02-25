@@ -13,6 +13,7 @@ struct RunningHomeView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @StateObject var courseViewModel = CourseViewModel()
+    @StateObject var userSearchViewModel = UserSearchViewModel()
     @State private var isOpen: Bool = false
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
@@ -105,18 +106,8 @@ extension RunningHomeView {
                       .animation(.spring())
                       .closeOnTap(false)
               }
-
-        // MARK: - 목표운동량 설정 팝업
-        .popup(isPresented: $showingPopup) {
-            SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
-        } customize: {
-            $0
-                .backgroundColor(.black.opacity(0.3))
-                .isOpaque(true)
-                .dragToDismiss(false)
-                .closeOnTap(false)
-        }
         .edgesIgnoringSafeArea(.top)
+        
     }
 }
 
@@ -143,19 +134,6 @@ extension RunningHomeView {
                 }
                 
                 Spacer()
-                
-                
-                Button(action: {
-                    showingPopup = true
-                }) {
-                    Circle()
-                        .fill(.white.shadow(.drop(color: .divider, radius: 10)))
-                        .frame(width: 28, height: 28)
-                        .overlay(
-                            Image(systemName: "gearshape")
-                                .foregroundStyle(.gray1)
-                        )
-                }
                 
                 Button(action: startButtonTapped, label: {
                     Text("러닝 시작")
@@ -212,19 +190,26 @@ extension RunningHomeView {
             .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
             
             // 가로 스크롤
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(courseViewModel.courseList, id: \.self) { course in
-                        Button(action: {
-                            router.push(.courseDetail(course))
-                        }, label: {
-                            RunningRecruitmentCell(course: course)
-                        })
+            if !courseViewModel.courseList.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    VStack {
+                        HStack(spacing: 12) {
+                            ForEach(courseViewModel.courseList, id: \.self) { course in
+                                Button(action: {
+                                    router.push(.courseDetail(course, courseViewModel))
+                                }, label: {
+                                    RunningRecruitmentCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
+                                })
+                            }
+                        }
                     }
+                    .padding(.vertical, 8)
                 }
-                .padding(.vertical, 8)
+                .padding(.leading, 16)
+            } else {
+                AroundMePlacholderView()
             }
-            .padding(.leading, 16)
+            
         }
     }
 }
