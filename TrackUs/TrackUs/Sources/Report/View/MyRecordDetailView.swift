@@ -79,7 +79,7 @@ struct MyRecordDetailView: View {
         
         // 실제기록/예상목표
         var kilometerComparisonLabel: String {
-            "\((runningLog!.distance / 1000).asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
+            "\(runningLog!.distance.asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
         }
         
         var calorieComparisonLabel: String {

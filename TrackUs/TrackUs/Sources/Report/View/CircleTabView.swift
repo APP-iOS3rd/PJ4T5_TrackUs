@@ -113,10 +113,6 @@ struct DailyCircleView: View {
         guard let selectedDate = selectedDate else { return [] }
         return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
     }
-//    var runningLogForSelectedDate: [UserRunningLog] {
-//        guard let selectedDate = selectedDate else { return [] }
-//        return viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, inSameDayAs: selectedDate) }
-//    }
     
     var progressValue: CGFloat {
         guard let dailyGoal = authViewModel.userInfo.setDailyGoal else { return 0.5 } // 기본값
@@ -182,8 +178,7 @@ struct DailyCircleView: View {
                             .frame(width: 13, height: 13)
                             .foregroundColor(.blue1)
                     }
-                    Text("\(String(format: "%.1f", totalDistanceForSelectedDate / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
-//                    Text("\((totalDistanceForSelectedDate / 1000.0).asString(unit: .kilometer)) / \(authViewModel.userInfo.setDailyGoal?.asString(unit: .kilometer) ?? String(0))")
+                    Text("\(String(format: "%.1f", totalDistanceForSelectedDate) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
                         .customFontStyle(.gray1_H17)
                         .italic()
                 }
@@ -192,7 +187,6 @@ struct DailyCircleView: View {
             HStack {
                 VStack(spacing: 7) {
                     Text(String(format: "%.1f", totalCaloriesForSelectedDate))
-//                    Text(totalCaloriesForSelectedDate.asString(unit: .calorie))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("칼로리")
@@ -202,8 +196,7 @@ struct DailyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-//                    Text(String(format: "%.2f", totalDistanceForSelectedDate / 1000.0) + "km")
-                    Text((totalDistanceForSelectedDate / 1000.0).asString(unit: .kilometer))
+                    Text((totalDistanceForSelectedDate).asString(unit: .kilometer))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("킬로미터")
@@ -368,7 +361,7 @@ struct MonthlyCircleView: View {
                             .frame(width: 13, height: 13)
                             .foregroundColor(.blue1)
                     }
-                    Text("\(String(format: "%.1f", averageDistanceForSelectedMonth / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
+                    Text("\(String(format: "%.1f", averageDistanceForSelectedMonth) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
                         .customFontStyle(.gray1_H17)
                         .italic()
                 }
@@ -377,7 +370,6 @@ struct MonthlyCircleView: View {
             HStack {
                 VStack(spacing: 7) {
                     Text(String(format: "%.1f", averageCaloriesForSelectedMonth))
-//                    Text(averageCaloriesForSelectedMonth.asString(unit: .calorie))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("칼로리")
@@ -387,8 +379,7 @@ struct MonthlyCircleView: View {
                 Spacer()
                 
                 VStack(spacing: 7) {
-//                    Text(String(format: "%.2f", averageDistanceForSelectedMonth / 1000.0) + "km")
-                    Text((averageDistanceForSelectedMonth / 1000.0).asString(unit: .kilometer))
+                    Text((averageDistanceForSelectedMonth).asString(unit: .kilometer))
                         .customFontStyle(.gray1_B20)
                         .italic()
                     Text("킬로미터")

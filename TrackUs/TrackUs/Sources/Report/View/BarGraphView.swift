@@ -56,7 +56,8 @@ struct BarGraphView: View {
                             }
                             
                             if selectedBarIndex == index {
-                                Text((avgData.data / 1000).asString(unit: .kilometer))
+//                                Text((avgData.data / 1000).asString(unit: .kilometer))
+                                Text((avgData.data).asString(unit: .kilometer))
                                     .font(.system(size: 10))
                                     .fontWeight(.semibold)
                                     .foregroundColor(.white)
@@ -186,7 +187,7 @@ struct WeakGraphView: View {
                                 }
                                 
                                 if selectedBarIndex == index {
-                                    Text((avgData.data / 1000).asString(unit: .kilometer))
+                                    Text((avgData.data).asString(unit: .kilometer))
                                         .font(.system(size: 10))
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
