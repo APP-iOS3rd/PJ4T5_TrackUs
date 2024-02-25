@@ -40,8 +40,9 @@ struct CourseDetailView: View {
             VStack {
                 let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
                 let isOwner = courseViewModel.course.ownerUid == authViewModel.userInfo.uid
-              
-                if courseViewModel.course.members.count >= courseViewModel.course.participants {
+                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.participants
+                
+                if exceedsCapacity && !memberContains {
                     MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
                     }
                 }

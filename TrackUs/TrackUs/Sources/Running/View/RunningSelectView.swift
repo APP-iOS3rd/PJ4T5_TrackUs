@@ -13,7 +13,7 @@ struct RunningSelectView: View {
     @State private var isPersonalRunning: Bool = false
     @State private var showingPopup: Bool = false
     @State var isSelect: Int?
-    @State var seletedItem: String = ""
+    @State var seletedGroupID: String = ""
     @EnvironmentObject var router: Router
     @StateObject var trackingViewModel = TrackingViewModel()
     @ObservedObject var courseListViewModel: CourseListViewModel
@@ -24,6 +24,7 @@ struct RunningSelectView: View {
             VStack(alignment: .leading) {
                 Text("러닝 시작하기")
                     .customFontStyle(.gray1_B24)
+                
                 Text("원하는 러닝 타입을 선택하신 뒤 러닝 시작 버튼을 눌러주세요")
                     .customFontStyle(.gray2_R15)
                 
@@ -34,20 +35,33 @@ struct RunningSelectView: View {
 //            .padding(.horizontal, 16)
             
             ZStack {
-                ScrollView(showsIndicators: false) {
-                    LazyVGrid(columns: vGridItems, spacing: 8) {
-                        ForEach(courseListViewModel.filterdCourseData(), id: \.self) { course in
-                            Button {
-//                                isSelect = item == isSelect ? nil : item
-                                seletedItem = course.uid
-                            } label: {
-//                                selectedCell(isSelect: isSelect == item)
-                                let isSelectedNow = !seletedItem.isEmpty // 선택이 안되었을떄
-                                let seleted = seletedItem == course.uid
-                                
-                                selectedCell(isSelect: isSelectedNow ? seleted : false, course: course, user: userSearchViewModel.users.filter {$0.uid == course.ownerUid}[0])
+                VStack {
+                    let filterdData = courseListViewModel.filterdCourseData()
+                    if !filterdData.isEmpty {
+                        ScrollView(showsIndicators: false) {
+                            LazyVGrid(columns: vGridItems, spacing: 8) {
+                                ForEach(filterdData, id: \.self) { course in
+                                    Button {
+                                        let isSeletedSameItem = seletedGroupID == course.uid
+                                        if isSeletedSameItem {
+                                            seletedGroupID = ""
+                                        } else {
+                                            seletedGroupID = course.uid
+                                        }
+                                           
+                                    } label: {
+                                        let isSelectedNow = !seletedGroupID.isEmpty // 선택이 안되었을떄
+                                        let seleted = seletedGroupID == course.uid
+                                        
+                                        selectedCell(isSelect: isSelectedNow ? seleted : false, course: course, user: userSearchViewModel.users.filter {$0.uid == course.ownerUid}[0])
+                                    }
+                                }
                             }
+                            
                         }
+                    } else {
+                        NoParticipationPlaceholderView()
+                            .frame(maxHeight: .infinity)
                     }
                     
                 }
@@ -82,10 +96,9 @@ struct RunningSelectView: View {
                 MainButton(buttonText: "러닝 시작") {
                     if isPersonalRunning {
                         showingPopup.toggle()
-                    } else if !seletedItem.isEmpty {
-                        // 메이트러닝시작
+                    } else if !seletedGroupID.isEmpty {
                         trackingViewModel.isGroup = true
-                        trackingViewModel.groupID = seletedItem
+                        trackingViewModel.groupID = seletedGroupID
                         router.push(.runningStart(trackingViewModel))
                     }
                 }

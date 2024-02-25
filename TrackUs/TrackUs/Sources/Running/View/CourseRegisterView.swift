@@ -129,6 +129,12 @@ extension CourseRegisterView {
             TimePicker(hours: $courseRegViewModel.hours, minutes: $courseRegViewModel.minutes, seconds: $courseRegViewModel.seconds)
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.hidden)
+                .onChange(of: [courseRegViewModel.hours, courseRegViewModel.minutes, courseRegViewModel.seconds]) { _ in
+                    let hoursInSeconds = courseRegViewModel.hours * 3600
+                    let minutesInSeconds = courseRegViewModel.minutes * 60
+                    let seconds = courseRegViewModel.seconds
+                    courseRegViewModel.estimatedTime = hoursInSeconds + minutesInSeconds + seconds
+                }
         })
         .customNavigation {
             NavigationText(title: "코스 등록")
