@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingPopup: View {
     @Binding var showingPopup: Bool
     @ObservedObject var settingVM: SettingPopupViewModel
+    @EnvironmentObject var router: Router
     
     var body: some View {
         VStack {
@@ -25,7 +26,7 @@ struct SettingPopup: View {
                 }
                 
                 VStack {
-                    Image("BigFire")
+                    Image(.dart)
                     
                     Text("오늘은 얼마나 달리실건가요?")
                         .customFontStyle(.gray1_B16)
@@ -85,8 +86,9 @@ struct SettingPopup: View {
                 Button(action: {
                     settingVM.saveSettings()
                     showingPopup = false
+                    router.push(.runningStart)
                 }) {
-                    Text("설정 완료")
+                    Text("개인 러닝 시작")
                         .customFontStyle(.white_B16)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 8)

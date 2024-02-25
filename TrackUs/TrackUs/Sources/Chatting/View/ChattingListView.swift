@@ -39,7 +39,7 @@ struct ChattingListView: View {
                                         .customFontStyle(.gray1_B16)
                                 }
                                 // 채팅방 인원수
-                                if chatRoom.members.count == 2 {
+                                if chatRoom.group {
                                     Image(systemName: "person.2.fill")
                                         .customFontStyle(.gray2_L12)
                                     Text("\(chatRoom.members.count)")

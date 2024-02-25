@@ -9,17 +9,20 @@ import SwiftUI
 import Kingfisher
 
 struct UserProfileCell: View {
+    let user: UserInfo
     var body: some View {
-        KFImage(URL(string: ""))
-            .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
-            .placeholder({ProgressView()})
-            .resizable()
-            .scaledToFill()
-            .frame(width: 61, height: 61)
-            .clipShape(Circle())
+        VStack {
+            KFImage(URL(string: user.profileImageUrl ?? ""))
+                .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
+                .placeholder({ProgressView()})
+                .resizable()
+                .scaledToFill()
+                .frame(width: 61, height: 61)
+                .clipShape(Circle())
+        }
     }
 }
 
-#Preview {
-    UserProfileCell()
-}
+//#Preview {
+//    UserProfileCell()
+//}

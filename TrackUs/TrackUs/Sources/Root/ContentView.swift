@@ -19,7 +19,7 @@ struct ContentView: View {
             switch authViewModel.authenticationState {
             case .startapp:
                 VStack{
-                    Image(.trackUsLogo)
+                    Image(.trackusBigLogo)
                         .resizable()
                         .frame(width: 200, height: 65)
                 }

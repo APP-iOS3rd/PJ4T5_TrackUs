@@ -79,7 +79,7 @@ struct MyRecordDetailView: View {
         
         // 실제기록/예상목표
         var kilometerComparisonLabel: String {
-            "\((runningLog!.distance / 1000).asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
+            "\(runningLog!.distance.asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
         }
         
         var calorieComparisonLabel: String {
@@ -109,13 +109,14 @@ struct MyRecordDetailView: View {
                                 Text(runningLog?.title ?? "러닝") // ReportViewModel의 title
                                     .customFontStyle(.gray1_SB16)
                                 Spacer()
-                                Text("개인")
+                                Text(runningLog?.isGroup ?? false ? "러닝메이트" : "개인")
                                     .foregroundColor(.white)
                                     .font(.system(size: 11))
                                     .fontWeight(.semibold)
                                     .padding(.horizontal, 9)
                                     .padding(.vertical, 3)
-                                    .background(Color.main)
+//                                    .background(Color.main)
+                                    .background(runningLog?.isGroup ?? false ? .orange2 : .main)
                                     .clipShape(Capsule())
                             }
                             
@@ -215,12 +216,12 @@ struct MyRecordDetailView: View {
                                 }
                         }
                     )
-                    .gesture(DragGesture()
-                        .onEnded({ (gesture) in
-                            if gesture.translation.width > 100 {
-                                router.pop()
-                            }
-                        }))
+//                    .gesture(DragGesture()
+//                        .onEnded({ (gesture) in
+//                            if gesture.translation.width > 100 {
+//                                router.pop()
+//                            }
+//                        }))
                 }
                 
                 

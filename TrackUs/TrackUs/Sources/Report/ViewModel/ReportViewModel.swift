@@ -141,7 +141,6 @@ class ReportViewModel : ObservableObject {
                     let targetDistance = runningData.data()["targetDistance"] as? Double
                     let isGroup = runningData.data()["isGroup"] as? Bool
                     
-//                    let log = Runninglog(calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title)
                     let log = Runninglog(documentID: documentID, calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title, targetDistance: targetDistance, isGroup: isGroup)
                     
                     if !self.runningLog.contains(log) {
@@ -239,9 +238,34 @@ class ReportViewModel : ObservableObject {
     
     //MARK: - BarGraphView에서 사용하는 함수들 월별
     
-    func updateMonthMyAvgData(selectedDate: Date) { // 월별 데이터
-//        guard let selectedDate = selectedDate else { return }
-        
+//    func updateMonthMyAvgData(selectedDate: Date) { // 월별 데이터
+////        guard let selectedDate = selectedDate else { return }
+//        
+//        let calendar = Calendar.current
+//        guard let startDateOfYear = calendar.date(from: calendar.dateComponents([.year], from: selectedDate)),
+//              let endDateOfYear = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: startDateOfYear) else {
+//            return
+//        }
+//        
+//        var monthIndex = 0
+//        var currentDate = startDateOfYear
+//        
+//        while currentDate <= endDateOfYear {
+//            guard let endDateOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: currentDate) else {
+//                return
+//            }
+//            
+//            let dataForThisMonth = getDataForMonth(startDate: currentDate, endDate: endDateOfMonth)
+//            let averageDistanceForMonth = dataForThisMonth.reduce(0.0) { $0 + $1.data } / Double(dataForThisMonth.count)
+//            
+//            monthMyAvgData[monthIndex].data = averageDistanceForMonth
+//            
+//            monthIndex += 1
+//            currentDate = calendar.date(byAdding: .month, value: 1, to: currentDate)!
+//        }
+//    }
+    
+    func updateMonthMyAvgData(selectedDate: Date) {
         let calendar = Calendar.current
         guard let startDateOfYear = calendar.date(from: calendar.dateComponents([.year], from: selectedDate)),
               let endDateOfYear = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: startDateOfYear) else {
@@ -256,9 +280,23 @@ class ReportViewModel : ObservableObject {
                 return
             }
             
-            let dataForThisMonth = getDataForMonth(startDate: currentDate, endDate: endDateOfMonth)
-            let averageDistanceForMonth = dataForThisMonth.reduce(0.0) { $0 + $1.data } / Double(dataForThisMonth.count)
+            // 해당 월의 runningLog 데이터 가져오기
+            let runningLogForMonth = runningLog.filter { log in
+                let logMonth = calendar.component(.month, from: log.timestamp)
+                let currentMonth = calendar.component(.month, from: currentDate)
+                return logMonth == currentMonth
+            }
             
+            // 해당 월의 평균 거리 계산
+            let totalDistanceForMonth = runningLogForMonth.reduce(0.0) { $0 + $1.distance }
+            let averageDistanceForMonth: Double
+            if runningLogForMonth.isEmpty {
+                averageDistanceForMonth = 0
+            } else {
+                averageDistanceForMonth = totalDistanceForMonth / Double(runningLogForMonth.count)
+            }
+            
+            // monthMyAvgData 배열에 넣기
             monthMyAvgData[monthIndex].data = averageDistanceForMonth
             
             monthIndex += 1

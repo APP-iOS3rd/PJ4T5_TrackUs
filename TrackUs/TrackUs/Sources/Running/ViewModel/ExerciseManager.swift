@@ -21,6 +21,7 @@ import Foundation
  totalcalorie  = MET * weight(kg) * time(hours)
  */
 final class ExerciseManager {
+    
     @MainActor
     static func calculatedCaloriesBurned(distance: Double, totalTime: Double) -> Double {
         let userInfo = AuthenticationViewModel.shared.userInfo
@@ -83,6 +84,21 @@ final class ExerciseManager {
         let pace = timeInMinutes / distance
         
         return pace
+    }
+    
+    // 예상시간 계산
+    @MainActor
+    static func calculateEstimatedTime(distance: Double, runningStyle: RunningStyle) -> Int {
+        switch runningStyle {
+        case .walking:
+            return Int(distance * 12)
+        case .jogging:
+            return Int(distance * 10)
+        case .running:
+            return Int(distance * 5)
+        case .interval:
+            return Int(distance * 4)
+        }
     }
 }
 

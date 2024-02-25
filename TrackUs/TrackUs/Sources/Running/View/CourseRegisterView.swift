@@ -60,7 +60,7 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStatsView(estimatedTime: 0, calories: 0, distance: 0)
+                        RunningStatsView(estimatedTime: Double(courseRegViewModel.totalEstimatedTimeTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0)
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -110,8 +110,9 @@ extension CourseRegisterView {
             }
             
             MainButton(active: isTextFieldValid ,buttonText: "코스 등록하기") {
-                courseRegViewModel.uploadData()
-                router.popToRoot()
+                courseRegViewModel.uploadCourseData {
+                    router.popToRoot()
+                }
             }.padding(.horizontal, 16)
             
         }
