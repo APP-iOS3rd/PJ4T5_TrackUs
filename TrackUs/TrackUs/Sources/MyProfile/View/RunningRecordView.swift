@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct RunningRecordView: View {
+    @State private var selectedDate: Date?
     var body: some View {
-        PreparingService()
+        MyRecordView(selectedDate: $selectedDate)
             .customNavigation {
                 NavigationText(title: "러닝기록")
             } left: {
