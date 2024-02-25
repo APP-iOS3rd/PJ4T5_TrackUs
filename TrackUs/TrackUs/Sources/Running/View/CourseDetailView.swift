@@ -27,15 +27,15 @@ struct CourseDetailView: View {
                 VStack(spacing: 0)   {
                     RunningStatsView(estimatedTime: Double(courseViewModel.course.estimatedTime), calories: 0, distance: courseViewModel.course.coordinates.caculateTotalDistance() / 1000.0)
                         .padding(.top, 20)
-                    
+                        .padding(.horizontal, 16)
                     courseDetailLabels
                         .padding(.top, 20)
-                    
+                        .padding(.horizontal, 16)
                     participantList
                         .padding(.top, 20)
-                    
+                        .padding(.leading, 16)
                 }
-                .padding(.horizontal, 16)
+                .padding(.bottom, 30)
             }
             VStack {
                 let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
