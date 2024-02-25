@@ -13,6 +13,7 @@ enum AvgAge: String, CaseIterable, Identifiable { // 나이대 피커
     case thirties = "30대"
     case forties = "40대"
     case fifties = "50대"
+    case sixties = "60대"
     
     var id: Self { self }
     
@@ -23,6 +24,7 @@ enum AvgAge: String, CaseIterable, Identifiable { // 나이대 피커
         case .thirties: return 30
         case .forties: return 40
         case .fifties: return 50
+        case .sixties: return 60
             
         }
     }
