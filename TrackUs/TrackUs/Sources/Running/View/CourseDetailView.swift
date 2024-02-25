@@ -11,22 +11,20 @@ import MapboxMaps
 struct CourseDetailView: View {
     private let authViewModel = AuthenticationViewModel.shared
     @EnvironmentObject var router: Router
-    @ObservedObject var courseViewModel: CourseViewModel
     @StateObject var userSearchViewModel = UserSearchViewModel()
-    let course: Course
-    // 더미데이터 삭제예정
+    @ObservedObject var courseViewModel: CourseViewModel
     
     var body: some View {
         VStack {
             PathPreviewMap(
                 mapStyle: .numberd,
-                coordinates: course.coordinates
+                coordinates: courseViewModel.course.coordinates
             )
             .frame(height: 230)
             
             ScrollView {
                 VStack(spacing: 0)   {
-                    RunningStatsView(estimatedTime: Double(course.estimatedTime), calories: 0, distance: course.coordinates.caculateTotalDistance() / 1000.0)
+                    RunningStatsView(estimatedTime: Double(courseViewModel.course.estimatedTime), calories: 0, distance: courseViewModel.course.coordinates.caculateTotalDistance() / 1000.0)
                         .padding(.top, 20)
                     
                     courseDetailLabels
@@ -39,20 +37,20 @@ struct CourseDetailView: View {
                 .padding(.horizontal, 16)
             }
             VStack {
-                let memberContains = course.members.contains(authViewModel.userInfo.uid)
-                if course.members.count >= course.participants {
+                let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
+                if courseViewModel.course.members.count >= courseViewModel.course.participants {
                     MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
                     }
+                  
                 }
                 else if !memberContains {
                     MainButton(buttonText: "러닝 참가하기") {
-                        courseViewModel.addParticipant(uid: course.uid)
+                        courseViewModel.addParticipant(uid: courseViewModel.course.uid)
                     }
                 } else if memberContains {
                     MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
-                        courseViewModel.removeParticipant(uid: course.uid)
+                        courseViewModel.removeParticipant(uid: courseViewModel.course.uid)
                     }
-                    
                 }
                 
             }
@@ -73,33 +71,33 @@ extension CourseDetailView {
     var courseDetailLabels: some View {
         VStack {
             HStack {
-                Text(course.startDate.formattedString())
+                Text(courseViewModel.course.startDate.formattedString())
                     .customFontStyle(.gray2_R12)
                 Spacer()
-                RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .running)
+                RunningStyleBadge(style: .init(rawValue: courseViewModel.course.runningStyle) ?? .running)
             }
             
             VStack(alignment: .leading) {
-                Text(course.title)
+                Text(courseViewModel.course.title)
                     .customFontStyle(.gray1_B20)
                 
                 HStack(spacing: 10) {
                     HStack {
                         Image(.pin)
                         
-                        Text(course.address)
+                        Text(courseViewModel.course.address)
                             .customFontStyle(.gray1_R12)
                             .lineLimit(1)
                     }
                     
                     HStack {
                         Image(.arrowBoth)
-                        Text(course.distance.asString(unit: .kilometer))
+                        Text(courseViewModel.course.distance.asString(unit: .kilometer))
                             .customFontStyle(.gray1_R12)
                     }
                 }
                 
-                Text(course.content)
+                Text(courseViewModel.course.content)
                     .customFontStyle(.gray1_R14)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,7 +108,7 @@ extension CourseDetailView {
     
     var participantList: some View {
         VStack(alignment: .leading) {
-            UserList(users: userSearchViewModel.filterdUserData(uid: course.members), ownerUid: course.ownerUid)
+            UserList(users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members), ownerUid: courseViewModel.course.ownerUid)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
