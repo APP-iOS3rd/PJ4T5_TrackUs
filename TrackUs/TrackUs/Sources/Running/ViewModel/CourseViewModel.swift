@@ -32,7 +32,7 @@ class CourseViewModel: ObservableObject {
         Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).getDocument { snapShot, error in
             guard let document = try? snapShot?.data(as: Course.self) else { return }
             Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).updateData(["members":document.members + [memberUid]]) { _ in
-                self.fetchCourseData()
+                  
             }
         }
     }
@@ -44,7 +44,7 @@ class CourseViewModel: ObservableObject {
             guard var document = try? snapShot?.data(as: Course.self) else { return }
             
             Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).updateData(["members":document.members.filter {$0 != memberUid}]) { _ in
-                self.fetchCourseData()
+              
             }
         }
     }
