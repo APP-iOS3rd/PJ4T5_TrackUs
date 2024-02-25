@@ -201,7 +201,6 @@ extension RunningHomeView {
                                     RunningRecruitmentCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
                                 })
                             }
-                            
                         }
                     }
                     .padding(.vertical, 8)

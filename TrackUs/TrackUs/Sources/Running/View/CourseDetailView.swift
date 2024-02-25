@@ -10,6 +10,7 @@ import MapboxMaps
 
 struct CourseDetailView: View {
     private let authViewModel = AuthenticationViewModel.shared
+    @State private var showingAlert = false
     @EnvironmentObject var router: Router
     @StateObject var userSearchViewModel = UserSearchViewModel()
     @ObservedObject var courseViewModel: CourseViewModel
@@ -38,18 +39,23 @@ struct CourseDetailView: View {
             }
             VStack {
                 let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
+                let isOwner = courseViewModel.course.ownerUid == authViewModel.userInfo.uid
+              
                 if courseViewModel.course.members.count >= courseViewModel.course.participants {
                     MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
                     }
-                  
                 }
                 else if !memberContains {
                     MainButton(buttonText: "러닝 참가하기") {
-                        courseViewModel.addParticipant(uid: courseViewModel.course.uid)
+                        courseViewModel.addParticipant()
                     }
                 } else if memberContains {
                     MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
-                        courseViewModel.removeParticipant(uid: courseViewModel.course.uid)
+                        if isOwner {
+                            showingAlert = true
+                        } else {
+                            courseViewModel.removeParticipant()
+                        }
                     }
                 }
                 
@@ -61,7 +67,24 @@ struct CourseDetailView: View {
         } left: {
             NavigationBackButton()
         }
-        
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("알림"),
+                message: Text("방장이 참가를 취소하는 경우 모집글이 삭제됩니다 계속 참가를 취소 하시겠습니까?"),
+                primaryButton: .default (
+                    Text("취소"),
+                    action: { }
+                ),
+                secondaryButton: .destructive (
+                    Text("삭제"),
+                    action: {
+                        courseViewModel.removeCourse {
+                            router.popToRoot()
+                        }
+                    }
+                )
+            )
+        }
     }
 }
 

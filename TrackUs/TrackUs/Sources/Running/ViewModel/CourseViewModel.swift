@@ -18,7 +18,8 @@ class CourseViewModel: ObservableObject {
     
     /// 러닝 참여하기
     @MainActor
-    func addParticipant(uid: String) {
+    func addParticipant() {
+        let uid = self.course.uid
         let memberUid = authViewModel.userInfo.uid
         
         Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).getDocument { snapShot, error in
@@ -30,14 +31,25 @@ class CourseViewModel: ObservableObject {
     }
     
     @MainActor
-    func removeParticipant(uid: String) {
+    func removeParticipant() {
+        let uid = self.course.uid
         let memberUid = authViewModel.userInfo.uid
+        
         Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).getDocument { snapShot, error in
             guard var document = try? snapShot?.data(as: Course.self) else { return }
             
             Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).updateData(["members":document.members.filter {$0 != memberUid}]) { _ in
                 self.course.members = self.course.members.filter { $0 != memberUid }
             }
+        }
+    }
+    
+    // 러닝 삭제
+    func removeCourse(completion: @escaping () -> ()) {
+        let uid = self.course.uid
+        
+        Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).delete { error in
+            completion()
         }
     }
 }
