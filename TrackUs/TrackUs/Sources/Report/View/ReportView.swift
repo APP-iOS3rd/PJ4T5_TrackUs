@@ -14,6 +14,7 @@ enum ReportTab: String, CaseIterable {
 }
 
 struct ReportView: View {
+    @State private var offset: CGFloat = 0
     @State private var selectedPicker: ReportTab = .report
     @Namespace private var animation
     @State var selectedDate: Date? = Date()
@@ -41,6 +42,22 @@ struct ReportView: View {
             viewModel.fetchUserLog(selectedDate: selectedDate!)
             viewModel.fetchUserAgeLog(selectedDate: selectedDate!)
         }
+        .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        offset = gesture.translation.width
+                    }
+                    .onEnded { gesture in
+                        withAnimation {
+                            if offset < 0 {
+                                selectedPicker = .record
+                            } else if offset > 0 {
+                                selectedPicker = .report
+                            }
+                            offset = 0
+                        }
+                    }
+            )
     }
     
     @ViewBuilder
