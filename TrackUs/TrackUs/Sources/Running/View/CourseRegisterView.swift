@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CourseRegisterView: View {
+    @EnvironmentObject var router: Router
     @ObservedObject var courseRegViewModel: CourseRegViewModel
     @State var isDatePickerPresented = false
     @State var isTimePickerPresented = false
@@ -23,6 +24,10 @@ struct CourseRegisterView: View {
     
     var formattedSeconds: String {
         String(format: "%02d", courseRegViewModel.seconds)
+    }
+    
+    var isTextFieldValid: Bool {
+        courseRegViewModel.title.count > 0 && courseRegViewModel.content.count > 0
     }
 }
 
@@ -55,7 +60,7 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStatsView(estimatedTime: 0, calories: 0, distance: 0)
+                        RunningStatsView(estimatedTime: Double(courseRegViewModel.totalEstimatedTimeTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0)
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -103,8 +108,11 @@ extension CourseRegisterView {
                     .padding(.bottom, 20)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            MainButton(buttonText: "코스 등록하기") {
-                
+            
+            MainButton(active: isTextFieldValid ,buttonText: "코스 등록하기") {
+                courseRegViewModel.uploadCourseData {
+                    router.popToRoot()
+                }
             }.padding(.horizontal, 16)
             
         }

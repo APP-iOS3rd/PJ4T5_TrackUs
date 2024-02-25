@@ -9,22 +9,24 @@ import SwiftUI
 import MapboxMaps
 
 struct CourseDetailView: View {
+    private let authViewModel = AuthenticationViewModel.shared
+    @EnvironmentObject var router: Router
+    @ObservedObject var courseViewModel: CourseViewModel
+    @StateObject var userSearchViewModel = UserSearchViewModel()
+    let course: Course
     // 더미데이터 삭제예정
-    let coordinates: [CLLocationCoordinate2D] = [
-        CLLocationCoordinate2D(latitude: 37.566637, longitude: 126.97338),
-        CLLocationCoordinate2D(latitude: 37.566337, longitude: 126.97338),
-        CLLocationCoordinate2D(latitude: 37.566637, longitude: 126.97328),
-        CLLocationCoordinate2D(latitude: 37.566647, longitude: 126.97248),
-    ]
     
     var body: some View {
         VStack {
+            PathPreviewMap(
+                mapStyle: .numberd,
+                coordinates: course.coordinates
+            )
+            .frame(height: 230)
+            
             ScrollView {
-                PathPreviewMap(coordinates: coordinates)
-                    .frame(height: 230)
-                
                 VStack(spacing: 0)   {
-                    RunningStatsView(estimatedTime: 1423.0, calories: 323.0, distance: 3.0)
+                    RunningStatsView(estimatedTime: Double(course.estimatedTime), calories: 0, distance: course.coordinates.caculateTotalDistance() / 1000.0)
                         .padding(.top, 20)
                     
                     courseDetailLabels
@@ -36,7 +38,22 @@ struct CourseDetailView: View {
                 }
                 .padding(.horizontal, 16)
             }
-            MainButton(buttonText: "트랙 참가하기") {
+            VStack {
+                let memberContains = course.members.contains(authViewModel.userInfo.uid)
+                if course.members.count >= course.participants {
+                    MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
+                    }
+                }
+                else if !memberContains {
+                    MainButton(buttonText: "러닝 참가하기") {
+                        courseViewModel.addParticipant(uid: course.uid)
+                    }
+                } else if memberContains {
+                    MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
+                        courseViewModel.removeParticipant(uid: course.uid)
+                    }
+                    
+                }
                 
             }
             .padding(.horizontal, 16)
@@ -56,37 +73,33 @@ extension CourseDetailView {
     var courseDetailLabels: some View {
         VStack {
             HStack {
-                Text("2024.01.12")
+                Text(course.startDate.formattedString())
                     .customFontStyle(.gray2_R12)
                 Spacer()
-                RunningStyleBadge(style: .running)
+                RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .running)
             }
             
             VStack(alignment: .leading) {
-                Text("30분 가볍게 러닝해요!")
+                Text(course.title)
                     .customFontStyle(.gray1_B20)
                 
                 HStack(spacing: 10) {
                     HStack {
                         Image(.pin)
                         
-                        Text("서울숲 카페거리")
+                        Text(course.address)
                             .customFontStyle(.gray1_R12)
                             .lineLimit(1)
                     }
-                    HStack {
-                        Image(.timerLine)
-                        Text("10:02 AM")
-                            .customFontStyle(.gray1_R12)
-                    }
+                    
                     HStack {
                         Image(.arrowBoth)
-                        Text("1.72km")
+                        Text(course.distance.asString(unit: .kilometer))
                             .customFontStyle(.gray1_R12)
                     }
                 }
                 
-            Text("서울숲카페거리에서 오전 10시 20분에 가볍게 30분정도 러닝하실 분을 모집합니다! 함께 재미있게 뛰어봐요! :)")
+                Text(course.content)
                     .customFontStyle(.gray1_R14)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -94,26 +107,12 @@ extension CourseDetailView {
     }
     
     // 참여자 리스트
+    
     var participantList: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: 2) {
-                Text("4명").customFontStyle(.main_B14)
-                Text("의 TrackUS 회원이 이 러닝 모임에 참여중입니다!")
-                    .customFontStyle(.gray2_R14)
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(1..<4, id: \.self) { _ in
-                        UserProfileCell()
-                    }
-                }
-            }
+            UserList(users: userSearchViewModel.filterdUserData(uid: course.members), ownerUid: course.ownerUid)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
-#Preview {
-    CourseDetailView()
-}

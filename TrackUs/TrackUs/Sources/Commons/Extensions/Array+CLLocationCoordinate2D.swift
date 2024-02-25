@@ -20,4 +20,13 @@ extension Array where Element == CLLocationCoordinate2D {
         let averageLongitude = totalLongitude / Double(self.count)
         return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
+    
+    func caculateTotalDistance() -> Double {
+        var distance: Double = 0.0
+        for (offset, value) in self.enumerated() {
+            guard offset < self.count - 1 else { break }
+            distance += value.distance(to: self[offset + 1])
+        }
+        return distance
+    }
 }

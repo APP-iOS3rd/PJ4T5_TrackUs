@@ -12,3 +12,9 @@ extension CLLocation {
         CLLocationCoordinate2D(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
     }
 }
+
+extension CLLocationCoordinate2D {
+    func asCLLocation() -> CLLocation {
+        CLLocation(latitude: self.latitude, longitude: self.longitude)
+    }
+}

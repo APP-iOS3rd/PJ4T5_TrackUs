@@ -88,6 +88,7 @@ class TrackingViewModel: ObservableObject {
     func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
         self.newtworkStatus = .loading 
         let uid = authViewModel.userInfo.uid
+    
         guard let image = snapshot else { return }
         ImageUploader.uploadImage(image: image, type: .map) { url in
             let firstCoordinate = self.coordinates.first!
