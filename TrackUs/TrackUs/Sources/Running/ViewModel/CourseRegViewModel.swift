@@ -24,7 +24,7 @@ class CourseRegViewModel: ObservableObject {
     @Published var estimatedTime: Int = 0
     @Published var estimatedCalorie: Double = 0
     @Published var distance: Double = 0
-    @Published var participants: Int = 1
+    @Published var participants: Int = 2
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
@@ -57,7 +57,7 @@ class CourseRegViewModel: ObservableObject {
     }
     
     func removeParticipants() {
-        guard participants > 1 else { return }
+        guard participants > 2 else { return }
         self.participants -= 1
     }
     
