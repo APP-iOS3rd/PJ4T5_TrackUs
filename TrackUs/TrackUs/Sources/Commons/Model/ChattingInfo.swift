@@ -38,7 +38,7 @@ struct ChatRoom: Codable, Identifiable {
 /// 마지막 채팅 정보
 public struct LatestMessageInChat: Hashable, Codable  {
     //public var senderName: String
-    public var timestemp: Date?
+    public var timestamp: Date?
     public var text: String?
 }
 
@@ -49,10 +49,17 @@ public struct FirestoreChatRoom: Codable, Identifiable, Hashable {
     public var members: [String]
     //public var messages: [Message]?
     public var usersUnreadCountInfo: [String: Int]?
-    public let latestMessage: FirestoreMessage?
+    public let latestMessage: FirestoreLastMessage?
 }
 
-public struct Member: Codable {
+public struct FirestoreLastMessage: Codable, Hashable {
+
+    @DocumentID public var id: String?
+    @ServerTimestamp public var timestamp: Date?
+    public var text: String
+}
+
+public struct Member: Codable, Hashable {
     var uid: String
     var userName: String
     var profileImageUrl: String?
@@ -64,26 +71,52 @@ public struct Member: Codable {
     }
 }
 
-struct Message: Codable {
-    var userId: String
+struct Message: Codable, Identifiable, Hashable {
+    @DocumentID var id: String?
+    
+    static func == (lhs: Message, rhs: Message) -> Bool {
+        lhs.sendMember.uid == rhs.sendMember.uid
+    }
+    
     var timestamp: Date
     var imageUrl: String?
     var text: String?
+    var sendMember: Member
     
-    init(userId: String, timestamp: Date = Date(), imageUrl: String? = nil, text: String? = nil) {
-        self.userId = userId
+    
+    init(id: String, timestamp: Date = Date(), imageUrl: String? = nil, text: String? = nil, sendMember: Member) {
+        self.id = id
         self.timestamp = timestamp
         self.imageUrl = imageUrl
         self.text = text
-        
+        self.sendMember = sendMember
     }
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)
+//    }
 }
+
+
+public struct FirestoreMessage: Codable, Hashable {
+
+    @DocumentID public var id: String?
+    @ServerTimestamp public var timestamp: Date?
+    
+    public var userId: String
+    public var text: String?
+    public var imageUrl: String?
+}
+
+
+
+// extension ==== 이후 분리
 
 extension Message {
     var time: String {
         DateFormatter.timeFormatter.string(from: timestamp)
     }
 }
+
 
 // 날짜 변환
 extension DateFormatter {

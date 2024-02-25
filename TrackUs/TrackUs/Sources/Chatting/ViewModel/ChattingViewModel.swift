@@ -124,13 +124,18 @@ class ChattingViewModel: ObservableObject {
     }
     
     // 채팅 메시지 전송
-    func sendChatMessage(chatText: String, userInfo: UserInfo) {
+    func sendChatMessage(chatText: String, image: UIImage?, uid: String) {
         if chatText.isEmpty { return }
+        // 이미지 있을 경우
+        if let image = image {
+            // 이미지 변환 함수
+        }
+        
         let messageData: [String: Any] = [
-            "userUid": userInfo.uid,
-            "message": chatText,
-            "userName": userInfo.username,
-            "profileImageUrl": userInfo.profileImageUrl as Any,
+            "userId": uid,
+            "test": chatText,
+            // 이미지 작업 추가하면 해당 수정
+            "imageUrl": image as Any,
             "timestamp": Date().timeIntervalSince1970 // 현재 시간을 타임스탬프로 변환
         ]
         //db.document(currentChatRoom.id).collection("messages").addDocument(data: messageData)

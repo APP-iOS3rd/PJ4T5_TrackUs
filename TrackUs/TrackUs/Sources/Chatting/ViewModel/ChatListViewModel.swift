@@ -43,7 +43,7 @@ class ChatListViewModel: ObservableObject {
 
                     return nil
                 }.sorted {
-                    if let date1 = $0.latestMessage?.timestemp, let date2 = $1.latestMessage?.timestemp {
+                    if let date1 = $0.latestMessage?.timestamp, let date2 = $1.latestMessage?.timestamp {
                         return date1 > date2
                     }
                     return $0.title < $1.title
@@ -58,8 +58,8 @@ class ChatListViewModel: ObservableObject {
         if let flm = firestoreChatRoom.latestMessage {
             message = LatestMessageInChat(
                 //senderName: user.name,
-                timestemp: flm.timestemp,
-                text: flm.text.isEmpty ? nil : flm.text
+                timestamp: flm.timestamp,
+                text: flm.text.isEmpty ? "사진을 보냈습니다." : flm.text
             )
         }
         let members = firestoreChatRoom.members

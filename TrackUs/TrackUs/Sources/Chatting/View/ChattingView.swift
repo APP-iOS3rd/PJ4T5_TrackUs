@@ -7,43 +7,30 @@
 
 import SwiftUI
 
-// 임시
-struct ChatMessage: Identifiable {
-    let id = UUID()
-    let isCurrentUser: Bool // 현재 사용자가 작성한 메시지 여부
-    let image: UIImage? = nil
-    let message: String? // 메시지 내용
-    let time: String // 메시지 작성 시간
-}
+public var previoosUser1: String?
 
 struct ChattingView: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
-    @StateObject var chatViewModel = ChattingViewModel.shared
+    @StateObject var chatViewModel: ChatViewModel
     
     @State private var sideMenuPresented: Bool = false
     @State private var sendMessage: String = ""
     
     @State private var sideMenuTranslation: CGFloat = 0
     
-    @State var previousUser: Bool = false
+    @State var previousUser: String?
     
+    @State private var title: String = ""
     
-    var messages = [
-            ChatMessage(isCurrentUser: true, message: "안녕하세요.", time: "10:00 AM"),
-            ChatMessage(isCurrentUser: false, message: "안녕하세요!", time: "10:01 AM"),
-            ChatMessage(isCurrentUser: true, message: "만나서 반가워요!", time: "10:02 AM"),
-            ChatMessage(isCurrentUser: false, message: "저도 반가워요!", time: "10:03 AM"),
-            ChatMessage(isCurrentUser: true, message: "안녕하세요.", time: "10:04 AM"),
-            ChatMessage(isCurrentUser: false, message: "안녕하세요!", time: "10:04 AM"),
-            ChatMessage(isCurrentUser: true, message: "만나서 반가워요!", time: "10:05 AM"),
-            ChatMessage(isCurrentUser: true, message: "dkddkkkkwlnqlnrl아ㅏ아아!", time: "10:05 AM"),
-            ChatMessage(isCurrentUser: false, message: "저도 반가워요!", time: "10:06 AM"),
-            ChatMessage(isCurrentUser: false, message: "저도 반가워요!", time: "10:06 AM"),
-            ChatMessage(isCurrentUser: true, message: "안녕하세요.", time: "10:07 AM"),
-            ChatMessage(isCurrentUser: false, message: "안녕하세요!", time: "10:10 AM"),
-            ChatMessage(isCurrentUser: true, message: "만나서 반가워요!", time: "10:12 AM"),
-            ChatMessage(isCurrentUser: false, message: "저도 반가워요!", time: "10:13 AM")
-        ]
+    private func updatePreviousSender(_ sender: String) -> Bool{
+        if previousUser != sender {
+            self.previousUser = sender
+            return true
+        }else{
+            previousUser = nil
+            return false
+        }
+    }
     
     var body: some View {
         ZStack(alignment: .trailing){
@@ -51,10 +38,11 @@ struct ChattingView: View {
                 // 채팅 내용 표기
                 ScrollView{
                     VStack(spacing: 6) {
-                        ForEach(messages.indices, id: \.self) { index in
-                            let showProfileInfo = index == 0 || messages[index].isCurrentUser != messages[index - 1].isCurrentUser
-                            ChatMessageView(message: messages[index], previousUser: showProfileInfo).id(index)
-                                .padding(.horizontal, 16)
+                        ForEach(chatViewModel.messages, id: \.self.id) { message in
+                            ChatMessageView(message: message,
+                                            mymessge: message.sendMember.uid == authViewModel.userInfo.uid)
+                            .id(message)
+                            .padding(.horizontal, 16)
                         }
                     }
                 }
@@ -63,8 +51,7 @@ struct ChattingView: View {
                     .padding(.horizontal, 16)
             }
             .customNavigation {
-                Text("빌드용 이후 삭제")
-                //Text(chatViewModel.currentChatRoom.title)
+                Text(title)
             } left: {
                 NavigationBackButton()
             } right: {
@@ -86,7 +73,7 @@ struct ChattingView: View {
                         sideMenuPresented.toggle()
                     }
             }
-            SideMenuView()
+            SideMenuView(title: title, memberUid: chatViewModel.chatRoom.members, members: chatViewModel.members)
                 .frame(width: 300)
                 .offset(x: sideMenuPresented ? sideMenuTranslation : 300, y: 0)
                 .animation(.easeInOut, value: sideMenuPresented)
@@ -110,24 +97,24 @@ struct ChattingView: View {
             
             
         }
+        .onAppear {
+            title = chatViewModel.chatRoom.gruop ? chatViewModel.chatRoom.title : chatViewModel.members[chatViewModel.chatRoom.nonSelfMembers.first!]?.userName ?? "러너"
+            
+        }
         .animation(.easeInOut, value: sideMenuPresented)
-//        .safeAreaInset(edge: .trailing) {
-//            if sideMenuPresented {
-//                            SideMenuView()
-//                                .frame(maxWidth: .infinity, alignment: .trailing)
-//                                .transition(.move(edge: .trailing))
-//                                .animation(.default, value: sideMenuPresented)
-//                        }
-//        }
+        .onDisappear {
+            // 메세지 읽음 확인
+            chatViewModel.resetUnreadCounter(myuid: authViewModel.userInfo.uid)
+        }
         
 
     }
+    /// 메세지 바3
     var messageBar: some View {
         // 하단 메세지 보내기
         HStack(alignment: .bottom, spacing: 12){
             ZStack{
                 TextField("대화를 입력해주세요.", text: $sendMessage, axis: .vertical)
-                //TextEditor(text: $sendMessage)
                     .customFontStyle(.gray1_R14)
                     .lineLimit(1...5)
                     .padding(10)
@@ -159,7 +146,8 @@ struct ChattingView: View {
             // 메세지 전송 버튼
             Button(
                 action: {
-                    chatViewModel.sendChatMessage(chatText: sendMessage, userInfo: authViewModel.userInfo)
+                    // 메세지 전송 함수
+                    chatViewModel.sendChatMessage(chatText: sendMessage, uid: authViewModel.userInfo.uid)
                     sendMessage = ""
                 }, label: {
                     Image(systemName: "paperplane.circle.fill")
@@ -174,40 +162,98 @@ struct ChattingView: View {
                 .stroke(Color.gray3, lineWidth: 1)
         )
     }
+    /// 사이드 메뉴
+//    var SideMenuView: some View {
+//        VStack(alignment: .leading, spacing: 0) {
+//            // 제목부분
+//            VStack(alignment: .leading, spacing: 6){
+//                Text(title)
+//                    .customFontStyle(.gray1_B16)
+//                HStack{
+//                    Image(systemName: "person.fill")
+//                        .resizable()
+//                        .foregroundStyle(.gray1)
+//                        .frame(width: 12, height: 12)
+//                    // 인원수
+//                    Text("\(chatViewModel.members.count)")
+//                        .customFontStyle(.gray1_R12)
+//                }
+//            }
+//            .padding(16)
+//            
+//            Rectangle()
+//                .frame(maxWidth: .infinity, maxHeight: 1)
+//                .foregroundStyle(.gray3)
+//            VStack(alignment: .leading, spacing: 6){
+//                Text("채팅밤 맴버")
+//                    .customFontStyle(.gray1_R12)
+//                // 참여 중인 사용자 프로필 정보
+//                ForEach(chatViewModel.chatRoom.members, id: \.self) { member in
+//                    ProfileImage(ImageUrl: chatViewModel.members[member]?.profileImageUrl, size: 40)
+//                    Text( chatViewModel.members[member]?.userName)
+//                        .customFontStyle(.gray1_M16)
+//                }
+//                HStack{
+//                    //ForEach
+//                    Image(.profileDefault)
+//                        .resizable()
+//                        .frame(width: 40, height: 40)
+//                        .clipShape(Circle())
+//                }
+//                
+//            }
+//            .padding(16)
+//            Spacer()
+//            
+//            Rectangle()
+//                .frame(maxWidth: .infinity, maxHeight: 1)
+//                .foregroundStyle(.gray3)
+//            Button(action: {
+//                // 나가기 기능
+//            }) {
+//                Image(systemName: "rectangle.portrait.and.arrow.forward")
+//                    .foregroundStyle(.gray1)
+//            }
+//            .padding(16)
+//        }
+//        //                .frame(maxWidth: 300, alignment: .leading)
+//        //                .background(Color.white)
+//        //                .transition(.move(edge: .trailing)) // 오른쪽에서 나오도록 애니메이션 적용
+//    }
 }
 
 struct ChatMessageView: View {
-    let message: ChatMessage
-    var previousUser: Bool
+    //@Binding var previousUser: String
+    
+    let message: Message
+    let mymessge: Bool
+    @State private var previousUser: Bool = false
     
     var body: some View {
         HStack(alignment: .top) {
-            if !message.isCurrentUser && previousUser {
-                Image(.profileDefault) // 사용자 프로필 이미지
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .clipShape(Circle())
+            if !mymessge && previousUser {
+                ProfileImage(ImageUrl: message.sendMember.profileImageUrl, size: 40)
             }else{
                 Spacer(minLength: 47)
             }
             
             VStack(alignment: .leading) {
-                if !message.isCurrentUser && previousUser {
-                    Text("상대방 이름") // 상대방 이름
+                if !mymessge && previousUser {
+                    Text(message.sendMember.userName) // 상대방 이름
                         .customFontStyle(.gray1_R12)
                 }
                 HStack(alignment: .bottom){
-                    if message.isCurrentUser {
+                    if mymessge {
                         Spacer()
                         Text(message.time) // 메시지 작성 시간
                             .customFontStyle(.gray1_R12)
                     }
-                    Text(message.message!) // 메시지 내용
-                        .customFontStyle(message.isCurrentUser ? .white_M14 : .gray1_R14)
+                    Text(message.text!) // 메시지 내용
+                        .customFontStyle(mymessge ? .white_M14 : .gray1_R14)
                         .padding(8)
-                        .background(message.isCurrentUser ? .main : .gray3)
+                        .background(mymessge ? .main : .gray3)
                         .cornerRadius(10)
-                    if !message.isCurrentUser {
+                    if !mymessge {
                         Text(message.time) // 메시지 작성 시간
                             .customFontStyle(.gray1_R12)
                         Spacer()
@@ -218,16 +264,24 @@ struct ChatMessageView: View {
             
             
         }
+        .onAppear {
+            previousUser = previoosUser1 == message.sendMember.uid ? false : true
+            previoosUser1 = message.sendMember.uid
+        }
     }
 }
 
 /// 사이드 메뉴
 struct SideMenuView: View {
+    let title: String
+    let memberUid: [String]
+    let members: [String : Member]
+    
     var body: some View {
             VStack(alignment: .leading, spacing: 0) {
                 // 제목부분
                 VStack(alignment: .leading, spacing: 6){
-                    Text("러닝메이트 채팅방")
+                    Text(title)
                         .customFontStyle(.gray1_B16)
                     HStack{
                         Image(systemName: "person.fill")
@@ -235,7 +289,7 @@ struct SideMenuView: View {
                             .foregroundStyle(.gray1)
                             .frame(width: 12, height: 12)
                         // 인원수
-                        Text("5")
+                        Text("\(members.count)")
                             .customFontStyle(.gray1_R12)
                     }
                 }
@@ -248,16 +302,13 @@ struct SideMenuView: View {
                     Text("채팅밤 맴버")
                         .customFontStyle(.gray1_R12)
                     // 참여 중인 사용자 프로필 정보
-                    HStack{
-                        //ForEach
-                        Image(.profileDefault)
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                        Text("닉네임")
-                            .customFontStyle(.gray1_M16)
+                    ForEach(memberUid, id: \.self) { memberUid in
+                        HStack{
+                            ProfileImage(ImageUrl: members[memberUid]?.profileImageUrl, size: 40)
+                            Text("\(members[memberUid]?.userName ?? "")")
+                                .customFontStyle(.gray1_M16)
+                        }
                     }
-                    
                 }
                 .padding(16)
                 Spacer()
@@ -277,9 +328,4 @@ struct SideMenuView: View {
             .background(Color.white)
             .transition(.move(edge: .trailing)) // 오른쪽에서 나오도록 애니메이션 적용
     }
-}
-
-
-#Preview {
-    ChattingView()
 }
