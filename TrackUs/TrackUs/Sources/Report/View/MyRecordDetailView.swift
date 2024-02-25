@@ -22,7 +22,7 @@ struct MyRecordDetailView: View {
         
         // TODO: - 여러곳에서 사용할 수 있도록 로직분리
         var estimatedCalories: Double {
-            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue, totalTime: Double(settingViewModel.estimatedTime) * 60)
+            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
         }
         
         var estimatedTimeText: String {
@@ -270,7 +270,7 @@ struct MyMateRecordDetailView: View {
         
         // TODO: - 여러곳에서 사용할 수 있도록 로직분리
         var estimatedCalories: Double {
-            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue, totalTime: Double(settingViewModel.estimatedTime) * 60)
+            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
         }
         
         var estimatedTimeText: String {

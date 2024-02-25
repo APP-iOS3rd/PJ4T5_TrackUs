@@ -219,7 +219,7 @@ extension RunningHomeView {
     func startButtonTapped() {
         LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
             if authrionzationStatus == .authorizedWhenInUse {
-                router.push(.runningSelect)
+                router.push(.runningSelect(courseListViewModel, userSearchViewModel))
             } else {
                 showingAlert = true
             }

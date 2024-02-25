@@ -24,7 +24,12 @@ class CourseListViewModel: ObservableObject {
         }
     }
     
-    
+    /// 참여중인 러닝목록 가져오기
+    @MainActor
+    func filterdCourseData() -> [Course] {
+        let uid = authViewModel.userInfo.uid
+        return courseList.filter { $0.members.contains(uid) }
+    }
 }
 
 extension CourseListViewModel: Hashable {

@@ -30,9 +30,7 @@ class CourseRegViewModel: ObservableObject {
     @Published var seconds: Int = 0
     @Published var image: UIImage?
     
-    var totalEstimatedTimeTime: Int {
-        (self.hours * 3600) + (self.minutes * 60) + (self.seconds)
-    }
+    
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
         guard self.coorinates.count < MAXIMUM_NUMBER_OF_MARKERS else { return }
@@ -66,6 +64,7 @@ class CourseRegViewModel: ObservableObject {
         let uid = authViewModel.userInfo.uid
         guard let image = self.image else { return }
         guard let startCoordinate = self.coorinates.first else { return }
+        
         let documentID = UUID().uuidString
         locationManager.convertToAddressWith(coordinate: startCoordinate.asCLLocation()) { address in
             guard let address = address else { return }
@@ -83,6 +82,7 @@ class CourseRegViewModel: ObservableObject {
                     "startDate": self.selectedDate ?? Date(),
                     "distance": self.coorinates.caculateTotalDistance() / 1000.0,
                     "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
+                    "estimatedCalorie": self.estimatedCalorie,
                     "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
                     "createdAt": Date()
                 ]
