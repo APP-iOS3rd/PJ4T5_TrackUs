@@ -317,7 +317,8 @@ extension TrackingModeMapView {
             
             self.trackingViewModel.$distance.sink { [weak self] distance in
                 guard let self = self else { return }
-                self.kilometerLabel.text = String(format: "%.2fkm/-", distance)
+                
+                self.kilometerLabel.text = "\(distance.asString(unit: .kilometer))/\(trackingViewModel.goldDistance.asString(unit: .kilometer))"
             }.store(in: &cancellation)
             
             self.trackingViewModel.$elapsedTime.sink { [weak self] time in

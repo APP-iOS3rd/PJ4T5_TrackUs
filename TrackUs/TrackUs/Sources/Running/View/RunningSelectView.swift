@@ -97,9 +97,13 @@ struct RunningSelectView: View {
                     if isPersonalRunning {
                         showingPopup.toggle()
                     } else if !seletedGroupID.isEmpty {
-                        trackingViewModel.isGroup = true
-                        trackingViewModel.groupID = seletedGroupID
-                        router.push(.runningStart(trackingViewModel))
+                        if let seletedItem = courseListViewModel.courseList.filter { $0.uid == seletedGroupID }.first {
+                            trackingViewModel.isGroup = true
+                            trackingViewModel.groupID = seletedItem.uid
+                            trackingViewModel.goldDistance = seletedItem.distance
+                            router.push(.runningStart(trackingViewModel))
+                        }
+                        
                     }
                 }
             }

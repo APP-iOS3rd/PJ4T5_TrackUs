@@ -21,12 +21,12 @@ enum NetworkStatus {
 class TrackingViewModel: ObservableObject {
     var snapshot: UIImage?
     var groupID = ""
+    var goldDistance: Double = 0.0
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
-    @Published var count: Int = 3 // 카운트다운
-    @Published var isPause: Bool = true // 러닝기록 상태
+    @Published var count: Int = 3
+    @Published var isPause: Bool = true
     @Published var newtworkStatus: NetworkStatus = .none
-    // 러닝기록(넘겨주는 데이터)
     @Published var title: String = ""
     @Published var coordinates: [CLLocationCoordinate2D] = []
     @Published var distance: Double = 0.0
