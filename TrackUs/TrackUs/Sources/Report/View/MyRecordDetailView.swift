@@ -22,17 +22,20 @@ struct MyRecordDetailView: View {
         
         // TODO: - 여러곳에서 사용할 수 있도록 로직분리
         var estimatedCalories: Double {
-            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
+//            return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
+            return ExerciseManager.calculatedCaloriesBurned(distance: (runningLog?.targetDistance ?? 0))
         }
         
         var estimatedTimeText: String {
-            return  Double(settingViewModel.estimatedTime * 60).asString(style: .positional)
+//            return  Double(settingViewModel.estimatedTime * 60).asString(style: .positional)
+            return  Double(runningLog!.exprectedTime).asString(style: .positional)
         }
         
         var feedbackMessageLabel: String {
             let estimatedTime = Double(settingViewModel.estimatedTime) // 예상시간
             let distanceInKilometers = runningLog!.distance // 킬로미터
-            let goalDistance = Double(settingViewModel.goalMinValue) // 목표치
+//            let goalDistance = Double(settingViewModel.goalMinValue) // 목표치
+            let goalDistance = Double(runningLog!.targetDistance ?? 0) // 목표치
             let goalReached = distanceInKilometers >= goalDistance // 목표도달 여부
             let timeReduction = runningLog!.elapsedTime < estimatedTime // 시간단축 여부
             
@@ -51,7 +54,8 @@ struct MyRecordDetailView: View {
         
         // 목표값과 비교하여 수치로 알려줌
         var elapsedTimeDifferenceLabel: String {
-            let differenceInSeconds = Double(settingViewModel.estimatedTime * 60) - runningLog!.elapsedTime
+//            let differenceInSeconds = Double(settingViewModel.estimatedTime * 60) - runningLog!.elapsedTime
+            let differenceInSeconds = Double(runningLog!.exprectedTime) - runningLog!.elapsedTime
             if differenceInSeconds > 0  {
                 return "예상 시간보다 \(differenceInSeconds.asString(style: .positional)) 빨리 끝났어요!"
             } else {
@@ -60,7 +64,8 @@ struct MyRecordDetailView: View {
         }
         
         var kilometerDifferenceLabel: String {
-            let difference = (runningLog!.distance) - settingViewModel.goalMinValue
+//            let difference = (runningLog!.distance) - settingViewModel.goalMinValue
+            let difference = (runningLog!.distance) - (runningLog!.targetDistance ?? 0)
             if difference > 0 {
                 return "목표보다 \(difference.asString(unit: .kilometer)) 더 뛰었어요!"
             } else {
@@ -79,7 +84,8 @@ struct MyRecordDetailView: View {
         
         // 실제기록/예상목표
         var kilometerComparisonLabel: String {
-            "\(runningLog!.distance.asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
+//            "\(runningLog!.distance.asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
+            "\(runningLog!.distance.asString(unit: .kilometer)) / \(runningLog!.targetDistance!.asString(unit: .kilometer))"
         }
         
         var calorieComparisonLabel: String {
@@ -87,7 +93,8 @@ struct MyRecordDetailView: View {
         }
         
         var timeComparisonLabel: String {
-            "\(runningLog!.elapsedTime.asString(style: .positional)) / \(Double(settingViewModel.estimatedTime * 60).asString(style: .positional))"
+//            "\(runningLog!.elapsedTime.asString(style: .positional)) / \(Double(settingViewModel.estimatedTime * 60).asString(style: .positional))"
+            "\(runningLog!.elapsedTime.asString(style: .positional)) / \(Double(runningLog!.exprectedTime).asString(style: .positional))"
         }
         // 맵뷰(임시)
         ZStack {

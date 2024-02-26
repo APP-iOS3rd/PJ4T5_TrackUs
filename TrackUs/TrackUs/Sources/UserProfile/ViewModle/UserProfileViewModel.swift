@@ -96,8 +96,9 @@ class UserProfileViewModel: ObservableObject {
                     let coordinates = runningData.data()["coordinates"] as? [GeoPoint]
                     let targetDistance = runningData.data()["targetDistance"] as? Double
                     let isGroup = runningData.data()["isGroup"] as? Bool
+                    let exprectedTime = runningData.data()["exprectedTime"] as? Double
                     
-                    let log = Runninglog(documentID: documentID, calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title, targetDistance: targetDistance, isGroup: isGroup)
+                    let log = Runninglog(documentID: documentID, calorie: calorie, distance: distance, elapsedTime: elapsedTime, pace: pace, timestamp: dateValue, address: address, coordinates: coordinates, routeImageUrl: routeImageUrl, title: title, targetDistance: targetDistance, isGroup: isGroup, exprectedTime: exprectedTime ?? 0)
                     
                     if !self.runningLog.contains(log) {
                         self.runningLog.append(log)
