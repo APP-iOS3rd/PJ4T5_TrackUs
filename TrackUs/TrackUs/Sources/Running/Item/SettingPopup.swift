@@ -87,7 +87,7 @@ struct SettingPopup: View {
                 Button(action: {
                     settingVM.saveSettings()
                     showingPopup = false
-                    trackingViewModel.goldDistance = settingVM.goalMinValue
+                    trackingViewModel.goalDistance = settingVM.goalMinValue
                     router.push(.runningStart(trackingViewModel))
                 }) {
                     Text("개인 러닝 시작")

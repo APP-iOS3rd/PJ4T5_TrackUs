@@ -10,78 +10,88 @@ import SwiftUI
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
     @State private var showingPopup = false
+    @State private var showingAlert = false
     let settingViewModel = SettingPopupViewModel()
     @ObservedObject var trackingViewModel: TrackingViewModel
     
-    // TODO: - 여러곳에서 사용할 수 있도록 로직분리
-    var estimatedCalories: Double {
-        return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
+    // 목표거리
+    var targetDistance: Double {
+        trackingViewModel.isGroup ? trackingViewModel.goalDistance : settingViewModel.goalMinValue
     }
     
-    var estimatedTimeText: String {
-        return  Double(settingViewModel.estimatedTime * 60).asString(style: .positional)
+    // 목표 칼로리
+    var targetCalorie: Double {
+        return ExerciseManager.calculatedCaloriesBurned(distance: targetDistance)
     }
     
-    // 하단 운동결과 피드백 메세지
-    var feedbackMessageLabel: String {
-        let estimatedTime = Double(settingViewModel.estimatedTime) // 예상시간
-        let distanceInKilometers = trackingViewModel.distance // 킬로미터
-        let goalDistance = Double(settingViewModel.goalMinValue) // 목표치
-        let goalReached = distanceInKilometers >= goalDistance // 목표도달 여부
-        let timeReduction = trackingViewModel.elapsedTime < estimatedTime // 시간단축 여부
+    // 예상시간
+    var estimatedTime: Int {
+        return ExerciseManager.calculateEstimatedTime(distance: targetDistance * 60)
+    }
+    
+    // 킬로미터 비교 -> 실제 뛴 거리 / 예상 거리
+    var compareKilometers: String {
+        return "\(trackingViewModel.distance.asString(unit: .kilometer)) / \(targetDistance.asString(unit: .kilometer))"
+    }
+    
+    // 소모 칼로리 비교 -> 실제 소모 칼로리 / 예상 소모 칼로리
+    var compareCalories: String {
+        return "\(trackingViewModel.calorie.asString(unit: .calorie)) / \(targetCalorie.asString(unit: .calorie))"
+    }
+    
+    // 소요시간 비교 -> 소요시간 / 예상 소요시간
+    var compareEstimatedTime: String {
+        return "\(trackingViewModel.elapsedTime.asString(style: .positional)) / \(Double(estimatedTime).asString(style: .positional))"
+    }
+    
+    // 킬로미터 비교
+    var compareKilometersLabel: String {
+        let isGoalReached = trackingViewModel.distance >= targetDistance
+        let distanceDifference = abs(trackingViewModel.distance - targetDistance)
         
-        if goalReached, timeReduction {
+        if isGoalReached {
+            return "\(distanceDifference.asString(unit: .kilometer)) 만큼 더 뛰었습니다!"
+        } else {
+            return "\(distanceDifference.asString(unit: .kilometer)) 적게 뛰었어요."
+        }
+    }
+    
+    // 칼로리 비교
+    var compareCaloriesLabel: String {
+        let isGoalReached = trackingViewModel.calorie >= targetCalorie
+        let caloriesDifference = abs(trackingViewModel.distance - targetCalorie)
+        
+        if isGoalReached {
+            return "\(caloriesDifference.asString(unit: .calorie)) 더 소모했어요!"
+        } else {
+            return "\(caloriesDifference.asString(unit: .calorie)) 덜 소모했어요."
+        }
+    }
+    
+    // 소요시간 비교
+    var compareEstimatedTimeLabel: String {
+        let isGoalReached = trackingViewModel.elapsedTime < Double(estimatedTime)
+        let estimatedTimeDifference = abs(trackingViewModel.elapsedTime - Double(estimatedTime))
+        if isGoalReached {
+            return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 단축되었어요!"
+        } else {
+            return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 더 소요됬어요."
+        }
+    }
+    
+    var feedbackMessageLabel: String {
+        let isGoalDistanceReached = trackingViewModel.distance >= targetDistance
+        let isTimeReduction = trackingViewModel.elapsedTime < Double(estimatedTime)
+        
+        if isGoalDistanceReached, isTimeReduction {
             return "대단해요! 목표를 달성하고 도전 시간을 단축했어요. 지속적인 노력이 효과를 나타내고 있습니다. 계속해서 도전해보세요!"
-        }
-        else if !goalReached, timeReduction {
+        } else if !isGoalDistanceReached, isTimeReduction {
             return "목표에는 도달하지 못했지만, 러닝 시간을 단축했어요! 훌륭한 노력입니다. 계속해서 노력하면 목표에 더 가까워질 거에요!"
-        }
-        else if goalReached, !timeReduction {
+        } else if isGoalDistanceReached, !isTimeReduction {
             return "목표에 도달했어요! 비록 러닝 시간을 단축하지 못했지만, 목표를 이루다니 정말 멋져요. 지속적인 노력으로 시간을 줄여가는 모습을 기대해봅니다!"
         } else {
             return "목표에 도달하지 못했어도 괜찮아요. 중요한 건 노력한 자체입니다. 목표와 거리를 조금 낮춰서 차근차근 도전해보세요!"
         }
-    }
-    
-    // 목표값과 비교하여 수치로 알려줌
-    var elapsedTimeDifferenceLabel: String {
-        let differenceInSeconds = Double(settingViewModel.estimatedTime * 60) - trackingViewModel.elapsedTime
-        if differenceInSeconds > 0  {
-            return "예상 시간보다 \(differenceInSeconds.asString(style: .positional)) 빨리 끝났어요!"
-        } else {
-            return "예상 시간보다 \(abs(differenceInSeconds).asString(style: .positional)) 늦게 끝났어요"
-        }
-    }
-    
-    var kilometerDifferenceLabel: String {
-        let difference = (trackingViewModel.distance) - settingViewModel.goalMinValue
-        if difference > 0 {
-            return "목표보다 \(difference.asString(unit: .kilometer)) 더 뛰었어요!"
-        } else {
-            return "목표보다 \(abs(difference).asString(unit: .kilometer)) 덜 뛰었어요."
-        }
-    }
-    
-    var calorieDifferenceLabel: String {
-        let difference = (trackingViewModel.calorie) - estimatedCalories
-        if difference > 0 {
-            return "\(difference.asString(unit: .calorie))를 더 소모했어요!"
-        } else {
-            return "\(abs(difference).asString(unit: .calorie))를 덜 소모했어요."
-        }
-    }
-    
-    // 실제기록/예상목표
-    var kilometerComparisonLabel: String {
-        "\(trackingViewModel.distance.asString(unit: .kilometer)) / \(settingViewModel.goalMinValue.asString(unit: .kilometer))"
-    }
-    
-    var calorieComparisonLabel: String {
-        "\(trackingViewModel.calorie.asString(unit: .calorie)) / \(estimatedCalories.asString(unit: .calorie))"
-    }
-    
-    var timeComparisonLabel: String {
-        "\(trackingViewModel.elapsedTime.asString(style: .positional)) / \(Double(settingViewModel.estimatedTime * 60).asString(style: .positional))"
     }
 }
 
@@ -112,11 +122,11 @@ extension RunningResultView {
                             Image(.distance)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(kilometerComparisonLabel)
+                                Text(compareKilometers)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(kilometerDifferenceLabel)
+                            Text(compareKilometersLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -124,11 +134,11 @@ extension RunningResultView {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(calorieComparisonLabel)
+                                Text(compareCalories)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(calorieDifferenceLabel)
+                            Text(compareCaloriesLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -136,11 +146,11 @@ extension RunningResultView {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text(timeComparisonLabel)
+                                Text(compareEstimatedTime)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(elapsedTimeDifferenceLabel)
+                            Text(compareEstimatedTimeLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -160,14 +170,16 @@ extension RunningResultView {
                     HStack {
                         Text(feedbackMessageLabel)
                             .customFontStyle(.gray1_R14)
+                            .multilineTextAlignment(.leading)
                             .lineLimit(3)
+                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     
                     
                     HStack(spacing: 28) {
                         MainButton(active: true, buttonText: "홈으로 가기", buttonColor: .gray1, minHeight: 45) {
-                            router.popToRoot()
+                            showingAlert = true
                         }
                         
                         MainButton(active: true, buttonText: "러닝 기록 저장", buttonColor: .main, minHeight: 45) {
@@ -189,11 +201,27 @@ extension RunningResultView {
             )
             .offset(y: -10)
         }
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("홈으로 이동"),
+                message: Text("홈으로 이동 하시겠습니까? 홈으로 이동하면 러닝 데이터가 리포트에 반영되지 않습니다."),
+                primaryButton: .default (
+                    Text("취소"),
+                    action: { }
+                ),
+                secondaryButton: .destructive (
+                    Text("이동"),
+                    action: {
+                        router.popToRoot()
+                    }
+                )
+            )
+        }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
                 trackingViewModel.uploadRecordedData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
-                    self.hideKeyboard()
-                    self.showingPopup = false
+                self.hideKeyboard()
+                self.showingPopup = false
             }
         } customize: {
             $0
@@ -217,6 +245,6 @@ extension RunningResultView {
 }
 
 
-       
+
 
 

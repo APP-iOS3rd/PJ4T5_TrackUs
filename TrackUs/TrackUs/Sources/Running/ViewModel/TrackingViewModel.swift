@@ -21,7 +21,8 @@ enum NetworkStatus {
 class TrackingViewModel: ObservableObject {
     var snapshot: UIImage?
     var groupID = ""
-    var goldDistance: Double = 0.0
+    var goalDistance: Double = 0.0
+    
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     @Published var count: Int = 3
@@ -43,32 +44,36 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 카운트다운
+    @MainActor
     func initTimer() {
-        self.countTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
-            guard let self = self else { return }
-            count -= 1
-            if count == 0 {
-                self.countTimer.invalidate()
-            }
-        })
+            self.countTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.count -= 1
+                    if self.count == 0 {
+                        self.countTimer.invalidate()
+                    }
+                }
+            })
     }
     
     // 경로데이터 업데이트 함수
     @MainActor
     func updateCoordinates(with coordinate: CLLocationCoordinate2D) {
-        self.coordinates.append(coordinate)
-        
-        guard self.coordinates.count > 1 else { return }
-        
-        let newLocation = self.coordinates[self.coordinates.count - 1]
-        let oldLocation = self.coordinates[self.coordinates.count - 2]
-        
-        self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
-        self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance)
-        self.pace = ExerciseManager.calculatedPace(distance: self.distance, totalTime: self.elapsedTime)
+            self.coordinates.append(coordinate)
+            
+            guard self.coordinates.count > 1 else { return }
+            
+            let newLocation = self.coordinates[self.coordinates.count - 1]
+            let oldLocation = self.coordinates[self.coordinates.count - 2]
+            
+            self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
+            self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance)
+            self.pace = ExerciseManager.calculatedPace(distance: self.distance, totalTime: self.elapsedTime)
     }
     
     // 기록시작
+    @MainActor
     func startRecord() {
         self.isPause = false
         self.recordTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
@@ -78,6 +83,7 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 기록중지
+    @MainActor
     func stopRecord() {
         self.isPause = true
         self.recordTimer.invalidate()
