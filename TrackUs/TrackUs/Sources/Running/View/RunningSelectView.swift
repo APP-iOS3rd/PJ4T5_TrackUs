@@ -35,7 +35,7 @@ struct RunningSelectView: View {
                     .customFontStyle(.gray1_SB17)
                     .padding(.top, 37)
             }
-//            .padding(.horizontal, 16)
+            .padding(.horizontal, 16)
             
             ZStack {
                 VStack {
