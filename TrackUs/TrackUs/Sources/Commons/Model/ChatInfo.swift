@@ -111,8 +111,13 @@ public struct FirestoreMessage: Codable, Hashable {
 // extension ==== 이후 분리
 
 extension Message {
+    // 시간 반환
     var time: String {
         DateFormatter.timeFormatter.string(from: timestamp)
+    }
+    
+    var date: String {
+        DateFormatter.dateFormatter.string(from: timestamp)
     }
 }
 
@@ -124,6 +129,13 @@ extension DateFormatter {
 
         formatter.dateStyle = .none
         formatter.timeStyle = .short
+
+        return formatter
+    }()
+    static let dateFormatter = {
+        let formatter = DateFormatter()
+
+        formatter.dateFormat = "yyyy.MM.dd"
 
         return formatter
     }()

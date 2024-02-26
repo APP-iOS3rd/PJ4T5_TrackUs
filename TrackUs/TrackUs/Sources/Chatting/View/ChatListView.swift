@@ -71,6 +71,14 @@ struct ChatListView: View {
                             .frame(height: 40)
                         }
                     }
+                    .swipeActions{
+                        Button(role: .destructive) {
+                            chatViewModel.deleteChatRoom(chatRoomID: chatRoom.id)
+                        } label: {
+                            Text("나가기")
+                                .customFontStyle(.white_B16)
+                        }
+                    }
                 }
             }
             .listStyle(.plain)
@@ -99,10 +107,10 @@ struct ChatRoomImage: View {
             ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 50)
         case 2:
             ZStack {
-                ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 30)
-                    .offset(x: -11, y: 11)
-                ProfileImage(ImageUrl: users[members[1]]?.profileImageUrl, size: 30)
-                    .offset(x: 11, y: 11)
+                ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 32)
+                    .offset(x: -10, y: 10)
+                ProfileImage(ImageUrl: users[members[1]]?.profileImageUrl, size: 32)
+                    .offset(x: 10, y: -10)
             }
         case 3:
             VStack(spacing: 1) {
@@ -157,7 +165,7 @@ struct usersUnreadCoun: View {
         if let count = count{
             if count != 0 && count <= 300 {
                 //Text("\(count)")
-                Text("N")
+                Text("\(count)")
                     .foregroundStyle(.white)
                     .font(.system(size: 12, weight: .bold))
                     .padding(.vertical, 3)
@@ -169,7 +177,7 @@ struct usersUnreadCoun: View {
                     )
             }else if  count > 300 {
                 //Text("300+")
-                Text("N")
+                Text("300+")
                     .foregroundStyle(.white)
                     .font(.system(size: 12, weight: .bold))
                     .padding(.vertical, 4)

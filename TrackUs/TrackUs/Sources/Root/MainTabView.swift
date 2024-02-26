@@ -73,10 +73,10 @@ struct MainTabView: View {
                     HapticManager.instance.impact(style: .light)
                 }
                 GeometryReader { geometry in
-                    if chatViewModel.updateNewMessage() {
+                    if chatViewModel.updateNewMessage() != 0 {
                         VStack{
                             Spacer()
-                            Text("N")
+                            Text(chatViewModel.updateNewMessage() < 1000 ? "\(chatViewModel.updateNewMessage())" : "999+")
                                 .foregroundStyle(.white)
                                 .font(.system(size: 10, weight: .regular))
                                 .padding(.vertical, 2)

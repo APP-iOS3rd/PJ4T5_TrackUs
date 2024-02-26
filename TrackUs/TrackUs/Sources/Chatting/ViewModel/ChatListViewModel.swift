@@ -30,9 +30,9 @@ class ChatListViewModel: ObservableObject {
     }
     
     // 탭바 신규 메세지 확인
-    func updateNewMessage() -> Bool{
+    func updateNewMessage() -> Int{
         // 채팅방들 중에서 현재 사용자의 unreadCount가 0이 아닌 경우를 확인
-        return chatRooms.contains { $0.usersUnreadCountInfo[currentUId] != 0 }
+        return chatRooms.reduce (0, { $0 + ($1.usersUnreadCountInfo[currentUId] ?? 0) })
         
 //        // 새로운 메시지 여부를 newMessage에 반영
 //        self.newMessage = hasNewMessage

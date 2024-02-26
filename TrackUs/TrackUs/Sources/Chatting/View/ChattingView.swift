@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-import Combine
 
 public var previoosUser1: String?
+public var previousdate1: String?
 
 struct ChattingView: View {
     @EnvironmentObject var router: Router
@@ -241,8 +241,13 @@ struct ChatMessageView: View {
     let message: Message
     let mymessge: Bool
     @State private var previousUser: Bool = false
+    @State private var previousdate: Bool = false
     
     var body: some View {
+//        if previousdate {
+//            Text(message.date)
+//                .customFontStyle(.gray1_R12)
+//        }
         HStack(alignment: .top) {
             if !mymessge && previousUser {
                 ProfileImage(ImageUrl: message.sendMember.profileImageUrl, size: 40)
@@ -279,7 +284,9 @@ struct ChatMessageView: View {
         }
         .onAppear {
             previousUser = previoosUser1 == message.sendMember.uid ? false : true
+            previousdate = previousdate1 == message.date ? false : true
             previoosUser1 = message.sendMember.uid
+            previousdate1 = message.date
         }
     }
 }
