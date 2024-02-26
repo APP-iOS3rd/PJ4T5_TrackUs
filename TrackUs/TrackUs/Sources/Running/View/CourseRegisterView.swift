@@ -60,7 +60,7 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStatsView(estimatedTime: Double(courseRegViewModel.totalEstimatedTimeTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0)
+                        RunningStatsView(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0)
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -129,6 +129,12 @@ extension CourseRegisterView {
             TimePicker(hours: $courseRegViewModel.hours, minutes: $courseRegViewModel.minutes, seconds: $courseRegViewModel.seconds)
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.hidden)
+                .onChange(of: [courseRegViewModel.hours, courseRegViewModel.minutes, courseRegViewModel.seconds]) { _ in
+                    let hoursInSeconds = courseRegViewModel.hours * 3600
+                    let minutesInSeconds = courseRegViewModel.minutes * 60
+                    let seconds = courseRegViewModel.seconds
+                    courseRegViewModel.estimatedTime = hoursInSeconds + minutesInSeconds + seconds
+                }
         })
         .customNavigation {
             NavigationText(title: "코스 등록")

@@ -12,7 +12,7 @@ import Kingfisher
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
-    @StateObject var courseViewModel = CourseViewModel()
+    @StateObject var courseListViewModel = CourseListViewModel()
     @StateObject var userSearchViewModel = UserSearchViewModel()
     @State private var isOpen: Bool = false
     @State private var showingPopup: Bool = false
@@ -87,7 +87,7 @@ extension RunningHomeView {
             }
         }
         .onAppear {
-            courseViewModel.fetchCourseData()
+            courseListViewModel.fetchCourseData()
         }
         // MARK: - 상단 팝업
               .popup(isPresented: $showingFloater) {
@@ -190,13 +190,13 @@ extension RunningHomeView {
             .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
             
             // 가로 스크롤
-            if !courseViewModel.courseList.isEmpty {
+            if !courseListViewModel.courseList.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     VStack {
                         HStack(spacing: 12) {
-                            ForEach(courseViewModel.courseList, id: \.self) { course in
+                            ForEach(courseListViewModel.courseList, id: \.self) { course in
                                 Button(action: {
-                                    router.push(.courseDetail(course, courseViewModel))
+                                    router.push(.courseDetail(CourseViewModel(course: course)))
                                 }, label: {
                                     RunningRecruitmentCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
                                 })
@@ -219,7 +219,7 @@ extension RunningHomeView {
     func startButtonTapped() {
         LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
             if authrionzationStatus == .authorizedWhenInUse {
-                router.push(.runningSelect)
+                router.push(.runningSelect(courseListViewModel, userSearchViewModel))
             } else {
                 showingAlert = true
             }

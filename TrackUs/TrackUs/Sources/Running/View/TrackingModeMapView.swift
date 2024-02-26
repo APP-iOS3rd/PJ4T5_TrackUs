@@ -10,16 +10,17 @@ import MapboxMaps
 
 struct TrackingModeMapView: UIViewControllerRepresentable {
     @ObservedObject var router: Router
+    @ObservedObject var trackingViewModel: TrackingViewModel
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return Coordinator(router: router)
+        return Coordinator(router: router, trackingViewModel: trackingViewModel)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(router: router)
+        return Coordinator(router: router, trackingViewModel: trackingViewModel)
     }
 }
 
@@ -28,7 +29,7 @@ extension TrackingModeMapView {
         private let router: Router
         private var mapView: MapView!
         private let locationManager = LocationManager.shared
-        private let trackingViewModel = TrackingViewModel()
+        private let trackingViewModel: TrackingViewModel
         private var locationTrackingCancellation: AnyCancelable?
         private var cancellation = Set<AnyCancelable>()
         private var lineAnnotation: PolylineAnnotation!
@@ -49,8 +50,9 @@ extension TrackingModeMapView {
         private var kilometerStatusView = UIStackView()
         private let excerciesStatusView = UIStackView()
         
-        init(router: Router) {
+        init(router: Router, trackingViewModel: TrackingViewModel) {
             self.router = router
+            self.trackingViewModel = trackingViewModel
             super.init(nibName: nil, bundle: nil)
         }
         
@@ -60,6 +62,7 @@ extension TrackingModeMapView {
         
         override public func viewDidLoad() {
             super.viewDidLoad()
+            trackingViewModel.initTimer()
             setupCamera()
             setupUI()
             bind()
@@ -180,7 +183,7 @@ extension TrackingModeMapView {
             }
             
             let distanceToNowLabel = UILabel()
-            let distanceToNowImage = UIImageView(image: UIImage(named: "Shose"))
+            let distanceToNowImage = UIImageView(image: UIImage(named: "Distance"))
             distanceToNowLabel.text = "현재까지 거리"
             distanceToNowLabel.textColor = .gray1
             
@@ -314,7 +317,8 @@ extension TrackingModeMapView {
             
             self.trackingViewModel.$distance.sink { [weak self] distance in
                 guard let self = self else { return }
-                self.kilometerLabel.text = String(format: "%.2fkm/-", distance)
+                
+                self.kilometerLabel.text = "\(distance.asString(unit: .kilometer))/\(trackingViewModel.goldDistance.asString(unit: .kilometer))"
             }.store(in: &cancellation)
             
             self.trackingViewModel.$elapsedTime.sink { [weak self] time in

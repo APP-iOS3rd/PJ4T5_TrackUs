@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingPopup: View {
+    @StateObject var trackingViewModel = TrackingViewModel()
     @Binding var showingPopup: Bool
     @ObservedObject var settingVM: SettingPopupViewModel
     @EnvironmentObject var router: Router
@@ -86,7 +87,8 @@ struct SettingPopup: View {
                 Button(action: {
                     settingVM.saveSettings()
                     showingPopup = false
-                    router.push(.runningStart)
+                    trackingViewModel.goldDistance = settingVM.goalMinValue
+                    router.push(.runningStart(trackingViewModel))
                 }) {
                     Text("개인 러닝 시작")
                         .customFontStyle(.white_B16)
