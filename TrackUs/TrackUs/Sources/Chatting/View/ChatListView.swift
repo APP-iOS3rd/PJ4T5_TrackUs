@@ -93,6 +93,8 @@ struct ChatRoomImage: View {
     
     var body: some View {
         switch members.count {
+        case 0:
+            ProfileImage(ImageUrl: nil, size: 50)
         case 1:
             ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 50)
         case 2:

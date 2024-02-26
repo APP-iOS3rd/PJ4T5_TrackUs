@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 public var previoosUser1: String?
 
@@ -22,6 +23,7 @@ struct ChattingView: View {
     @State var previousUser: String?
     
     @State private var title: String = ""
+    @State private var scrollToBottom = false // State 변수 추가
     
     private func updatePreviousSender(_ sender: String) -> Bool{
         if previousUser != sender {
@@ -37,14 +39,22 @@ struct ChattingView: View {
         ZStack(alignment: .trailing){
             VStack(alignment: .leading){
                 // 채팅 내용 표기
-                ScrollView{
-                    VStack(spacing: 6) {
-                        ForEach(chatViewModel.messages, id: \.self.id) { message in
-                            ChatMessageView(message: message,
-                                            mymessge: message.sendMember.uid == authViewModel.userInfo.uid)
-                            .id(message)
-                            .padding(.horizontal, 16)
+                ScrollViewReader{ proxy in
+                    ScrollView{
+                        VStack(spacing: 6) {
+                            ForEach(chatViewModel.messages, id: \.self.id) { message in
+                                ChatMessageView(message: message,
+                                                mymessge: message.sendMember.uid == authViewModel.userInfo.uid)
+                                .id(message)
+                                .padding(.horizontal, 16)
+                            }
                         }
+                    }
+                    .onChange(of: chatViewModel.messages.count) { _ in // 새 메시지가 추가될 때마다 호출
+                        proxy.scrollTo(chatViewModel.messages.last?.id, anchor: .bottom)
+                    }
+                    .onAppear {
+                        proxy.scrollTo(chatViewModel.messages.last?.id, anchor: .bottom)
                     }
                 }
                 Spacer()
@@ -110,7 +120,7 @@ struct ChattingView: View {
         
 
     }
-    /// 메세지 바3
+    /// 메세지 바
     var messageBar: some View {
         // 하단 메세지 보내기
         HStack(alignment: .bottom, spacing: 12){
@@ -195,7 +205,7 @@ struct ChattingView: View {
                     HStack{
                         ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
                         Text("\(chatViewModel.members[uid]?.userName ?? "")")
-                            .customFontStyle(.gray1_M16)
+                            .customFontStyle(.gray1_R14)
                     }
                 }
             }
@@ -207,7 +217,11 @@ struct ChattingView: View {
                 .foregroundStyle(.gray3)
             Button(action: {
                 // 나가기 기능
-                chatViewModel.leaveChatRoom(chatRoomID: chatViewModel.chatRoom.id, userUID: authViewModel.userInfo.uid)
+                if chatViewModel.chatRoom.group {
+                    chatViewModel.leaveChatRoom(chatRoomID: chatViewModel.chatRoom.id, userUID: authViewModel.userInfo.uid)
+                }else {
+                    chatViewModel.deleteChatRoom(chatRoomID: chatViewModel.chatRoom.id)
+                }
                 router.pop()
             }) {
                 Image(systemName: "rectangle.portrait.and.arrow.forward")

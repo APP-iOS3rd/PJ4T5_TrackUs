@@ -57,6 +57,10 @@ class ChatViewModel: ObservableObject {
                                                profileImageUrl: opponentInfo.profileImageUrl)]
         createChatRoom(myInfo: myInfo, opponentInfo: opponentInfo)
     }
+    // 채팅방 삭제
+    func deleteChatRoom(chatRoomID: String) {
+        ref.document(chatRoomID).delete{ error in }
+    }
     
     
     // 개인 채팅 신규

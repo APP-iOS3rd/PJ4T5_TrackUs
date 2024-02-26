@@ -13,6 +13,7 @@ import Firebase
 class CourseRegViewModel: ObservableObject {
     private let authViewModel = AuthenticationViewModel.shared
     private let locationManager = LocationManager.shared
+    private let chatVieModle = ChatListViewModel.shared
     let id = UUID()
     let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     
@@ -90,6 +91,7 @@ class CourseRegViewModel: ObservableObject {
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
                     
                 }
+                self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
                 completion()
             }
         }
