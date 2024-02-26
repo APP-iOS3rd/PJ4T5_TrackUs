@@ -17,56 +17,64 @@ struct ChattingListView: View {
     private var numberChatroom = 5
     
     var body: some View {
-        List{
-            ForEach(chatViewModel.chatRooms, id: \.id) { chatRoom in
-                Button {
-                    router.push(.chatting(ChatViewModel(chatRoom: chatRoom, users: chatViewModel.users)))
-                } label: {
-                    HStack(spacing: 12){
-                        // 채팅방 이미지
-                        ChatRoomImage(members: chatRoom.nonSelfMembers, users: chatViewModel.users)
-                            .frame(width: 52, height: 52)
-                        // 채팅 제목, 최근 메세지
-                        VStack(alignment: .leading, spacing: 4){
-                            // 채팅 제목
-                            HStack(spacing: 4){
-                                // 1:1 채팅 제목 받아오기 추가
-                                if chatRoom.group {
-                                    Text(chatRoom.title)
-                                        .customFontStyle(.gray1_B16)
-                                }else {
-                                    Text(chatViewModel.users[chatRoom.nonSelfMembers.first ?? ""]?.userName ?? "인식오류")
-                                        .customFontStyle(.gray1_B16)
+        ZStack{
+            if chatViewModel.chatRooms.count == 0{
+                Text("참여한 채팅방이 없습니다")
+                    .font(.title)
+                    .foregroundStyle(.gray3)
+            }
+            
+            List{
+                ForEach(chatViewModel.chatRooms, id: \.id) { chatRoom in
+                    Button {
+                        router.push(.chatting(ChatViewModel(chatRoom: chatRoom, users: chatViewModel.users)))
+                    } label: {
+                        HStack(spacing: 12){
+                            // 채팅방 이미지
+                            ChatRoomImage(members: chatRoom.nonSelfMembers, users: chatViewModel.users)
+                                .frame(width: 52, height: 52)
+                            // 채팅 제목, 최근 메세지
+                            VStack(alignment: .leading, spacing: 4){
+                                // 채팅 제목
+                                HStack(spacing: 4){
+                                    // 1:1 채팅 제목 받아오기 추가
+                                    if chatRoom.group {
+                                        Text(chatRoom.title)
+                                            .customFontStyle(.gray1_B16)
+                                    }else {
+                                        Text(chatViewModel.users[chatRoom.nonSelfMembers.first ?? ""]?.userName ?? "TrackUs")
+                                            .customFontStyle(.gray1_B16)
+                                    }
+                                    // 채팅방 인원수
+                                    if chatRoom.group {
+                                        Image(systemName: "person.2.fill")
+                                            .customFontStyle(.gray2_L12)
+                                        Text("\(chatRoom.members.count)")
+                                            .customFontStyle(.gray2_L12)
+                                    }
                                 }
-                                // 채팅방 인원수
-                                if chatRoom.group {
-                                    Image(systemName: "person.2.fill")
-                                        .customFontStyle(.gray2_L12)
-                                    Text("\(chatRoom.members.count)")
-                                        .customFontStyle(.gray2_L12)
-                                }
+                                // 최신 메세지
+                                Text(chatRoom.latestMessage?.text ?? "작성된 메세지가 없습니다.")
+                                    .customFontStyle(.gray2_R12)
+                                    .lineLimit(2)
                             }
-                            // 최신 메세지
-                            Text(chatRoom.latestMessage?.text ?? "")
-                                .customFontStyle(.gray2_R12)
-                                .lineLimit(2)
-                        }
-                        Spacer()
-                        
-                        VStack(alignment: .trailing, spacing: 0){
-                            // 최신 메세지 시간
-                            Text(chatRoom.latestMessage?.timestamp?.timeAgoFormat() ?? "")
-                                .customFontStyle(.gray1_R12)
                             Spacer()
-                            // 신규 메세지 갯수
-                            usersUnreadCoun(count: chatRoom.usersUnreadCountInfo[authViewModel.userInfo.uid])
+                            
+                            VStack(alignment: .trailing, spacing: 0){
+                                // 최신 메세지 시간
+                                Text(chatRoom.latestMessage?.timestamp?.timeAgoFormat() ?? "")
+                                    .customFontStyle(.gray1_R12)
+                                Spacer()
+                                // 신규 메세지 갯수
+                                usersUnreadCoun(count: chatRoom.usersUnreadCountInfo[authViewModel.userInfo.uid])
+                            }
+                            .frame(height: 40)
                         }
-                        .frame(height: 40)
                     }
                 }
             }
+            .listStyle(.plain)
         }
-        .listStyle(.plain)
         .customNavigation(center: {
             Text("채팅 목록")
                 .customFontStyle(.gray1_B16)
