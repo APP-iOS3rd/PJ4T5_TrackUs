@@ -16,6 +16,7 @@ import CryptoKit
 import SwiftUI
 
 enum AuthenticationState {
+    case startapp
     case unauthenticated
     case authenticating
     case signUpcating
@@ -48,14 +49,17 @@ class FirebaseManger: NSObject {
 class AuthenticationViewModel: NSObject, ObservableObject {
     static let shared = AuthenticationViewModel()
     
-    @Published var authenticationState: AuthenticationState = .unauthenticated
+    @Published var authenticationState: AuthenticationState = .startapp
     @Published var errorMessage: String = ""
-    @Published var user: User?
-    @Published var newUser: Bool = false
-    @Published var checkBool: Bool?
+    @Published var user: Firebase.User?
     @Published var userInfo: UserInfo = UserInfo()
     
-    // apple login 
+    // 외부 공유용 사용
+    static var currentUId: String {
+        shared.userInfo.uid
+    }
+    
+    // apple login
     var window: UIWindow?
     fileprivate var currentNonce: String?
 
@@ -109,6 +113,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     func logOut() {
         do {
             try Auth.auth().signOut()
+            userInfo = UserInfo()
         }
         catch {
             print(error)
@@ -135,6 +140,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 }
             }
             self.authenticationState = .unauthenticated
+            userInfo = UserInfo()
             return true
         }
         catch {
@@ -172,7 +178,8 @@ extension AuthenticationViewModel {
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                            accessToken: accessToken.tokenString)
-            try await Auth.auth().signIn(with: credential)
+            let auth = try await Auth.auth().signIn(with: credential)
+            self.userInfo.uid = auth.user.uid
             return true
         }
         catch {
@@ -255,7 +262,8 @@ extension AuthenticationViewModel: ASAuthorizationControllerDelegate {
             // Sign in with Firebase.
             Task {
                 do {
-                    try await Auth.auth().signIn(with: credential)
+                    let auth = try await Auth.auth().signIn(with: credential)
+                    self.userInfo.uid = auth.user.uid
                 }
                 catch {
                     print("Error authenticating: \(error.localizedDescription)")
@@ -327,7 +335,6 @@ extension AuthenticationViewModel {
     }
     // MARK: - 사용자 정보 저장 - 위 이미지 저장함수와 순차적으로 사용
     private func storeUserInformation() {
-        print(userInfo.runningStyle)
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
             return }
         // 해당부분 자료형 지정 필요
@@ -344,7 +351,6 @@ extension AuthenticationViewModel {
                         "runningStyle": userInfo.runningStyle?.rawValue as Any] as [String : Any]
         FirebaseManger.shared.firestore.collection("users").document(uid).setData(userData){ error in
             if error != nil {
-                print("@@@@@@ error 1 @@@@@@")
                 return
             }
             print("success")
@@ -379,11 +385,9 @@ extension AuthenticationViewModel {
     }
     
     func downloadImageFromStorage(uid: String) {
-        guard let profileImageUrl = self.userInfo.profileImageUrl else { 
-            print("Url 없음 - downloadImageFromStorage")
+        guard let profileImageUrl = self.userInfo.profileImageUrl else {
             return
         }
-        print("Url 있음 - ", profileImageUrl)
         let ref = FirebaseManger.shared.storage.reference(forURL: profileImageUrl)
 //
 //        let storageRef = storage.reference(forURL: url.absoluteString)

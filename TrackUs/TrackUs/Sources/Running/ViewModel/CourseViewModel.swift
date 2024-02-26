@@ -9,6 +9,7 @@ import Foundation
 class CourseViewModel: ObservableObject {
     let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
+    private let chatViewModel = ChatListViewModel.shared
     @Published var course: Course
     
     
@@ -28,6 +29,7 @@ class CourseViewModel: ObservableObject {
                 self.course.members.append(memberUid)
             }
         }
+        chatViewModel.joinChatRoom(chatRoomID: uid, userUID: memberUid)
     }
     
     @MainActor
@@ -42,12 +44,15 @@ class CourseViewModel: ObservableObject {
                 self.course.members = self.course.members.filter { $0 != memberUid }
             }
         }
+        // 채팅 나가기
+        chatViewModel.leaveChatRoom(chatRoomID: uid, userUID: memberUid)
     }
     
     // 러닝 삭제
     func removeCourse(completion: @escaping () -> ()) {
         let uid = self.course.uid
         
+        chatViewModel.deleteChatRoom(chatRoomID: uid)
         Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(uid).delete { error in
             completion()
         }
