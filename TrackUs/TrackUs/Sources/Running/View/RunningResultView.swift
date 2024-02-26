@@ -49,9 +49,9 @@ struct RunningResultView: View {
         let distanceDifference = abs(trackingViewModel.distance - targetDistance)
         
         if isGoalReached {
-            return "\(distanceDifference.asString(unit: .kilometer)) 더 뛰었습니다!"
+            return "\(distanceDifference.asString(unit: .kilometer)) 만큼 더 뛰었습니다!"
         } else {
-            return "\(distanceDifference.asString(unit: .kilometer)) 덜 뛰었습니다."
+            return "\(distanceDifference.asString(unit: .kilometer)) 적게 뛰었어요."
         }
     }
     
@@ -75,6 +75,21 @@ struct RunningResultView: View {
             return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 단축되었어요!"
         } else {
             return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 더 소요됬어요."
+        }
+    }
+    
+    var feedbackMessageLabel: String {
+        let isGoalDistanceReached = trackingViewModel.distance >= targetDistance
+        let isTimeReduction = trackingViewModel.elapsedTime < Double(estimatedTime)
+        
+        if isGoalDistanceReached, isTimeReduction {
+            return "대단해요! 목표를 달성하고 도전 시간을 단축했어요. 지속적인 노력이 효과를 나타내고 있습니다. 계속해서 도전해보세요!"
+        } else if !isGoalDistanceReached, isTimeReduction {
+            return "목표에는 도달하지 못했지만, 러닝 시간을 단축했어요! 훌륭한 노력입니다. 계속해서 노력하면 목표에 더 가까워질 거에요!"
+        } else if isGoalDistanceReached, !isTimeReduction {
+            return "목표에 도달했어요! 비록 러닝 시간을 단축하지 못했지만, 목표를 이루다니 정말 멋져요. 지속적인 노력으로 시간을 줄여가는 모습을 기대해봅니다!"
+        } else {
+            return "목표에 도달하지 못했어도 괜찮아요. 중요한 건 노력한 자체입니다. 목표와 거리를 조금 낮춰서 차근차근 도전해보세요!"
         }
     }
 }
@@ -152,9 +167,11 @@ extension RunningResultView {
                     }
                     
                     HStack {
-                        Text("")
+                        Text(feedbackMessageLabel)
                             .customFontStyle(.gray1_R14)
+                            .multilineTextAlignment(.leading)
                             .lineLimit(3)
+                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     

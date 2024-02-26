@@ -44,17 +44,17 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 카운트다운
-    
+    @MainActor
     func initTimer() {
-        DispatchQueue.main.async {
             self.countTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
                 guard let self = self else { return }
-                count -= 1
-                if count == 0 {
-                    self.countTimer.invalidate()
+                DispatchQueue.main.async {
+                    self.count -= 1
+                    if self.count == 0 {
+                        self.countTimer.invalidate()
+                    }
                 }
             })
-        }
     }
     
     // 경로데이터 업데이트 함수
@@ -73,7 +73,7 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 기록시작
-    
+    @MainActor
     func startRecord() {
         self.isPause = false
         self.recordTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
@@ -83,7 +83,7 @@ class TrackingViewModel: ObservableObject {
     }
     
     // 기록중지
-    
+    @MainActor
     func stopRecord() {
         self.isPause = true
         self.recordTimer.invalidate()

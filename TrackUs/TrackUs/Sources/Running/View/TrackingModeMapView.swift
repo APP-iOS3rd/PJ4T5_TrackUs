@@ -303,35 +303,35 @@ extension TrackingModeMapView {
         // 뷰에 갱신될 값들을 바인딩
         private func bind() {
             // 카운트다운 상태 바인딩
-            self.trackingViewModel.$count.sink { [weak self] count in
+            self.trackingViewModel.$count.receive(on: DispatchQueue.main).sink { [weak self] count in
                 guard let self = self else { return }
                 self.countLabel.text = "\(count)"
                 if count == 0 { updatedOnStart() }
             }.store(in: &cancellation)
-            
+        
             // 중지상태 바인딩
-            self.trackingViewModel.$isPause.sink { [weak self] isPause in
+            self.trackingViewModel.$isPause.receive(on: DispatchQueue.main).sink { [weak self] isPause in
                 guard let self = self else { return }
                 isPause ? self.updatedOnPause() : self.updatedOnPlay()
             }.store(in: &cancellation)
             
-            self.trackingViewModel.$distance.sink { [weak self] distance in
+            self.trackingViewModel.$distance.receive(on: DispatchQueue.main).sink { [weak self] distance in
                 guard let self = self else { return }
                 
                 self.kilometerLabel.text = "\(distance.asString(unit: .kilometer))/\(trackingViewModel.goalDistance.asString(unit: .kilometer))"
             }.store(in: &cancellation)
             
-            self.trackingViewModel.$elapsedTime.sink { [weak self] time in
+            self.trackingViewModel.$elapsedTime.receive(on: DispatchQueue.main).receive(on: DispatchQueue.main).sink { [weak self] time in
                 guard let self = self else { return }
                 self.timeLabel.text = time.asString(style: .positional)
             }.store(in: &cancellation)
             
-            self.trackingViewModel.$calorie.sink { [weak self] calorie in
+            self.trackingViewModel.$calorie.receive(on: DispatchQueue.main).sink { [weak self] calorie in
                 guard let self = self else { return }
                 self.calorieLable.text = String(format: "%.1f", calorie)
             }.store(in: &cancellation)
             
-            self.trackingViewModel.$pace.sink { [weak self] pace in
+            self.trackingViewModel.$pace.receive(on: DispatchQueue.main).sink { [weak self] pace in
                 guard let self = self else { return }
                 self.paceLabel.text = pace.asString(unit: .pace)
             }.store(in: &cancellation)
