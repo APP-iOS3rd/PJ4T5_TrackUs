@@ -49,6 +49,8 @@ struct CourseDetailView: View {
                 else if !memberContains {
                     MainButton(buttonText: "러닝 참가하기") {
                         courseViewModel.addParticipant()
+                        // 채팅방 참여
+                        chatViewModel.joinChatRoom(chatRoomID: course.uid, userUID: authViewModel.userInfo.uid)
                     }
                 } else if memberContains {
                     MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
@@ -56,6 +58,8 @@ struct CourseDetailView: View {
                             showingAlert = true
                         } else {
                             courseViewModel.removeParticipant()
+                            // 채팅방 나가기
+                            chatViewModel.joinChatRoom(chatRoomID: course.uid, userUID: authViewModel.userInfo.uid)
                         }
                     }
                 }
