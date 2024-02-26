@@ -62,10 +62,10 @@ extension TrackingModeMapView {
         
         override public func viewDidLoad() {
             super.viewDidLoad()
-            trackingViewModel.initTimer()
             setupCamera()
             setupUI()
             bind()
+            trackingViewModel.initTimer()
         }
         
         // 맵뷰 설정 & 초기 카메라 셋팅
@@ -318,7 +318,7 @@ extension TrackingModeMapView {
             self.trackingViewModel.$distance.sink { [weak self] distance in
                 guard let self = self else { return }
                 
-                self.kilometerLabel.text = "\(distance.asString(unit: .kilometer))/\(trackingViewModel.goldDistance.asString(unit: .kilometer))"
+                self.kilometerLabel.text = "\(distance.asString(unit: .kilometer))/\(trackingViewModel.goalDistance.asString(unit: .kilometer))"
             }.store(in: &cancellation)
             
             self.trackingViewModel.$elapsedTime.sink { [weak self] time in

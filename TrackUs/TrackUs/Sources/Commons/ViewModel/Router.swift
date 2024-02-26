@@ -78,6 +78,7 @@ final class Router: ObservableObject {
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullScreenCover?
     
+    @MainActor
     func push(_ page: Page) {
         path.append(page)
     }

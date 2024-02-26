@@ -103,7 +103,8 @@ struct RunningSelectView: View {
                         if let seletedItem = courseListViewModel.courseList.filter { $0.uid == seletedGroupID }.first {
                             trackingViewModel.isGroup = true
                             trackingViewModel.groupID = seletedItem.uid
-                            trackingViewModel.goldDistance = seletedItem.distance
+                            trackingViewModel.goalDistance = seletedItem.distance
+                            
                             router.push(.runningStart(trackingViewModel))
                         }
                         
