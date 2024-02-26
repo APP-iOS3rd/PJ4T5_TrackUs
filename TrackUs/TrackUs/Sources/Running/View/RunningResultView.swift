@@ -10,6 +10,7 @@ import SwiftUI
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
     @State private var showingPopup = false
+    @State private var showingAlert = false
     let settingViewModel = SettingPopupViewModel()
     @ObservedObject var trackingViewModel: TrackingViewModel
     
@@ -178,7 +179,7 @@ extension RunningResultView {
                     
                     HStack(spacing: 28) {
                         MainButton(active: true, buttonText: "홈으로 가기", buttonColor: .gray1, minHeight: 45) {
-                            router.popToRoot()
+                            showingAlert = true
                         }
                         
                         MainButton(active: true, buttonText: "러닝 기록 저장", buttonColor: .main, minHeight: 45) {
@@ -199,6 +200,22 @@ extension RunningResultView {
                 )
             )
             .offset(y: -10)
+        }
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("홈으로 이동"),
+                message: Text("홈으로 이동 하시겠습니까? 홈으로 이동하면 러닝 데이터가 리포트에 반영되지 않습니다."),
+                primaryButton: .default (
+                    Text("취소"),
+                    action: { }
+                ),
+                secondaryButton: .destructive (
+                    Text("이동"),
+                    action: {
+                        router.popToRoot()
+                    }
+                )
+            )
         }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
