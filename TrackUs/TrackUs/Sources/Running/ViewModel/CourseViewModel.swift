@@ -63,3 +63,4 @@ extension CourseViewModel: Hashable {
         hasher.combine(id)
     }
 }
+

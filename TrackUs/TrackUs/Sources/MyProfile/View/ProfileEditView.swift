@@ -209,6 +209,7 @@ struct ProfileEditView: View {
                         Text(value.description).tag(value)
                     }
                 }
+                .customFontStyle(.gray1_M16)
                 .pickerStyle(WheelPickerStyle())
                 .presentationDetents([.height(300)])
                 HStack(spacing: 8){

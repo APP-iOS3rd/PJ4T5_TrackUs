@@ -16,7 +16,6 @@ import CryptoKit
 import SwiftUI
 
 enum AuthenticationState {
-    case startapp
     case unauthenticated
     case authenticating
     case signUpcating
@@ -49,15 +48,12 @@ class FirebaseManger: NSObject {
 class AuthenticationViewModel: NSObject, ObservableObject {
     static let shared = AuthenticationViewModel()
     
-    @Published var authenticationState: AuthenticationState = .startapp
+    @Published var authenticationState: AuthenticationState = .unauthenticated
     @Published var errorMessage: String = ""
-    @Published var user: Firebase.User?
+    @Published var user: User?
+    @Published var newUser: Bool = false
+    @Published var checkBool: Bool?
     @Published var userInfo: UserInfo = UserInfo()
-    
-    // 외부 공유용 사용
-    static var currentUId: String {
-        shared.userInfo.uid
-    }
     
     // apple login 
     var window: UIWindow?
@@ -113,7 +109,6 @@ class AuthenticationViewModel: NSObject, ObservableObject {
     func logOut() {
         do {
             try Auth.auth().signOut()
-            userInfo = UserInfo()
         }
         catch {
             print(error)
@@ -140,7 +135,6 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 }
             }
             self.authenticationState = .unauthenticated
-            userInfo = UserInfo()
             return true
         }
         catch {
@@ -178,8 +172,7 @@ extension AuthenticationViewModel {
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                            accessToken: accessToken.tokenString)
-            let auth = try await Auth.auth().signIn(with: credential)
-            self.userInfo.uid = auth.user.uid
+            try await Auth.auth().signIn(with: credential)
             return true
         }
         catch {
@@ -262,8 +255,7 @@ extension AuthenticationViewModel: ASAuthorizationControllerDelegate {
             // Sign in with Firebase.
             Task {
                 do {
-                    let auth = try await Auth.auth().signIn(with: credential)
-                    self.userInfo.uid = auth.user.uid
+                    try await Auth.auth().signIn(with: credential)
                 }
                 catch {
                     print("Error authenticating: \(error.localizedDescription)")
@@ -335,6 +327,7 @@ extension AuthenticationViewModel {
     }
     // MARK: - 사용자 정보 저장 - 위 이미지 저장함수와 순차적으로 사용
     private func storeUserInformation() {
+        print(userInfo.runningStyle)
         guard let uid = FirebaseManger.shared.auth.currentUser?.uid else {
             return }
         // 해당부분 자료형 지정 필요

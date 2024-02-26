@@ -45,15 +45,8 @@ struct UserInfo : Codable {
     init(){
         self.uid = ""
         self.username = ""
-        self.weight = nil
-        self.height = nil
-        self.age = nil
-        self.gender = nil
-        self.isProfilePublic = true
+        self.isProfilePublic = false
         self.isProSubscriber = false
-        self.profileImageUrl = nil
-        self.setDailyGoal = nil
-        self.runningStyle = nil
     }
     
     enum CodingKeys:String, CodingKey {

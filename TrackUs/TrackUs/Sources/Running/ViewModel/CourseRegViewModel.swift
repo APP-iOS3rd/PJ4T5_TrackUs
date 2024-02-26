@@ -13,7 +13,6 @@ import Firebase
 class CourseRegViewModel: ObservableObject {
     private let authViewModel = AuthenticationViewModel.shared
     private let locationManager = LocationManager.shared
-    private let chatVieModle = ChatListViewModel.shared
     let id = UUID()
     let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     
@@ -31,9 +30,7 @@ class CourseRegViewModel: ObservableObject {
     @Published var seconds: Int = 0
     @Published var image: UIImage?
     
-    var totalEstimatedTimeTime: Int {
-        (self.hours * 3600) + (self.minutes * 60) + (self.seconds)
-    }
+    
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
         guard self.coorinates.count < MAXIMUM_NUMBER_OF_MARKERS else { return }
@@ -93,7 +90,6 @@ class CourseRegViewModel: ObservableObject {
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
                     
                 }
-                self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
                 completion()
             }
         }

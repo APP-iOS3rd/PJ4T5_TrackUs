@@ -17,17 +17,6 @@ struct ContentView: View {
     var body: some View {
         VStack{
             switch authViewModel.authenticationState {
-            case .startapp:
-                VStack{
-                    Spacer()
-                    Image(.trackusBigLogo)
-                        .resizable()
-                        .frame(width: 200, height: 65)
-                        .padding(.top,80)
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
                 // 로그인
             case .unauthenticated, .authenticating:
                 VStack {
