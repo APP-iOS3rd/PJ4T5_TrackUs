@@ -26,7 +26,6 @@ struct ContentView: View {
                         .padding(.top,80)
                     Spacer()
                     ProgressView()
-                        //.padding(.top,80)
                     Spacer()
                 }
                 // 로그인
