@@ -27,6 +27,8 @@ enum Page: Hashable, Identifiable {
     case courseDrawing
     case courseDetail(CourseViewModel)
     case courseRegister(CourseRegViewModel)
+    // Chat
+    case chatting(ChatViewModel)
     // Report
     case recordDetail(Runninglog)
     // UserProfileView
@@ -113,7 +115,7 @@ final class Router: ObservableObject {
         case .running:
             RunningHomeView()
         case .chat:
-            ChattingView()
+            ChatListView()
         case .report:
             ReportView()
         case .profile:
@@ -144,6 +146,8 @@ final class Router: ObservableObject {
             MyRecordDetailView(runningLog: myRecord)
         case .userProfile(let userId):
             UserProfileView(userUid: userId)
+        case .chatting(let chatViewModel):
+            ChattingView(chatViewModel: chatViewModel)
         }
     }
     
@@ -161,5 +165,11 @@ final class Router: ObservableObject {
         case .webView(url: let url):
             WebViewSurport(url: url)
         }
+    }
+}
+
+extension Page {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

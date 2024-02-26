@@ -38,6 +38,8 @@ struct UserProfileView: View {
 }
 
 struct UserProfileContent: View {
+    @StateObject var authViewModel = AuthenticationViewModel.shared
+    @EnvironmentObject var router: Router
     let userInfo: UserInfo
     @Binding var selectedDate: Date?
     @ObservedObject var userProfileViewModel: UserProfileViewModel
@@ -86,7 +88,8 @@ struct UserProfileContent: View {
             VStack {
                 HStack {
                     Button(action: {
-                        // 1:1 채팅방으로 이동해야함!
+                        // 채팅방 있는여부 확인
+                        router.push(.chatting(ChatViewModel(myInfo: authViewModel.userInfo, opponentInfo: userInfo)))
                     }) {
                         Text("1:1 대화")
                             .frame(width: 113, height: 28)
