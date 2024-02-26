@@ -144,7 +144,7 @@ struct HorizontalGraph: View {
         let runningLogForSelectedMonth = viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 킬로미터를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalDistance = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.distance }
@@ -156,7 +156,7 @@ struct HorizontalGraph: View {
         let runningLogForSelectedMonth = viewModel.runningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 페이스를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalPace = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.pace }
@@ -188,24 +188,27 @@ struct HorizontalGraph: View {
     
     // 월별 페이스
     var allUserAveragePaceForSelectedMonth: Double {
-        let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
-        
-        guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0
+            let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
+            
+            // 수정된 부분: 평균 계산 전에 0 값을 제외합니다.
+            let nonZeroPaces = runningLogForSelectedMonth.filter { $0.pace != 0 }
+            
+            guard !nonZeroPaces.isEmpty else {
+                return 0.0
+            }
+            
+            let totalPace = nonZeroPaces.reduce(0.0) { $0 + $1.pace }
+            let averagePace = totalPace / Double(nonZeroPaces.count)
+            
+            return averagePace.isNaN ? 0.0 : averagePace
         }
-        
-        let totalPace = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.pace }
-        let averagePace = totalPace / Double(runningLogForSelectedMonth.count)
-        
-        return averagePace.isNaN ? 0.0 : averagePace
-    }
     
     // 월별 거리
     var allUserAverageDistanceForSelectedMonth: Double {
         let runningLogForSelectedMonth = viewModel.allUserRunningLog.filter { Calendar.current.isDate($0.timestamp, equalTo: firstDayOfSelectedMonth, toGranularity: .month) }
         
         guard !runningLogForSelectedMonth.isEmpty else {
-            return 0.0 // 러닝 데이터가 없는 경우 평균 킬로미터를 0.0으로 설정하거나 다른 처리를 수행
+            return 0.0
         }
         
         let totalDistance = runningLogForSelectedMonth.reduce(0.0) { $0 + $1.distance }
@@ -230,22 +233,22 @@ struct SpeedBar: View {
     let minWidth: CGFloat = 10 // 최소 너비
     
     var body: some View {
-        GeometryReader { geometry in // GeometryReader를 사용하여 그래프의 크기를 얻습니다.
+        GeometryReader { geometry in
             HStack {
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .frame(width: maxWidth, height: 12) // 고정 높이를 사용하여 너비 제한
+                        .frame(width: maxWidth, height: 12)
                         .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
                     
                     Capsule()
-                        .frame(width: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))), height: 15) // 최소 너비를 고려하여 동적으로 너비 설정
+                        .frame(width: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))), height: 15)
 //                        .foregroundColor(.blue)
                     
-                    Text("\(String(format: "%0.1f", speedValue / 10)) km/h")
+                    Text(speedValue.asString(unit: .pace))
                         .customFontStyle(.gray1_R9)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
-                        .offset(x: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))) + 5) // 텍스트를 더 오른쪽으로 이동시킵니다.
+                        .offset(x: minWidth + CGFloat(max(0, min((value / 10), Double(maxWidth - minWidth)))) + 5)
                 }
             }
         }
@@ -260,22 +263,21 @@ struct DistanceBar: View {
     let minWidth: CGFloat = 10 // 최소 너비
     
     var body: some View {
-        GeometryReader { geometry in // GeometryReader를 사용하여 그래프의 크기를 얻습니다.
+        GeometryReader { geometry in
             HStack {
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .frame(width: maxWidth, height: 12) // 고정 높이를 사용하여 너비 제한
+                        .frame(width: maxWidth, height: 12)
                         .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
                     
                     Capsule()
-                        .frame(width: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))), height: 15) // 최소 너비를 고려하여 동적으로 너비 설정
-//                        .foregroundColor(.green)
+                        .frame(width: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))), height: 15)
                     
                     Text(distanceValue.asString(unit: .kilometer))
                         .customFontStyle(.gray1_R9)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
-                        .offset(x: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))) + 5) // 텍스트를 더 오른쪽으로 이동시킵니다.
+                        .offset(x: minWidth + CGFloat(max(0, min((value * 20), Double(maxWidth - minWidth)))) + 5)
                 }
             }
         }

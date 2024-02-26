@@ -22,9 +22,12 @@ struct RunningSelectView: View {
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
-                Text("러닝 시작하기")
-                    .customFontStyle(.gray1_B24)
-                
+                HStack {
+                    Text("러닝 시작하기")
+                        .customFontStyle(.gray1_B24)
+                    
+                    Spacer()
+                }
                 Text("원하는 러닝 타입을 선택하신 뒤 러닝 시작 버튼을 눌러주세요")
                     .customFontStyle(.gray2_R15)
                 
@@ -32,7 +35,7 @@ struct RunningSelectView: View {
                     .customFontStyle(.gray1_SB17)
                     .padding(.top, 37)
             }
-//            .padding(.horizontal, 16)
+            .padding(.horizontal, 16)
             
             ZStack {
                 VStack {

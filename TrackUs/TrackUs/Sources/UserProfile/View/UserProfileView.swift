@@ -10,7 +10,7 @@ import SwiftUI
 struct UserProfileView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
-    @StateObject var userProfileViewModel = UserProfileViewModel()
+    @ObservedObject var userViewModel = UserProfileViewModel.shared
     @State private var selectedImage: Image?
     @State private var selectedDate: Date?
     let userUid: String
@@ -21,10 +21,13 @@ struct UserProfileView: View {
     
     var body: some View {
         VStack {
-            UserProfileContent(userInfo: userProfileViewModel.otherUserInfo, selectedDate: $selectedDate)
+            UserProfileContent(userInfo: userViewModel.otherUserInfo, selectedDate: $selectedDate, userProfileViewModel: userViewModel)
         }
         .onAppear {
-            userProfileViewModel.getOtherUserInfo(for: userUid)
+            userViewModel.getOtherUserInfo(for: userUid)
+            userViewModel.fetchUserLog(userId: userUid) {
+                print(userViewModel.runningLog)
+            }
         }
         .customNavigation {
             NavigationText(title: "프로필 확인")
@@ -39,6 +42,7 @@ struct UserProfileContent: View {
     @EnvironmentObject var router: Router
     let userInfo: UserInfo
     @Binding var selectedDate: Date?
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
     
     var body: some View {
         VStack {
@@ -108,14 +112,24 @@ struct UserProfileContent: View {
                     .padding(.top, 12)
                 }
             }
+            .padding(.bottom, 15)
         }
         .padding(.bottom, 32)
         
         Spacer()
         
         if userInfo.isProfilePublic {
-            MyRecordView(selectedDate: $selectedDate)
-                .padding(.top, -40)
+            switch userProfileViewModel.userLogLoadingState {
+            case .loading:
+                OtherUserRecordView(selectedDate: $selectedDate, userInfo: userProfileViewModel.otherUserInfo, runningLog: userProfileViewModel.runningLog)
+                    .padding(.top, -40)
+                    .redacted(reason: .placeholder)
+            case .loaded:
+                OtherUserRecordView(selectedDate: $selectedDate, userInfo: userProfileViewModel.otherUserInfo, runningLog: userProfileViewModel.runningLog)
+                    .padding(.top, -40)
+            case .error(_) :
+                Text("ERROR")
+            }
         } else {
             PrivateUserView()
                 .padding()
