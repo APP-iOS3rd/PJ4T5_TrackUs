@@ -24,15 +24,13 @@ class CourseRegViewModel: ObservableObject {
     @Published var estimatedTime: Int = 0
     @Published var estimatedCalorie: Double = 0
     @Published var distance: Double = 0
-    @Published var participants: Int = 1
+    @Published var participants: Int = 2
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
     @Published var image: UIImage?
     
-    var totalEstimatedTimeTime: Int {
-        (self.hours * 3600) + (self.minutes * 60) + (self.seconds)
-    }
+    
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
         guard self.coorinates.count < MAXIMUM_NUMBER_OF_MARKERS else { return }
@@ -57,7 +55,7 @@ class CourseRegViewModel: ObservableObject {
     }
     
     func removeParticipants() {
-        guard participants > 1 else { return }
+        guard participants > 2 else { return }
         self.participants -= 1
     }
     
@@ -66,6 +64,7 @@ class CourseRegViewModel: ObservableObject {
         let uid = authViewModel.userInfo.uid
         guard let image = self.image else { return }
         guard let startCoordinate = self.coorinates.first else { return }
+        
         let documentID = UUID().uuidString
         locationManager.convertToAddressWith(coordinate: startCoordinate.asCLLocation()) { address in
             guard let address = address else { return }
@@ -83,7 +82,9 @@ class CourseRegViewModel: ObservableObject {
                     "startDate": self.selectedDate ?? Date(),
                     "distance": self.coorinates.caculateTotalDistance() / 1000.0,
                     "estimatedTime": (self.hours * 3600) + (self.minutes * 60) + (self.seconds),
-                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}
+                    "estimatedCalorie": self.estimatedCalorie,
+                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "createdAt": Date()
                 ]
                 
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in

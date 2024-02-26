@@ -12,6 +12,7 @@ import Foundation
  */
 
 class UserSearchViewModel: ObservableObject {
+    let id = UUID()
     @Published var users = [UserInfo]()
     
     init() {
@@ -34,5 +35,15 @@ class UserSearchViewModel: ObservableObject {
     /// uid를 받아서 유저데이터 반환
     func filterdUserData(uid: [String]) -> [UserInfo] {
         return users.filter {uid.contains($0.uid)}
+    }
+}
+
+extension UserSearchViewModel: Hashable {
+    static func == (lhs: UserSearchViewModel, rhs: UserSearchViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

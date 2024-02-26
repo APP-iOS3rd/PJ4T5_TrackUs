@@ -157,14 +157,15 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
                 self.lineAnnotation.lineJoin = .round
                 self.lineAnnotationManager.annotations = [self.lineAnnotation]
                 
-                // 시간 업데이트
-                let totalEstimatedTime = ExerciseManager.calculateEstimatedTime(distance: self.courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0, runningStyle: self.courseRegViewModel.style)
-                self.courseRegViewModel.hours = totalEstimatedTime / 3600
-                self.courseRegViewModel.minutes = totalEstimatedTime % 3600
-                self.courseRegViewModel.seconds = totalEstimatedTime % 60
+                let totalDistanceInKilometers = coordinate.caculateTotalDistance() / 1000.0
+                let totalEstimatedTimeInMinutes = ExerciseManager.calculateEstimatedTime(distance: totalDistanceInKilometers) * 60
                 
-                self.courseRegViewModel.estimatedCalorie = ExerciseManager.calculatedCaloriesBurned(distance: courseRegViewModel.coorinates.caculateTotalDistance(), totalTime: Double(totalEstimatedTime))
-                // 칼로리 업데이트
+                // 예상 소모 칼로리 업데이트
+                self.courseRegViewModel.estimatedCalorie = ExerciseManager.calculatedCaloriesBurned(distance: totalDistanceInKilometers)
+                
+                // 예상 소요시간 업데이트
+                self.courseRegViewModel.estimatedTime = totalEstimatedTimeInMinutes
+                
             }.store(in: &cancellation)
         }
         

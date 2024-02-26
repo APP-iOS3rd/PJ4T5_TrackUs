@@ -38,7 +38,7 @@ class SettingPopupViewModel: ObservableObject {
     
     @MainActor func updateEstimatedTime() {
         guard let runningStyle = authViewModel.userInfo.runningStyle
-        
+                
         else {
             estimatedTime = Int(goalMinValue * 10)
             return
@@ -55,7 +55,7 @@ class SettingPopupViewModel: ObservableObject {
             estimatedTime = Int(goalMinValue * 4)
         }
     }
-
+    
     
     func saveSettings() {
         let defaults = UserDefaults.standard
