@@ -6,18 +6,25 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RunningSelectView: View {
     var vGridItems = [GridItem()]
     @State private var isPersonalRunning: Bool = false
     @State private var showingPopup: Bool = false
     @State var isSelect: Int?
+    @State var seletedGroupID: String = ""
+    @EnvironmentObject var router: Router
+    @StateObject var trackingViewModel = TrackingViewModel()
+    @ObservedObject var courseListViewModel: CourseListViewModel
+    @ObservedObject var userSearchViewModel: UserSearchViewModel
     
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
                 Text("러닝 시작하기")
                     .customFontStyle(.gray1_B24)
+                
                 Text("원하는 러닝 타입을 선택하신 뒤 러닝 시작 버튼을 눌러주세요")
                     .customFontStyle(.gray2_R15)
                 
@@ -25,19 +32,36 @@ struct RunningSelectView: View {
                     .customFontStyle(.gray1_SB17)
                     .padding(.top, 37)
             }
-            .padding(.horizontal, 16)
+//            .padding(.horizontal, 16)
             
             ZStack {
-                ScrollView(showsIndicators: false) {
-                    LazyVGrid(columns: vGridItems, spacing: 8) {
-                        ForEach(0..<5) { item in
-                            Button {
-                                isSelect = item == isSelect ? nil : item
-                            } label: {
-//                                selectedCell(isSelect: isSelect == item)
-                                selectedCell(isSelect: isPersonalRunning == false ? isSelect == item : isSelect == nil)
+                VStack {
+                    let filterdData = courseListViewModel.filterdCourseData()
+                    if !filterdData.isEmpty {
+                        ScrollView(showsIndicators: false) {
+                            LazyVGrid(columns: vGridItems, spacing: 8) {
+                                ForEach(filterdData, id: \.self) { course in
+                                    Button {
+                                        let isSeletedSameItem = seletedGroupID == course.uid
+                                        if isSeletedSameItem {
+                                            seletedGroupID = ""
+                                        } else {
+                                            seletedGroupID = course.uid
+                                        }
+                                           
+                                    } label: {
+                                        let isSelectedNow = !seletedGroupID.isEmpty // 선택이 안되었을떄
+                                        let seleted = seletedGroupID == course.uid
+                                        
+                                        selectedCell(isSelect: isSelectedNow ? seleted : false, course: course, user: userSearchViewModel.users.filter {$0.uid == course.ownerUid}[0])
+                                    }
+                                }
                             }
+                            
                         }
+                    } else {
+                        NoParticipationPlaceholderView()
+                            .frame(maxHeight: .infinity)
                     }
                     
                 }
@@ -72,8 +96,13 @@ struct RunningSelectView: View {
                 MainButton(buttonText: "러닝 시작") {
                     if isPersonalRunning {
                         showingPopup.toggle()
-                    } else {
-                        // 메이트러닝시작
+                    } else if !seletedGroupID.isEmpty {
+                        if let seletedItem = courseListViewModel.courseList.filter { $0.uid == seletedGroupID }.first {
+                            trackingViewModel.isGroup = true
+                            trackingViewModel.groupID = seletedItem.uid
+                            trackingViewModel.goldDistance = seletedItem.distance
+                            router.push(.runningStart(trackingViewModel))
+                        }
                         
                     }
                 }
@@ -102,15 +131,19 @@ struct RunningSelectView: View {
 
 struct selectedCell: View {
     var isSelect: Bool
+    let course: Course
+    let user: UserInfo
+    
     var body: some View {
         HStack(alignment: .center) {
-            Image(.mapPath)
+            KFImage(URL(string: course.routeImageUrl))
+                .resizable()
                 .frame(width: 75, height: 75)
                 .cornerRadius(12)
             
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
-                    Text("광명시 러닝 메이트 구합니다")
+                    Text(course.title)
                         .bold()
                         .customFontStyle(.gray1_R14)
                     
@@ -140,42 +173,34 @@ struct selectedCell: View {
 //                        .padding(.vertical, 3)
 //                        .background(Color.main)
 //                        .cornerRadius(25)
-                    Text("스프린트")
-                        .foregroundColor(.white)
-                        .font(.system(size: 10))
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(Color.main)
-                        .cornerRadius(25)
+                    
+                    RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .walking)
                 }
                 
                 HStack {
                     HStack {
                         Image(.pin)
-                        Text("서울숲카페거리")
+                        Text(course.address)
                             .customFontStyle(.gray1_R9)
                     }
-                    HStack {
-                        Image(.timerLine)
-                        Text("10:02AM")
-                            .customFontStyle(.gray1_R9)
-                    }
+                    
                     HStack {
                         Image(.arrowBoth)
-                        Text("1.72km")
+                        Text(course.distance.asString(unit: .kilometer))
                             .customFontStyle(.gray1_R9)
                     }
                 }
                 
                 HStack {
                     HStack {
-                        Image(.profileDefault)
+                        KFImage(URL(string: user.profileImageUrl ?? ""))
+                            .placeholder({ProgressView()})
+                            .onFailureImage(KFCrossPlatformImage(named: "ProfileDefault"))
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(.vertical, 12)
                             .clipShape(Circle())
-                        Text("TrackUs")
+                        Text(user.username)
                             .customFontStyle(.gray2_R12)
                         Image(.crown)
                     }
@@ -188,7 +213,7 @@ struct selectedCell: View {
                             .frame(width: 15, height: 12)
                             .foregroundColor(.gray1)
                         
-                        Text("3/6")
+                        Text("\(course.members.count)/\(course.participants)")
                             .customFontStyle(.gray1_M16)
                     }
                 }
@@ -205,6 +230,6 @@ struct selectedCell: View {
     }
 }
 
-#Preview {
-    RunningSelectView()
-}
+//#Preview {
+//    RunningSelectView()
+//}

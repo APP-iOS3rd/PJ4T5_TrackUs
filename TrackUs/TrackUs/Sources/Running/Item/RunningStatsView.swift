@@ -16,7 +16,7 @@ struct RunningStatsView: View {
         HStack {
             Spacer()
             VStack {
-                Image(.shose)
+                Image(.distance)
                 Text("러닝 거리")
                     .customFontStyle(.gray1_R16)
                     .foregroundStyle(Color.init(hex: 0x3d3d3d))

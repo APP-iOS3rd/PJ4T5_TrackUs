@@ -22,7 +22,24 @@ struct UserList: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
-                    ForEach(users, id: \.self.uid) { user in
+                    Button(action: {}, label: {
+                        if let owner = users.first  {$0.uid == ownerUid} {
+                            Button(action: {
+                                router.push(.userProfile(owner.uid))
+                            }, label: {
+                                VStack {
+                                    UserProfileCell(user: owner)
+                                    HStack {
+                                        Text(owner.username)
+                                            .customFontStyle(.gray1_R12)
+                                        Image(.crown)
+                                    }
+                                }
+                            })
+                        }
+                        
+                    })
+                    ForEach(users.filter {$0.uid != ownerUid}, id: \.self.uid) { user in
                         Button(action: {
                             router.push(.userProfile(user.uid))
                         }, label: {
@@ -31,9 +48,6 @@ struct UserList: View {
                                 HStack {
                                     Text(user.username)
                                         .customFontStyle(.gray1_R12)
-                                    if user.uid == ownerUid {
-                                        Image(.crown)
-                                    }
                                 }
                             }
                         })
@@ -43,6 +57,7 @@ struct UserList: View {
         }
     }
 }
+
 
 //#Preview {
 //    UserList()

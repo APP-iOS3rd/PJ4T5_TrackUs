@@ -20,25 +20,26 @@ enum NetworkStatus {
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 class TrackingViewModel: ObservableObject {
     var snapshot: UIImage?
+    var groupID = ""
+    var goldDistance: Double = 0.0
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
-    @Published var count: Int = 3 // 카운트다운
-    @Published var isPause: Bool = true // 러닝기록 상태
+    @Published var count: Int = 3
+    @Published var isPause: Bool = true
     @Published var newtworkStatus: NetworkStatus = .none
-    // 러닝기록(넘겨주는 데이터)
     @Published var title: String = ""
     @Published var coordinates: [CLLocationCoordinate2D] = []
     @Published var distance: Double = 0.0
     @Published var elapsedTime: Double = 0.0
     @Published var calorie: Double = 0.0
     @Published var pace: Double = 0.0
-    
+    @Published var isGroup: Bool = false
     
     private var countTimer: Timer = Timer()
     private var recordTimer: Timer = Timer()
     
     init() {
-        initTimer()
+     
     }
     
     // 카운트다운
@@ -63,7 +64,7 @@ class TrackingViewModel: ObservableObject {
         let oldLocation = self.coordinates[self.coordinates.count - 2]
         
         self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
-        self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance, totalTime: self.elapsedTime)
+        self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance)
         self.pace = ExerciseManager.calculatedPace(distance: self.distance, totalTime: self.elapsedTime)
     }
     
@@ -108,7 +109,8 @@ class TrackingViewModel: ObservableObject {
                     "targetDistance": targetDistance,
                     "exprectedTime": expectedTime * 60,
                     "timestamp": Timestamp(date: Date()),
-                    "isGroup": false
+                    "isGroup": self.isGroup,
+                    "groupID": self.groupID
                 ]
                 
                 Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { _ in

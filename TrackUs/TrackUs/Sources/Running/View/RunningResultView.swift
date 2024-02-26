@@ -15,7 +15,7 @@ struct RunningResultView: View {
     
     // TODO: - 여러곳에서 사용할 수 있도록 로직분리
     var estimatedCalories: Double {
-        return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue, totalTime: Double(settingViewModel.estimatedTime) * 60)
+        return ExerciseManager.calculatedCaloriesBurned(distance: settingViewModel.goalMinValue * 60)
     }
     
     var estimatedTimeText: String {
@@ -109,7 +109,7 @@ extension RunningResultView {
                             .customFontStyle(.gray1_R16)
                         
                         HStack {
-                            Image(.shose)
+                            Image(.distance)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
                                 Text(kilometerComparisonLabel)
