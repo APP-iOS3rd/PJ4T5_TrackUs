@@ -8,12 +8,28 @@
 import Foundation
 import Firebase
 
+@MainActor
 class ChatViewModel: ObservableObject {
+    var chatListViewModel = ChatListViewModel.shared
+    var authViewModel = AuthenticationViewModel.shared
     
-    @Published var currentChatID: String = ""
+    @Published var currentChatID: String
     @Published var members: [String : Member] = [:]
     @Published var messages: [Message] = []
-    @Published var chatRoom: ChatRoom
+    //@Published var chatRoom: ChatRoom
+    
+    var chatRoom: ChatRoom {
+        if let chatRoom = chatListViewModel.chatRooms.first(where: { $0.id == currentChatID }){
+            return chatRoom
+        }
+        var member = members.values.map { $0.uid }
+        
+        return ChatRoom(id: UUID().uuidString,
+                        title: "",
+                        members: member,
+                        nonSelfMembers: member.filter { $0 != authViewModel.userInfo.uid },
+                        group: false)
+    }
     
     var newChat: Bool = false
     // 뭐지
@@ -26,13 +42,13 @@ class ChatViewModel: ObservableObject {
         self.currentChatID = currentChatID
         self.members = members
         self.messages = messages
-        self.chatRoom = chatRoom
+        //self.chatRoom = chatRoom
     }
     
     /// 기존 채팅방 생성자
     init(chatRoom: ChatRoom, users: [String: Member]){
         self.currentChatID = chatRoom.id
-        self.chatRoom = chatRoom
+        //self.chatRoom = chatRoom
         self.members = chatRoom.members.reduce(into: [String: Member]()) { result, uid in
             if let member = users[uid] {
                 result[uid] = member
@@ -44,11 +60,12 @@ class ChatViewModel: ObservableObject {
     /// 1대1 채팅 생성자
     init(myInfo: UserInfo, opponentInfo: UserInfo){
         // 기존 채팅 있는지 확인
-        self.chatRoom = ChatRoom(id: UUID().uuidString,
-                                 title: "",
-                                 members: [myInfo.uid, opponentInfo.uid],
-                                 nonSelfMembers: [opponentInfo.uid],
-                                 group: false)
+//        self.chatRoom = ChatRoom(id: UUID().uuidString,
+//                                 title: "",
+//                                 members: [myInfo.uid, opponentInfo.uid],
+//                                 nonSelfMembers: [opponentInfo.uid],
+//                                 group: false)
+        self.currentChatID = ""
         self.members = [myInfo.uid: Member(uid: myInfo.uid ,
                                           userName: myInfo.username,
                                           profileImageUrl: myInfo.profileImageUrl),
@@ -56,6 +73,10 @@ class ChatViewModel: ObservableObject {
                                                userName: opponentInfo.username,
                                                profileImageUrl: opponentInfo.profileImageUrl)]
         createChatRoom(myInfo: myInfo, opponentInfo: opponentInfo)
+    }
+    // 채팅방 삭제
+    func deleteChatRoom(chatRoomID: String) {
+        ref.document(chatRoomID).delete{ error in }
     }
     
     
@@ -99,10 +120,11 @@ class ChatViewModel: ObservableObject {
                 }
                 // 비어있음 - 신규
                 if chatRoom.isEmpty {
+                    self.currentChatID = UUID().uuidString
                     self.newChat = true
                     return
                 }
-                self.chatRoom = chatRoom.first!
+                //self.chatRoom = chatRoom.first!
                 self.currentChatID = chatRoom.first!.id
                 self.subscribeToUpdates()
             }
@@ -111,7 +133,7 @@ class ChatViewModel: ObservableObject {
     
     // 채팅방 리스너
     func subscribeToUpdates() {
-        ref.document(chatRoom.id)
+        ref.document(currentChatID)
             .collection("messages")
             .order(by: "timestamp", descending: false)
             .addSnapshotListener() { [weak self] (snapshot, _) in
@@ -174,7 +196,7 @@ class ChatViewModel: ObservableObject {
                 "usersUnreadCountInfo": chatRoom.usersUnreadCountInfo
                 //"latestMessage": nil
             ]  as [String : Any]
-            ref.document(chatRoom.id).setData(newChatRoom)
+            ref.document(currentChatID).setData(newChatRoom)
             self.newChat = false
             subscribeToUpdates()
         }
@@ -195,14 +217,14 @@ class ChatViewModel: ObservableObject {
 
         
         let id = UUID().uuidString
-        ref.document(chatRoom.id).collection("messages").document(id).setData(messageData) {  error in
+        ref.document(currentChatID).collection("messages").document(id).setData(messageData) {  error in
             if let error = error {
                 print("Error updating document: \(error)")
             }
         }
         bumpUnre3adCounters(myuid: uid)
         // 마지막 메세지 수정
-        ref.document(chatRoom.id)
+        ref.document(currentChatID)
             .updateData(["latestMessage" : latestMessageData])
     }
     
@@ -210,7 +232,7 @@ class ChatViewModel: ObservableObject {
     func resetUnreadCounter(myuid: String) {
         var usersUnreadCountInfo = chatRoom.usersUnreadCountInfo
         usersUnreadCountInfo[myuid] = 0
-        ref.document(chatRoom.id).updateData(["usersUnreadCountInfo" : usersUnreadCountInfo])
+        ref.document(currentChatID).updateData(["usersUnreadCountInfo" : usersUnreadCountInfo])
     }
     
     // 본인 제외 안읽은 메세지 1개씩 추가 - 메세지 전송때
@@ -218,7 +240,7 @@ class ChatViewModel: ObservableObject {
         var usersUnreadCountInfo = chatRoom.usersUnreadCountInfo
         usersUnreadCountInfo = usersUnreadCountInfo.mapValues { $0 + 1 }
         usersUnreadCountInfo[myuid] = 0
-        ref.document(chatRoom.id).updateData(["usersUnreadCountInfo" : usersUnreadCountInfo])
+        ref.document(currentChatID).updateData(["usersUnreadCountInfo" : usersUnreadCountInfo])
     }
     
     // 마지막 메세지 변경
