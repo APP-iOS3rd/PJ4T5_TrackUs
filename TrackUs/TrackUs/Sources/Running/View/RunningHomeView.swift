@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
-import PopupView
 import Kingfisher
+@_spi(Experimental) import MapboxMaps
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @StateObject var courseListViewModel = CourseListViewModel()
     @StateObject var userSearchViewModel = UserSearchViewModel()
+    @State private var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
     @State private var isOpen: Bool = false
     @State private var showingPopup: Bool = false
     @State private var showingFloater: Bool = true
@@ -27,24 +28,39 @@ struct RunningHomeView: View {
         "새로운 기회는 당신의 발 아래에 있어요.",
         "나만의 런웨이에서 뛰어보세요."
     ].randomElement()!
+    
+    private var isFocusingUser: Bool {
+        return viewport.followPuck?.bearing == .constant(0)
+    }
+
+    private var isFollowingUser: Bool {
+        return viewport.followPuck?.bearing == .heading
+    }
 }
 
 // MARK: - View
 extension RunningHomeView {
     var body: some View {
         GeometryReader { geometry in
-            LocationMeMapView()
+            Map(viewport: $viewport) {
+                      Puck2D(bearing: .heading)
+                  }
+          
+            .mapStyle(.init(uri: StyleURI(rawValue: "mapbox://styles/seokki/clslt5i0700m901r64bli645z") ?? .light))
                 .onTapGesture {
                     withAnimation {
                         isOpen = false
                     }
                     offset = 0
                 }
+                
+                .overlay(alignment: .bottomTrailing, content: {
+                    addCourseButton
+                        .padding(16)
+                })
                 .frame(height: geometry.size.height - 95)
                 .offset(y: min(offset, 0))
                 .animation(.interactiveSpring(), value: offset)
-                
-            
             
             // MARK: - Sheet
             BottomSheet(isOpen: $isOpen, maxHeight: 580, minHeight: 100) {
@@ -85,29 +101,18 @@ extension RunningHomeView {
                 }
                 deltaY = 0
             }
+            
+        }
+        .overlay(alignment: .topTrailing) {
+                locationMeButton
+                .padding(.top, UIApplication.shared.statusBarFrame.height)
         }
         .onAppear {
             courseListViewModel.fetchCourseData()
         }
-        // MARK: - 상단 팝업
-              .popup(isPresented: $showingFloater) {
-                  Button(action: {
-                      router.push(.courseDrawing)
-                  }) {
-                      GraphicTextCard(title: "내가 만드는 러닝코스", subTitle: "나만의 코스를 그리고 다른 러너와 함께 뛰어보세요!", resource: .pen)
-                          .cornerRadius(12)
-                          .padding(.horizontal, 16)
-                  }
-                  
-              } customize: {
-                  $0
-                      .type(.floater(verticalPadding: UIApplication.shared.statusBarFrame.size.height + 5, horizontalPadding: 16, useSafeAreaInset: true))
-                      .position(.top)
-                      .animation(.spring())
-                      .closeOnTap(false)
-              }
-        .edgesIgnoringSafeArea(.top)
         
+        .edgesIgnoringSafeArea(.top)
+
     }
 }
 
@@ -211,6 +216,40 @@ extension RunningHomeView {
             }
             
         }
+    }
+}
+
+// MARK: - Sub View's
+extension RunningHomeView {
+    var addCourseButton: some View {
+        Button(action: {
+            router.push(.courseDrawing)
+        }, label: {
+           Circle()
+                .frame(width: 52, height: 52)
+                .foregroundColor(.main)
+                .overlay (
+                    Image(systemName: "plus")
+                        .foregroundColor(.white)
+                        .font(.system(size: 24, weight: .bold))
+                )
+        })
+    }
+    
+    var locationMeButton: some View {
+        Button(action: {
+            withViewportAnimation(.default(maxDuration: 1)) {
+                        if isFocusingUser {
+                            viewport = .followPuck(zoom: 16.5, bearing: .heading, pitch: 60)
+                        } else if isFollowingUser {
+                            viewport = .idle
+                        } else {
+                            viewport = .followPuck(zoom: 13, bearing: .constant(0))
+                        }
+                    }
+        }, label: {
+            Image(.locationButton)
+        })
     }
 }
 

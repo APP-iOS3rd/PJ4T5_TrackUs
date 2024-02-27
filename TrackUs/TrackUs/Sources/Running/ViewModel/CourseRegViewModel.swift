@@ -11,11 +11,10 @@ import Firebase
  코스등록 정보 뷰모델
  */
 class CourseRegViewModel: ObservableObject {
+    let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     private let locationManager = LocationManager.shared
-    let id = UUID()
-    let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
-    
+    private let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     @Published var style: RunningStyle = .walking
     @Published var coorinates = [CLLocationCoordinate2D]()
     @Published var title: String = ""
@@ -29,7 +28,6 @@ class CourseRegViewModel: ObservableObject {
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
     @Published var image: UIImage?
-    
     
     // 경로 추가
     func addPath(with coordinate: CLLocationCoordinate2D) {
@@ -60,7 +58,7 @@ class CourseRegViewModel: ObservableObject {
     }
     
     @MainActor
-    func uploadCourseData(completion: @escaping () -> ()) {
+    func uploadCourseData(completion: @escaping (CourseViewModel?) -> ()) {
         let uid = authViewModel.userInfo.uid
         guard let image = self.image else { return }
         guard let startCoordinate = self.coorinates.first else { return }
@@ -90,7 +88,8 @@ class CourseRegViewModel: ObservableObject {
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
                     
                 }
-                completion()
+                
+                completion(CourseViewModel(course: Course(uid: documentID, ownerUid: uid, title: self.title, content: self.content, courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}, distance: self.distance, estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid], routeImageUrl: url, address: address, estimatedCalorie: self.estimatedCalorie)))
             }
         }
         
