@@ -96,8 +96,10 @@ struct SignUpView: View {
         case .daily:
             // 테스트용
             router.popToRoot()
+            Task{
+                authViewModel.storeUserInfoInFirebase()
+            }
             authViewModel.authenticationState = .authenticated
-            authViewModel.storeUserInfoInFirebase()
         }
     }
     

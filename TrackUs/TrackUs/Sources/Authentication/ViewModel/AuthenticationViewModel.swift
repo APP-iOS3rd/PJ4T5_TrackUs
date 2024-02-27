@@ -48,6 +48,7 @@ class FirebaseManger: NSObject {
 @MainActor
 class AuthenticationViewModel: NSObject, ObservableObject {
     static let shared = AuthenticationViewModel()
+    var chatListViewModel = ChatListViewModel.shared
     
     @Published var authenticationState: AuthenticationState = .startapp
     @Published var errorMessage: String = ""
@@ -86,6 +87,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                             self.authenticationState = .signUpcating
                         }else {
                             self.getMyInformation()
+                            self.chatListViewModel.subscribeToUpdates()
                             self.authenticationState = .authenticated
                         }
                     }

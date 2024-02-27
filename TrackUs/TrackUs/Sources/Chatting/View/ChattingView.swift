@@ -198,7 +198,7 @@ struct ChattingView: View {
                 .frame(maxWidth: .infinity, maxHeight: 1)
                 .foregroundStyle(.gray3)
             VStack(alignment: .leading, spacing: 6){
-                Text("채팅밤 맴버")
+                Text("채팅방 맴버")
                     .customFontStyle(.gray1_R12)
                 // 참여 중인 사용자 프로필 정보
                 ForEach(chatViewModel.chatRoom.members, id: \.self) { uid in
