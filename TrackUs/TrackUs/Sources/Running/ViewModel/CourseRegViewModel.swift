@@ -16,8 +16,6 @@ class CourseRegViewModel: ObservableObject {
     private let locationManager = LocationManager.shared
     private let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     private let chatVieModle = ChatListViewModel.shared
-    let id = UUID()
-    let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
     
     @Published var style: RunningStyle = .walking
     @Published var coorinates = [CLLocationCoordinate2D]()
@@ -92,10 +90,10 @@ class CourseRegViewModel: ObservableObject {
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { _ in
                     
                 }
-                
-                completion(CourseViewModel(course: Course(uid: documentID, ownerUid: uid, title: self.title, content: self.content, courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}, distance: self.distance, estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid], routeImageUrl: url, address: address, estimatedCalorie: self.estimatedCalorie)))
                 self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
-                completion()
+                completion(CourseViewModel(course: Course(uid: documentID, ownerUid: uid, title: self.title, content: self.content, courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)}, distance: self.distance, estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid], routeImageUrl: url, address: address, estimatedCalorie: self.estimatedCalorie)))
+           
+              
             }
         }
         
