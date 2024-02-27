@@ -45,7 +45,9 @@ struct LocationMeMapView: UIViewControllerRepresentable {
             self.view.addSubview(mapView)
             
             setupLocationButton()
-            
+            setupFilterButton()
+            setupAddRunningButton()
+
             mapView.location.options.puckType = .puck2D()
             mapView.gestures.delegate = self // gesture delegate
         }
@@ -85,9 +87,9 @@ struct LocationMeMapView: UIViewControllerRepresentable {
             
             NSLayoutConstraint.activate([
                 locationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-                locationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
-                locationButton.widthAnchor.constraint(equalTo: locationButton.heightAnchor),
-                locationButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+                locationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+                locationButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+                locationButton.heightAnchor.constraint(equalToConstant: buttonWidth)
             ])
         }
         
@@ -99,6 +101,71 @@ struct LocationMeMapView: UIViewControllerRepresentable {
             }
             let camera = CameraOptions(center: currentLocation, zoom: 14, bearing: 0, pitch: 0)
             mapView.camera.ease(to: camera, duration: 1.3)
+        }
+        
+        private func setupAddRunningButton() {
+            let buttonWidth = 52.0
+            let plusButton = UIButton(type: .custom)
+            plusButton.setImage(UIImage(named: "Plus"), for: .normal)
+            plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchDown)
+            plusButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(plusButton)
+            
+            NSLayoutConstraint.activate([
+                plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+                plusButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
+                plusButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+                plusButton.heightAnchor.constraint(equalToConstant: buttonWidth)
+            ])
+        }
+        
+        @objc private func plusButtonTapped() {
+            print("버튼이 눌렸습니다.")
+        }
+        
+        private func setupFilterButton() {
+            let buttonWidth: CGFloat = 71
+            let buttonHeight: CGFloat = 28
+            
+            let filterButton = UIButton(type: .custom)
+            filterButton.backgroundColor = .white
+            filterButton.layer.cornerRadius = 14
+            filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchDown)
+            filterButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(filterButton)
+            
+            let filterImageView = UIImageView(image: UIImage(named: "Filter"))
+            filterImageView.contentMode = .center
+            filterImageView.translatesAutoresizingMaskIntoConstraints = false
+            filterButton.addSubview(filterImageView)
+            
+            let filterLabel = UILabel()
+            filterLabel.text = "필터"
+            filterLabel.contentMode = .center
+            filterLabel.font = UIFont.boldSystemFont(ofSize: 12)
+            filterLabel.textColor = .gray2
+            filterLabel.translatesAutoresizingMaskIntoConstraints = false
+            filterButton.addSubview(filterLabel)
+            
+            NSLayoutConstraint.activate([
+                filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+                filterButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+                filterButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+                filterButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+                
+                filterImageView.leadingAnchor.constraint(equalTo: filterButton.leadingAnchor, constant: 12),
+                filterImageView.centerYAnchor.constraint(equalTo: filterButton.centerYAnchor),
+                filterImageView.heightAnchor.constraint(equalToConstant: 16),
+                filterImageView.widthAnchor.constraint(equalToConstant: 16),
+                
+                filterLabel.trailingAnchor.constraint(equalTo: filterButton.trailingAnchor, constant: -12),
+                filterLabel.centerYAnchor.constraint(equalTo: filterButton.centerYAnchor)
+            ])
+        }
+        
+        
+        @objc private func filterButtonTapped() {
+            print("Filter 버튼이 눌렸습니다.")
         }
     }
 }
