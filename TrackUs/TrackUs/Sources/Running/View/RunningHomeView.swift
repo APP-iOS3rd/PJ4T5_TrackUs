@@ -195,11 +195,12 @@ extension RunningHomeView {
             .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
             
             // 가로 스크롤
-            if !courseListViewModel.courseList.isEmpty {
+            if !courseListViewModel.courseList.isEmpty, authViewModel.userInfo.uid != "" {
                 ScrollView(.horizontal, showsIndicators: false) {
                     VStack {
                         HStack(spacing: 12) {
                             ForEach(courseListViewModel.courseList, id: \.self) { course in
+                                
                                 Button(action: {
                                     router.push(.courseDetail(CourseViewModel(course: course)))
                                 }, label: {
