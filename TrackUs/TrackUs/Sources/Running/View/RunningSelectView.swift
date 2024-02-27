@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import PopupView
 
 struct RunningSelectView: View {
     var vGridItems = [GridItem()]

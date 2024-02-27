@@ -89,6 +89,11 @@ final class Router: ObservableObject {
         }
     }
     
+    func popScreens(count: Int) {
+        guard path.count >= count else { return }
+        path.removeLast(count)
+    }
+    
     func popToRoot() {
         path.removeLast(path.count)
     }
