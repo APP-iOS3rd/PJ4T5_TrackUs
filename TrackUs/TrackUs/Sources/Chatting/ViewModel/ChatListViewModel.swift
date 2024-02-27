@@ -23,10 +23,10 @@ class ChatListViewModel: ObservableObject {
         self.newMessage = false
         if let currentUId = FirebaseManger().auth.currentUser?.uid {
             self.currentUId = currentUId
+            //subscribeToUpdates()
         }else{
             self.currentUId = ""
         }
-        subscribeToUpdates()
     }
     
     // 탭바 신규 메세지 확인

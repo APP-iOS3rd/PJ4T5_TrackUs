@@ -71,7 +71,7 @@ struct CourseDetailView: View {
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("알림"),
-                message: Text("방장이 참가를 취소하는 경우 모집글이 삭제됩니다 계속 참가를 취소 하시겠습니까?"),
+                message: Text("방장이 참가를 취소하는 경우 모집글이 삭제됩니다.\n계속 참가를 취소 하시겠습니까?"),
                 primaryButton: .default (
                     Text("취소"),
                     action: { }
