@@ -573,9 +573,9 @@
 			children = (
 				82AB28B82B6B528500D7734D /* FAQView.swift */,
 				82AB28B62B6B512F00D7734D /* WebView.swift */,
-				8224637C2B68E7F6008D3DAA /* MyProfileView.swift */,
 				82AB28B22B6B4F0E00D7734D /* RunningRecordView.swift */,
 				82AB28C02B6B5B6600D7734D /* TeamIntroView.swift */,
+				8224637C2B68E7F6008D3DAA /* MyProfileView.swift */,
 				963AE42A2B6A445800E98BF4 /* ProfileEditView.swift */,
 				82AB28BC2B6B56E100D7734D /* SettingsView.swift */,
 				963AE4242B6A2C3C00E98BF4 /* Withdrawal.swift */,

@@ -87,29 +87,31 @@ struct UserProfileContent: View {
             
             VStack {
                 HStack {
-                    Button(action: {
-                        // 채팅방 있는여부 확인
-                        router.push(.chatting(ChatViewModel(myInfo: authViewModel.userInfo, opponentInfo: userInfo)))
-                    }) {
-                        Text("1:1 대화")
-                            .frame(width: 113, height: 28)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(26)
+                    if userInfo.uid != authViewModel.userInfo.uid {
+                        Button(action: {
+                            // 채팅방 있는여부 확인
+                            router.push(.chatting(ChatViewModel(myInfo: authViewModel.userInfo, opponentInfo: userInfo)))
+                        }) {
+                            Text("1:1 대화")
+                                .frame(width: 113, height: 28)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(26)
+                        }
+                        .padding(.top, 12)
+                        
+                        Button(action: {
+                            // 신고하기 화면으로 이동해야함!
+                        }) {
+                            Text("신고하기")
+                                .frame(width: 113, height: 28)
+                                .background(Color.red)
+                                .customFontStyle(.white_M14)
+                                .foregroundColor(.white)
+                                .cornerRadius(26)
+                        }
+                        .padding(.top, 12)
                     }
-                    .padding(.top, 12)
-                    
-                    Button(action: {
-                        // 신고하기 화면으로 이동해야함!
-                    }) {
-                        Text("신고하기")
-                            .frame(width: 113, height: 28)
-                            .background(Color.red)
-                            .customFontStyle(.white_M14)
-                            .foregroundColor(.white)
-                            .cornerRadius(26)
-                    }
-                    .padding(.top, 12)
                 }
             }
             .padding(.bottom, 15)
