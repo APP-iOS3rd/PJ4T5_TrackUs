@@ -108,9 +108,9 @@ struct ChatRoomImage: View {
         case 2:
             ZStack {
                 ProfileImage(ImageUrl: users[members[0]]?.profileImageUrl, size: 32)
-                    .offset(x: -10, y: 10)
+                    .offset(x: -10, y: -10)
                 ProfileImage(ImageUrl: users[members[1]]?.profileImageUrl, size: 32)
-                    .offset(x: 10, y: -10)
+                    .offset(x: 10, y: 10)
             }
         case 3:
             VStack(spacing: 1) {
