@@ -43,11 +43,13 @@ struct CircleTabView: View {
         }, content: {
             if selectedPicker == .day {
                 CustomDatePicker(selectedDate: $selectedDate, isPickerPresented: $isPickerPresented)
-                    .presentationDetents([.height(400)])
+//                    .presentationDetents([.height(400)])
+                    .presentationDetents([.height(330)])
                     .presentationDragIndicator(.hidden)
             } else {
                 MonthPicker(isPickerPresented: $isPickerPresented, selectedDate: $selectedDate)
-                    .presentationDetents([.height(300)])
+//                    .presentationDetents([.height(300)])
+                    .presentationDetents([.height(250)])
                     .presentationDragIndicator(.hidden)
             }
         })
@@ -149,7 +151,8 @@ struct DailyCircleView: View {
                 Button {
                     selectedDate = yesterdayDate
                 } label: {
-                    Image(systemName: "arrowtriangle.left.fill")
+//                    Image(systemName: "arrowtriangle.left.fill")
+                    Image(systemName: "chevron.left")
                         .foregroundColor(.gray2)
                 }
                 
@@ -160,7 +163,8 @@ struct DailyCircleView: View {
                 Button {
                     selectedDate = tomorrowDate
                 } label: {
-                    Image(systemName: "arrowtriangle.right.fill")
+//                    Image(systemName: "arrowtriangle.right.fill")
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.gray2)
                 }
             }
@@ -333,7 +337,8 @@ struct MonthlyCircleView: View {
                 Button {
                     selectedDate = lastMonthDate
                 } label: {
-                    Image(systemName: "arrowtriangle.left.fill")
+//                    Image(systemName: "arrowtriangle.left.fill")
+                    Image(systemName: "chevron.left")
                         .foregroundColor(.gray2)
                 }
                 
@@ -344,7 +349,8 @@ struct MonthlyCircleView: View {
                 Button {
                     selectedDate = nextMonthDate
                 } label: {
-                    Image(systemName: "arrowtriangle.right.fill")
+//                    Image(systemName: "arrowtriangle.right.fill")
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.gray2)
                 }
             }

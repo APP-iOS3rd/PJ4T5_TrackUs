@@ -33,13 +33,13 @@ struct MyRecordView: View {
         ScrollView {
             ZStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    Button {
-                        router.present(fullScreenCover: .payment)
-                    } label: {
-                        GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
-                            .modifier(BorderLineModifier())
-                            .multilineTextAlignment(.leading)
-                    }
+//                    Button {
+//                        router.present(fullScreenCover: .payment)
+//                    } label: {
+//                        GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+//                            .modifier(BorderLineModifier())
+//                            .multilineTextAlignment(.leading)
+//                    }
                     
                     VStack(alignment: .leading) {
                         //                        152.asString(unit: .pace)
@@ -187,7 +187,8 @@ struct MyRecordView: View {
             
         }, content: {
             CustomDateFilter(selectedDate: $selectedDate, isPickerPresented: $calendarButton)
-                .presentationDetents([.height(450)])
+//                .presentationDetents([.height(450)])
+                .presentationDetents([.height(390)])
                 .presentationDragIndicator(.hidden)
         })
         .alert("알림", isPresented: $isDelete) {
@@ -390,11 +391,12 @@ struct CustomDateFilter: View {
                     Spacer()
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth -= 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.left.fill")
+//                        Image(systemName: "arrowtriangle.left.fill")
+                        Image(systemName: "chevron.left")
                             .foregroundColor(.white)
                     }
                     
@@ -405,11 +407,12 @@ struct CustomDateFilter: View {
                     }
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth += 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.right.fill")
+//                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "chevron.right")
                             .foregroundColor(.white)
                     }
                     
@@ -449,6 +452,7 @@ struct CustomDateFilter: View {
                         }
                 }
             }
+            .frame(height: 230)
             
             Spacer()
         }
