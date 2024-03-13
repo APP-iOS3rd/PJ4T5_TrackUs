@@ -37,7 +37,7 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         private var pointAnnotationManager: PointAnnotationManager!
         
         // UI
-        lazy var buttonStack: UIStackView = {
+        private lazy var buttonStack: UIStackView = {
             let stack = UIStackView()
             stack.translatesAutoresizingMaskIntoConstraints = false
             stack.axis = .vertical
@@ -45,7 +45,7 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
             return stack
         }()
         
-        lazy var completeButton: UIButton = {
+        private lazy var completeButton: UIButton = {
             let button = UIButton()
             button.setTitle("코스 완성", for: .normal)
             button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
@@ -53,21 +53,23 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
             button.backgroundColor = .main
             button.setTitleColor(.white, for: .normal)
             button.layer.cornerRadius = 28
-            
+            button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
             return button
         }()
         
-        lazy var deleteButton: UIButton = {
+        private lazy var deleteButton: UIButton = {
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             button.setImage(UIImage(named: "trash"), for: .normal)
+            button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
             return button
         }()
         
-        lazy var revertButton: UIButton = {
+        private lazy var revertButton: UIButton = {
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             button.setImage(UIImage(named: "revert"), for: .normal)
+            button.addTarget(self, action: #selector(revertButtonTapped), for: .touchUpInside)
             return button
         }()
         
@@ -110,10 +112,6 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         }
         
         private func setupUI() {
-            completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
-            deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-            revertButton.addTarget(self, action: #selector(revertButtonTapped), for: .touchUpInside)
-            
             // add view
             [deleteButton, revertButton].forEach { buttonStack.addArrangedSubview($0) }
             
@@ -133,7 +131,7 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
         }
         
         // 데이터 바인딩
-        func bind() {
+        private func bind() {
             // 좌표탭 핸들러
             self.mapView.gestures.onMapTap.observe { context in
                 self.courseRegViewModel.addPath(with: context.coordinate)
@@ -157,14 +155,6 @@ struct CourseDrawingMapView: UIViewControllerRepresentable {
                 self.lineAnnotation.lineJoin = .round
                 self.lineAnnotationManager.annotations = [self.lineAnnotation]
                 
-                let totalDistanceInKilometers = coordinate.caculateTotalDistance() / 1000.0
-                let totalEstimatedTimeInMinutes = ExerciseManager.calculateEstimatedTime(distance: totalDistanceInKilometers) * 60
-                
-                // 예상 소모 칼로리 업데이트
-                self.courseRegViewModel.estimatedCalorie = ExerciseManager.calculatedCaloriesBurned(distance: totalDistanceInKilometers)
-                
-                // 예상 소요시간 업데이트
-                self.courseRegViewModel.estimatedTime = totalEstimatedTimeInMinutes
                 
             }.store(in: &cancellation)
         }

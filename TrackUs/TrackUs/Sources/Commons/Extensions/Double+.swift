@@ -18,7 +18,7 @@ extension Double {
         return self * .pi / 180.0
     }
     
-    // 정수를 00:00 형식으로 포매팅
+    /// 시간(sec) -> MM:00
     func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -27,7 +27,7 @@ extension Double {
         return formatter.string(from: self) ?? ""
     }
     
-    // 러닝페이스 형식으로 포매팅
+    /// 거리(m) -> 거리(km)
     func asString(unit: FormattedStyle) -> String {
         switch unit {
         case .pace:
@@ -39,7 +39,7 @@ extension Double {
             
             return "\(paceInMinutes)'\(paceInSecondsFirst)\(paceInSecondsThird)''"
         case .kilometer:
-            return String(format: "%.2f km", self)
+            return String(format: "%.2f km", self / 1000.0)
         case .calorie:
             return String(format: "%.1f kcal", self)
         }

@@ -25,7 +25,7 @@ struct RunningResultView: View {
     }
     
     // 예상시간
-    var estimatedTime: Int {
+    var estimatedTime: Double {
         return ExerciseManager.calculateEstimatedTime(distance: targetDistance * 60)
     }
     

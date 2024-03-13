@@ -60,7 +60,7 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStatsView(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance() / 1000.0)
+                        RunningStatsView(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance())
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -109,7 +109,8 @@ extension CourseRegisterView {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
-            MainButton(active: isTextFieldValid ,buttonText: "코스 등록하기") {
+            MainButton(active: isTextFieldValid && !courseRegViewModel.isLoading ,buttonText: "코스 등록하기") {
+                print(courseRegViewModel.isLoading)
                 courseRegViewModel.uploadCourseData { uploadedData in
                     guard let uploadedData = uploadedData else { return }
                     router.popScreens(count: 2)
@@ -135,7 +136,7 @@ extension CourseRegisterView {
                     let hoursInSeconds = courseRegViewModel.hours * 3600
                     let minutesInSeconds = courseRegViewModel.minutes * 60
                     let seconds = courseRegViewModel.seconds
-                    courseRegViewModel.estimatedTime = hoursInSeconds + minutesInSeconds + seconds
+                    courseRegViewModel.estimatedTime = Double(hoursInSeconds) + Double(minutesInSeconds) + Double(seconds)
                 }
         })
         .customNavigation {
@@ -166,7 +167,7 @@ extension CourseRegisterView {
                     .background(isSelected ? .main : .white)
                     .foregroundColor(isSelected ? .white : .gray2)
                     .clipShape(Capsule())
-                    
+                
                     .overlay(
                         Capsule()
                             .stroke(.gray3, lineWidth: isSelected ? 0 : 1)
@@ -176,6 +177,9 @@ extension CourseRegisterView {
                     }
                 
             }
+        }
+        .onChange(of: courseRegViewModel.style) { _ in
+            
         }
     }
     
