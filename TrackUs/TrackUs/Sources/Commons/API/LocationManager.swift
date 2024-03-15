@@ -51,12 +51,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     // 위도, 경도를 받아서 한글주소로 반환
-    func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String?) -> ()) {
+    func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String) -> ()) {
         let geoCoder = CLGeocoder()
         
         geoCoder.reverseGeocodeLocation(coordinate) { placemarks, error in
             if error != nil {
-                completion(nil)
+                completion("위치정보 없음")
                 return
             }
             

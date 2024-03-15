@@ -15,6 +15,10 @@ import Firebase
 
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 final class TrackingViewModel: ObservableObject {
+    enum NetworkError: Error {
+        case snapshotError
+        case fetchError
+    }
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     
@@ -90,19 +94,20 @@ extension TrackingViewModel {
     /// 데이터 추가(DB)
     /// throw 함수를 만들면서 throw가 되씅때 네트워크상태를 에러로 만들어보기
     @MainActor
-    func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
+    func uploadRunningData(targetDistance: Double, expectedTime: Double) throws {
         let uid = authViewModel.userInfo.uid
         
         self.isLoading = true
         
-        guard let image = snapshot else { return }
+        guard let image = snapshot else {
+            throw TrackingViewModel.NetworkError.snapshotError
+        }
         
         ImageUploader.uploadImage(image: image, type: .map) { url in
             let firstCoordinate = self.coordinates.first!
             let coordinate = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
             
             LocationManager.shared.convertToAddressWith(coordinate: coordinate) { address in
-                guard let address = address else { return }
                 
                 let data: [String : Any] = [
                     "title": self.title == "" ? "\(address) 에서 러닝" : self.title,
@@ -120,7 +125,7 @@ extension TrackingViewModel {
                     "groupID": self.groupID
                 ]
                 
-                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { _ in
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
                     self.isLoading = false
                 }
             }

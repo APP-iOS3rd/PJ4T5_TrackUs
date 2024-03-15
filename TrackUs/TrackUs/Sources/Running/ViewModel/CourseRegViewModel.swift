@@ -106,7 +106,7 @@ extension CourseRegViewModel {
         let documentID = UUID().uuidString
         
         locationManager.convertToAddressWith(coordinate: startCoordinate.asCLLocation()) { address in
-            guard let address = address else { return }
+            
             ImageUploader.uploadImage(image: image, type: .map) { url in
                 defer {
                     self.isLoading = false
@@ -149,7 +149,6 @@ extension CourseRegViewModel {
                                           ))
             }
         }
-        
     }
 }
 

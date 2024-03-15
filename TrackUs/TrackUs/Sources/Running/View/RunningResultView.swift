@@ -222,9 +222,13 @@ extension RunningResultView {
         }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
-                trackingViewModel.uploadRecordedData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
-                self.hideKeyboard()
-                self.showingPopup = false
+                do {
+                   try trackingViewModel.uploadRunningData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
+                    self.hideKeyboard()
+                    self.showingPopup = false
+                } catch let error {
+                    trackingViewModel.isLoading = false
+                }
             }
         } customize: {
             $0
