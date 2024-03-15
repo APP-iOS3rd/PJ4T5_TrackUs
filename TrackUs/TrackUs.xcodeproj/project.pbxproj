@@ -378,6 +378,8 @@
 			isa = PBXGroup;
 			children = (
 				824F4DF22B83D73500EFDF42 /* ExerciseManager.swift */,
+				822AE5F12B704FB700D90264 /* LocationManager.swift */,
+				8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */,
 				82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */,
 			);
 			path = API;
@@ -444,8 +446,6 @@
 				82ECF0B62B67A623002CFD00 /* Extensions */,
 				610F88202B74CFFC00FB12A1 /* Network */,
 				82ECF0B92B67A64B002CFD00 /* Constants.swift */,
-				822AE5F12B704FB700D90264 /* LocationManager.swift */,
-				8252D51B2B6CCD27006B4FE5 /* HapticManager.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";

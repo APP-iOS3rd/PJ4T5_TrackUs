@@ -40,9 +40,10 @@ struct ImageUploader {
                 return
             }
             
-            print("Succesfully upload image...")
+            
             ref.downloadURL { url, _ in
                 guard let url = url?.absoluteString else { return }
+                print("Succesfully upload image...")
                 completion(url)
             }
         }
