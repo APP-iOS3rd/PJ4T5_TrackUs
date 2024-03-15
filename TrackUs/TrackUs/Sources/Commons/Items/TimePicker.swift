@@ -12,7 +12,7 @@ struct TimePicker: View {
     @Binding var hours: Int
     @Binding var minutes: Int
     @Binding var seconds: Int
-
+    
     var formattedHours: String {
         String(format: "%02d", hours)
     }
@@ -26,6 +26,7 @@ struct TimePicker: View {
     }
     
     var body: some View {
+        // 설정된 시간을 표시
         VStack {
             HStack {
                 Text("🏃🏻 ")
@@ -53,7 +54,7 @@ struct TimePicker: View {
                 }
                 .pickerStyle(WheelPickerStyle())
                 .frame(width: 100)
-
+                
                 Picker("Minutes", selection: $minutes) {
                     ForEach(0..<60, id: \.self) { minute in
                         Text( String(format: "%02d", minute))
@@ -61,7 +62,7 @@ struct TimePicker: View {
                 }
                 .pickerStyle(WheelPickerStyle())
                 .frame(width: 100)
-
+                
                 Picker("Seconds", selection: $seconds) {
                     ForEach(0..<60, id: \.self) { second in
                         Text( String(format: "%02d", second))
@@ -74,10 +75,7 @@ struct TimePicker: View {
         .padding()
         
     }
-
-    var formattedTime: String {
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
+    
 }
 
 #Preview {

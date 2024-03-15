@@ -7,15 +7,28 @@
 
 import Foundation
 
-enum FormattedStyle {
-    case pace
-    case kilometer
-    case calorie
-}
-
 extension Double {
+    /// 포맷팅 스타일
+    enum FormattedStyle {
+        case pace
+        case kilometer
+        case calorie
+    }
+    
     var radians: Double {
         return self * .pi / 180.0
+    }
+    
+    var secondsInHours: Int {
+        return Int(self / 3600)
+    }
+    
+    var secondsInMinutes: Int {
+        return Int(self) % 3600 / 60
+    }
+    
+    var seconds: Int {
+        return Int(self) % 60
     }
     
     /// 시간(sec) -> MM:00

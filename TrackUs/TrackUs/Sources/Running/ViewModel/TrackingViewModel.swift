@@ -17,6 +17,7 @@ enum NetworkStatus {
     case error
     case success
 }
+
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 class TrackingViewModel: ObservableObject {
     var snapshot: UIImage?
@@ -69,7 +70,7 @@ class TrackingViewModel: ObservableObject {
             
             self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
             self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance)
-            self.pace = ExerciseManager.calculatedPace(distance: self.distance, totalTime: self.elapsedTime)
+            self.pace = ExerciseManager.calculatedPace(distance: self.distance, timeInSeconds: self.elapsedTime)
     }
     
     // 기록시작

@@ -14,13 +14,16 @@ final class ExerciseManager {
         let caloriesPerKilometer: Double = 0.00075
         let weightInKilograms = 70.0
         let caloriesBurned = weightInKilograms * distance * caloriesPerKilometer
+        
         return caloriesBurned
     }
     
-    // 페이스(pace) -> 1km를 가는데 걸리는 시간
-    // 5km 이동 30분 소요 = 30/5 = 6min/km
-    static func calculatedPace(distance: Double, totalTime: Double) -> Double {
-        return 0
+    /// 시간(sec) -> 러닝 페이스
+    static func calculatedPace(distance: Double, timeInSeconds: Double) -> Double {
+        let timeInMinutes = timeInSeconds / 60.0
+        let pace = timeInMinutes / distance
+        
+        return pace
     }
     
     /// 거리(m) + 러닝스타일 -> 예상시간(sec)
@@ -28,6 +31,7 @@ final class ExerciseManager {
     @MainActor
     static func calculateEstimatedTime(distance: Double, style: RunningStyle? = nil) -> Double {
         let runningStyle = style ?? (AuthenticationViewModel.shared.userInfo.runningStyle ?? .jogging)
+        
         switch runningStyle {
         case .walking:
             return distance * 0.9

@@ -6,6 +6,9 @@
 //
 import Foundation
 
+/**
+  코스데이터에 대한 개별적인 뷰모델
+ */
 class CourseViewModel: ObservableObject {
     let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared

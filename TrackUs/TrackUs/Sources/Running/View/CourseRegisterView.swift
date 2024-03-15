@@ -14,16 +14,20 @@ struct CourseRegisterView: View {
     @State var isTimePickerPresented = false
     @State var isTooltipDisplay = false
     
+    var isTimeSetting: Bool {
+        courseRegViewModel.hours != 0 && courseRegViewModel.minutes != 0 && courseRegViewModel.seconds != 0
+    }
+    
     var formattedHours: String {
-        String(format: "%02d", courseRegViewModel.hours)
+        String(format: "%02d", isTimeSetting ? courseRegViewModel.hours : courseRegViewModel.estimatedTime.secondsInHours)
     }
     
     var formattedMinutess: String {
-        String(format: "%02d", courseRegViewModel.minutes)
+        String(format: "%02d", isTimeSetting ? courseRegViewModel.minutes : courseRegViewModel.estimatedTime.secondsInMinutes)
     }
     
     var formattedSeconds: String {
-        String(format: "%02d", courseRegViewModel.seconds)
+        String(format: "%02d", isTimeSetting ? courseRegViewModel.seconds : courseRegViewModel.estimatedTime.seconds)
     }
     
     var isTextFieldValid: Bool {
@@ -31,7 +35,7 @@ struct CourseRegisterView: View {
     }
 }
 
-// MARK: - View
+// MARK: - Main View
 extension CourseRegisterView {
     var body: some View {
         VStack {
@@ -110,7 +114,6 @@ extension CourseRegisterView {
             }
             
             MainButton(active: isTextFieldValid && !courseRegViewModel.isLoading ,buttonText: "코스 등록하기") {
-                print(courseRegViewModel.isLoading)
                 courseRegViewModel.uploadCourseData { uploadedData in
                     guard let uploadedData = uploadedData else { return }
                     router.popScreens(count: 2)
@@ -137,6 +140,9 @@ extension CourseRegisterView {
                     let minutesInSeconds = courseRegViewModel.minutes * 60
                     let seconds = courseRegViewModel.seconds
                     courseRegViewModel.estimatedTime = Double(hoursInSeconds) + Double(minutesInSeconds) + Double(seconds)
+                }
+                .onChange(of: courseRegViewModel.estimatedTime) { _ in
+                    courseRegViewModel.matchTimeFormat()
                 }
         })
         .customNavigation {
@@ -175,11 +181,10 @@ extension CourseRegisterView {
                     .onTapGesture {
                         courseRegViewModel.style = style
                     }
-                
             }
         }
         .onChange(of: courseRegViewModel.style) { _ in
-            
+            courseRegViewModel.updateCourseInfo()
         }
     }
     

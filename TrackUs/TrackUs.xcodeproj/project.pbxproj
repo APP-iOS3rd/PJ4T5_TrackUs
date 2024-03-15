@@ -377,6 +377,7 @@
 		82494DD62B7AD66900FB3EB8 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				824F4DF22B83D73500EFDF42 /* ExerciseManager.swift */,
 				82494DD72B7AD67400FB3EB8 /* ImageUploader.swift */,
 			);
 			path = API;
@@ -550,7 +551,6 @@
 			children = (
 				FE1CD54F2B7DFDEA00F8A8BE /* SettingPopupViewModel.swift */,
 				823F27A62B827CCE005333F8 /* TrackingViewModel.swift */,
-				824F4DF22B83D73500EFDF42 /* ExerciseManager.swift */,
 				82CB5FA92B87B0FE00406FBF /* CourseRegViewModel.swift */,
 				82B434BE2B8BC20100E96FEA /* CourseListViewModel.swift */,
 				82B434C02B8BC27F00E96FEA /* CourseViewModel.swift */,
