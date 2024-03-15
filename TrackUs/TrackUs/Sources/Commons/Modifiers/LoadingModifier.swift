@@ -8,19 +8,15 @@
 import SwiftUI
 
 struct LoadingModifier: ViewModifier {
-    let networkStatus: NetworkStatus
+    let loadingStatus: Bool
     func body(content: Content) -> some View {
-        switch networkStatus {
-        case .none:
-            content
-        case .loading:
+        switch loadingStatus {
+        case true:
             content
                 .overlay (DataLoadingView())
-        case .error:
+        case false:
             content
-                .overlay (DataLoadingView())
-        case .success:
-            content
+                
         }
     }
 }

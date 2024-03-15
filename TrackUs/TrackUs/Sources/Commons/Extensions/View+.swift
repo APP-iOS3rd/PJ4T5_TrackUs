@@ -8,8 +8,8 @@
 import SwiftUI
 
 extension View {
-    func loadingWithNetwork(status: NetworkStatus) -> some View {
-        modifier(LoadingModifier(networkStatus: status))
+    func loadingWithNetwork(status: Bool) -> some View {
+        modifier(LoadingModifier(loadingStatus: status))
     }
     
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {

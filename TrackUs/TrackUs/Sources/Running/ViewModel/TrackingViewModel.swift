@@ -11,12 +11,7 @@ import SwiftUI
 import MapboxMaps
 import Firebase
 
-enum NetworkStatus {
-    case none
-    case loading
-    case error
-    case success
-}
+
 
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 class TrackingViewModel: ObservableObject {
@@ -28,7 +23,6 @@ class TrackingViewModel: ObservableObject {
     private let authViewModel = AuthenticationViewModel.shared
     @Published var count: Int = 3
     @Published var isPause: Bool = true
-    @Published var newtworkStatus: NetworkStatus = .none
     @Published var title: String = ""
     @Published var coordinates: [CLLocationCoordinate2D] = []
     @Published var distance: Double = 0.0
@@ -36,7 +30,7 @@ class TrackingViewModel: ObservableObject {
     @Published var calorie: Double = 0.0
     @Published var pace: Double = 0.0
     @Published var isGroup: Bool = false
-    
+    @Published var isLoading = false
     private var countTimer: Timer = Timer()
     private var recordTimer: Timer = Timer()
     
@@ -94,7 +88,7 @@ class TrackingViewModel: ObservableObject {
     // throw 함수를 만들면서 throw가 되씅때 네트워크상태를 에러로 만들어보기
     @MainActor
     func uploadRecordedData(targetDistance: Double, expectedTime: Double) {
-        self.newtworkStatus = .loading 
+        self.isLoading = true
         let uid = authViewModel.userInfo.uid
     
         guard let image = snapshot else { return }
@@ -121,7 +115,7 @@ class TrackingViewModel: ObservableObject {
                 ]
                 
                 Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { _ in
-                    self.newtworkStatus = .success
+                    self.isLoading = false
                 }
             }
         }

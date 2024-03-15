@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct RunningResultView: View {
+    private let settingViewModel = SettingPopupViewModel()
+    
     @EnvironmentObject var router: Router
+    @ObservedObject var trackingViewModel: TrackingViewModel
+    
     @State private var showingPopup = false
     @State private var showingAlert = false
-    let settingViewModel = SettingPopupViewModel()
-    @ObservedObject var trackingViewModel: TrackingViewModel
+    
     
     // 목표거리
     var targetDistance: Double {
@@ -233,11 +236,10 @@ extension RunningResultView {
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
         .ignoresSafeArea(.keyboard)
-        .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
+        .loadingWithNetwork(status: trackingViewModel.isLoading)
         .preventGesture()
-        .onChange(of: trackingViewModel.newtworkStatus) { status in
-            print(status)
-            if status == .success {
+        .onChange(of: trackingViewModel.isLoading) { isLoading in
+            if !isLoading {
                 router.popToRoot()
             }
         }
