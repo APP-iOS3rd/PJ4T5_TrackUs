@@ -910,7 +910,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					963AE4002B678EAC00E98BF4 = {
 						CreatedOnToolsVersion = 15.2;
@@ -1038,9 +1038,7 @@
 				824F4DF12B83CDEA00EFDF42 /* TrackingModeMapView.swift in Sources */,
 				82AB28B12B6B4DC200D7734D /* MenuItems.swift in Sources */,
 				824038CA2B6FD040000BADD5 /* MaxBoxMapView.swift in Sources */,
-				82ECF0B32B67A0F8002CFD00 /* AuthenticationViewModel.swift in Sources */,
 				61B914C32B89A506008CAC92 /* RunningSelectView.swift in Sources */,
-				98F1C2F02B6A2342009382B1 /* NickNameView.swift in Sources */,
 				610F88242B74D02900FB12A1 /* NetworkErrorView.swift in Sources */,
 				821CD24F2B72C8A600CE6D42 /* View+Gesture.swift in Sources */,
 				6112431D2B7AA3110086EF40 /* CustomDatePicker.swift in Sources */,
@@ -1050,8 +1048,6 @@
 				610F88282B775F5400FB12A1 /* MyRecordView.swift in Sources */,
 				FEEAEA0F2B827717001F1888 /* UserProfileViewModel.swift in Sources */,
 				984B3A462B73ADDD00C9831C /* UserInfo.swift in Sources */,
-				989D12DE2B68237E004F41CF /* ProfilePicker.swift in Sources */,
-				98F1C2F62B6A23A5009382B1 /* AgeGenderView.swift in Sources */,
 				828EA4BF2B7CB63100785D0F /* BorderLineModifier.swift in Sources */,
 				82CB5F952B87251200406FBF /* CourseDrawingView.swift in Sources */,
 				82CB5FA02B874C8300406FBF /* LocationMeMapView.swift in Sources */,

@@ -202,11 +202,17 @@ struct ChattingView: View {
                     .customFontStyle(.gray1_R12)
                 // 참여 중인 사용자 프로필 정보
                 ForEach(chatViewModel.chatRoom.members, id: \.self) { uid in
-                    HStack{
-                        ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
-                        Text("\(chatViewModel.members[uid]?.userName ?? "")")
-                            .customFontStyle(.gray1_R14)
+                    Button {
+                        router.push(.userProfile(uid))
+                    } label: {
+                        HStack{
+                            ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
+                            Text("\(chatViewModel.members[uid]?.userName ?? "")")
+                                .customFontStyle(.gray1_R14)
+                        }
                     }
+
+                    
                 }
             }
             .padding(16)
