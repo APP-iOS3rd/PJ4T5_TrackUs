@@ -25,7 +25,7 @@ struct CourseDetailView: View {
             
             ScrollView {
                 VStack(spacing: 0)   {
-                    RunningStatsView(estimatedTime: Double(courseViewModel.course.estimatedTime), calories: courseViewModel.course.estimatedCalorie, distance: courseViewModel.course.coordinates.caculateTotalDistance() / 1000.0)
+                    RunningStatsView(estimatedTime: courseViewModel.course.estimatedTime, calories: courseViewModel.course.estimatedCalorie, distance: courseViewModel.course.coordinates.caculateTotalDistance())
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
                     courseDetailLabels

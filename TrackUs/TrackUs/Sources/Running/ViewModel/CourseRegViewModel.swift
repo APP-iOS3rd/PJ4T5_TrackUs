@@ -142,7 +142,7 @@ extension CourseRegViewModel {
                                                    content: self.content,
                                                    courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
                                                    distance: self.distance,
-                                                   estimatedTime: Int(self.estimatedTime), participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
+                                                   estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
                                                    routeImageUrl: url,
                                                    address: address,
                                                    estimatedCalorie: self.estimatedCalorie)

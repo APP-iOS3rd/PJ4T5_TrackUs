@@ -66,7 +66,7 @@ extension TrackingViewModel {
             let newLocation = self.coordinates[self.coordinates.count - 1]
             let oldLocation = self.coordinates[self.coordinates.count - 2]
             
-            self.distance += (newLocation.distance(to: oldLocation)) / 1000.0
+            self.distance += (newLocation.distance(to: oldLocation))
             self.calorie = ExerciseManager.calculatedCaloriesBurned(distance: self.distance)
             self.pace = ExerciseManager.calculatedPace(distance: self.distance, timeInSeconds: self.elapsedTime)
     }

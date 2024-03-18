@@ -114,9 +114,6 @@ struct RunningSelectView: View {
             }
             .padding(.horizontal, 16)
         }
-        
-//        .padding(.horizontal, 16)
-//        .padding(.vertical, 20)
         .popup(isPresented: $showingPopup) {
             SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
         } customize: {
@@ -153,31 +150,6 @@ struct selectedCell: View {
                         .customFontStyle(.gray1_R14)
                     
                     Spacer()
-                    
-//                    Text("걷기")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: 10))
-//                        .fontWeight(.semibold)
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 3)
-//                        .background(Color.main)
-//                        .cornerRadius(25)
-//                    Text("빠른걸음")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: 10))
-//                        .fontWeight(.semibold)
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 3)
-//                        .background(Color.main)
-//                        .cornerRadius(25)
-//                    Text("러닝")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: 10))
-//                        .fontWeight(.semibold)
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 3)
-//                        .background(Color.main)
-//                        .cornerRadius(25)
                     
                     RunningStyleBadge(style: .init(rawValue: course.runningStyle) ?? .walking)
                 }

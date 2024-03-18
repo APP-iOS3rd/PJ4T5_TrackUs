@@ -17,7 +17,7 @@ struct Course: Decodable, Hashable {
     let content: String
     let courseRoutes: [GeoPoint]
     let distance: Double
-    let estimatedTime: Int
+    let estimatedTime: Double
     let participants: Int
     let runningStyle: String
     let startDate: Date

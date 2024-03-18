@@ -11,49 +11,39 @@ import SwiftUI
 class SettingPopupViewModel: ObservableObject {
     @Published var showingPopup = false
     @Published var goalMinValue: Double
-    @Published var estimatedTime: Int
+    @Published var estimatedTime: Double
     
     var authViewModel = AuthenticationViewModel.shared
     
     let goalMinValueKey = "GoalMinValue"
     let estimatedTimeKey = "EstimatedTime"
     
+    let DEFAULT_GOAL_DISTANCE = 3000.0
+    let DEFAULT_ESTIMATED_TIME = 900.0
+    
     init() {
         let defaults = UserDefaults.standard
         let savedGoalMinValue = defaults.double(forKey: goalMinValueKey)
-        let savedEstimatedTime = defaults.integer(forKey: estimatedTimeKey)
+        let savedEstimatedTime = defaults.double(forKey: estimatedTimeKey)
         
         if savedGoalMinValue == 0 {
-            self.goalMinValue = 3
+            self.goalMinValue = DEFAULT_GOAL_DISTANCE
         } else {
             self.goalMinValue = savedGoalMinValue
         }
         
         if savedEstimatedTime == 0 {
-            self.estimatedTime = 15
+            self.estimatedTime = DEFAULT_ESTIMATED_TIME
         } else {
             self.estimatedTime = savedEstimatedTime
         }
     }
     
-    @MainActor func updateEstimatedTime() {
-        guard let runningStyle = authViewModel.userInfo.runningStyle
-                
-        else {
-            estimatedTime = Int(goalMinValue * 10)
-            return
-        }
-        
-        switch runningStyle {
-        case .walking:
-            estimatedTime = Int(goalMinValue * 12)
-        case .jogging:
-            estimatedTime = Int(goalMinValue * 10)
-        case .running:
-            estimatedTime = Int(goalMinValue * 5)
-        case .interval:
-            estimatedTime = Int(goalMinValue * 4)
-        }
+    
+    @MainActor 
+    func updateEstimatedTime() {
+        self.estimatedTime = ExerciseManager.calculateEstimatedTime(distance: self.goalMinValue)
+        print(estimatedTime, "!!!")
     }
     
     

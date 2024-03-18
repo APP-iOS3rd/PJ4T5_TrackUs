@@ -43,9 +43,9 @@ struct SettingPopup: View {
                             .foregroundStyle(.gray1)
                         
                         Picker(selection: Binding<Double>(
-                            get: { settingVM.goalMinValue },
+                            get: { settingVM.goalMinValue / 1000.0 },
                             set: { newValue in
-                                settingVM.goalMinValue = newValue
+                                settingVM.goalMinValue = newValue * 1000.0
                                 settingVM.updateEstimatedTime()
                             }
                         )) {
@@ -68,11 +68,16 @@ struct SettingPopup: View {
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.gray1)
                         
-                        Picker(selection: $settingVM.estimatedTime) {
-                            ForEach(1..<240, id: \.self) {
+                        Picker(selection: Binding<Int>(
+                            get: { Int(settingVM.estimatedTime / 60.0) },
+                            set: { newValue in
+                                settingVM.estimatedTime = Double(newValue) * 60.0
+                            }
+                        ))  {
+                            ForEach(1..<240, id: \.self)  {
                                 Text("\($0) min")
                                     .customFontStyle(.gray1_R16)
-                            }
+                            } 
                         } label: {}
                             .padding(5)
                             .accentColor(.gray1)
@@ -109,6 +114,6 @@ struct SettingPopup: View {
     }
 }
 
-#Preview {
-    SettingPopup(showingPopup: .constant(true), settingVM: SettingPopupViewModel())
-}
+//#Preview {
+//    SettingPopup(showingPopup: .constant(true), settingVM: SettingPopupViewModel())
+//}

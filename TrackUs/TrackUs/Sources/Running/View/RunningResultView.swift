@@ -29,7 +29,7 @@ struct RunningResultView: View {
     
     // 예상시간
     var estimatedTime: Double {
-        return ExerciseManager.calculateEstimatedTime(distance: targetDistance * 60)
+        return ExerciseManager.calculateEstimatedTime(distance: targetDistance)
     }
     
     // 킬로미터 비교 -> 실제 뛴 거리 / 예상 거리
