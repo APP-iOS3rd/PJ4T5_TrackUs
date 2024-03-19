@@ -64,10 +64,12 @@ struct RunningSelectView: View {
                             
                         }
                     } else {
-                        NoParticipationPlaceholderView()
-                            .frame(maxHeight: .infinity)
+                      PlaceholderView(
+                        title: "참여중인 러닝이 존재하지 않습니다.",
+                        message: "러닝 메이트 모집 기능을 통해 직접 러닝 모임을 만들어보세요!",
+                        maxHeight: nil
+                      )
                     }
-                    
                 }
                 .padding(.horizontal, 16)
                 

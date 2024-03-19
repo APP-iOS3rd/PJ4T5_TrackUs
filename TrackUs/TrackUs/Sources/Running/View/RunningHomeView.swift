@@ -204,7 +204,7 @@ extension RunningHomeView {
                                 Button(action: {
                                     router.push(.courseDetail(CourseViewModel(course: course)))
                                 }, label: {
-                                    RunningRecruitmentCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
+                                    RunningCell(course: course, user: userSearchViewModel.filterdUserData(uid: [course.ownerUid])[0])
                                 })
                             }
                         }
@@ -213,7 +213,11 @@ extension RunningHomeView {
                 }
                 .padding(.leading, 16)
             } else {
-                AroundMePlacholderView()
+                PlaceholderView(
+                    title: "근처 러닝 모임이 존재하지 않습니다.", 
+                    message: "러닝 메이트 모집 기능을 통해 직접 러닝 모임을 만들어보세요!",
+                    maxHeight: 300
+                )
             }
             
         }

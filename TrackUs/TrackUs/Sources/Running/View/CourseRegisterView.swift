@@ -64,7 +64,7 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStatsView(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance())
+                        RunningStats(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance())
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {

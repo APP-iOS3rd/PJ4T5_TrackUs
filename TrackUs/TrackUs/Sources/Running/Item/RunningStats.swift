@@ -1,13 +1,14 @@
 //
-//  RunningStatsView.swift
+//  RunningStats.swift
 //  TrackUs
 //
-//  Created by 석기권 on 2024/02/22.
+//  Created by 권석기 on 3/19/24.
 //
 
 import SwiftUI
 
-struct RunningStatsView: View {
+/// 거리(m) -> km, 시간(sec) -> mm:ss
+struct RunningStats: View {
     let estimatedTime: Double
     let calories: Double
     let distance: Double
@@ -46,8 +47,3 @@ struct RunningStatsView: View {
         .modifier(BorderLineModifier())
     }
 }
-
-
-//#Preview {
-//    RunningStatsView()
-//}

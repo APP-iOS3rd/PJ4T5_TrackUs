@@ -1,14 +1,16 @@
 //
-//  RunningRecruitmentCell.swift
+//  RunningCell.swift
 //  TrackUs
 //
-//  Created by 석기권 on 2024/02/05.
+//  Created by 권석기 on 3/19/24.
 //
+
+import SwiftUI
 
 import SwiftUI
 import Kingfisher
 
-struct RunningRecruitmentCell: View {
+struct RunningCell: View {
     let course: Course
     let user: UserInfo
     
@@ -68,7 +70,3 @@ struct RunningRecruitmentCell: View {
         .frame(width: 176)
     }
 }
-
-//#Preview {
-//    RunningRecruitmentCell()
-//}
