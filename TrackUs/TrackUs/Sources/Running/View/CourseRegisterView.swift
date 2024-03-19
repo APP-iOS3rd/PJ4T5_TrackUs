@@ -122,10 +122,14 @@ extension CourseRegisterView {
             }
             
             MainButton(active: isTextFieldValid && !courseRegViewModel.isLoading ,buttonText: "코스 등록하기") {
-                courseRegViewModel.uploadCourseData { uploadedData in
-                    guard let uploadedData = uploadedData else { return }
-                    router.popScreens(count: 2)
-                    router.push(.courseDetail(uploadedData))
+                courseRegViewModel.uploadCourseData { result in
+                    switch result {
+                    case .success(let course):
+                        router.popScreens(count: 2)
+                        router.push(.courseDetail(course))
+                    case .failure(let error):
+                        print(error)
+                    }
                 }
             }.padding(.horizontal, 16)
             

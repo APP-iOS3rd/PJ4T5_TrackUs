@@ -12,6 +12,12 @@ import Firebase
  코스등록 정보 뷰모델
  */
 final class CourseRegViewModel: ObservableObject {
+    enum CustomError: Error {
+        case networkError
+        case locationError
+        case snapshotError
+    }
+    
     let id = UUID()
     
     private let authViewModel = AuthenticationViewModel.shared
@@ -97,9 +103,15 @@ extension CourseRegViewModel {
 extension CourseRegViewModel {
     
     @MainActor
-    func uploadCourseData(completion: @escaping (CourseViewModel?) -> ()) {
-        guard let image = self.image else { return }
-        guard let startCoordinate = self.coorinates.first else { return }
+    func uploadCourseData(completion: @escaping (Result<CourseViewModel, CourseRegViewModel.CustomError>) -> ()) {
+        guard let image = self.image else {
+            completion(.failure(.snapshotError))
+            return
+        }
+        guard let startCoordinate = self.coorinates.first else {
+            completion(.failure(.locationError))
+            return
+        }
         
         self.isLoading = true
         let uid = authViewModel.userInfo.uid
@@ -129,24 +141,26 @@ extension CourseRegViewModel {
                     "createdAt": Date()
                 ]
                 
-                Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data)
+                Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { error in
+                    completion(.failure(.networkError))
+                }
                 
                 // 채팅방 생성
                 self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
                 
                 // 완료 핸들러 -> 채팅방 이동
-                completion(CourseViewModel(course:
-                                            Course(uid: documentID,
-                                                   ownerUid: uid,
-                                                   title: self.title,
-                                                   content: self.content,
-                                                   courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
-                                                   distance: self.distance,
-                                                   estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
-                                                   routeImageUrl: url,
-                                                   address: address,
-                                                   estimatedCalorie: self.estimatedCalorie)
-                                          ))
+                completion(.success(CourseViewModel(course:
+                                                        Course(uid: documentID,
+                                                               ownerUid: uid,
+                                                               title: self.title,
+                                                               content: self.content,
+                                                               courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                                                               distance: self.distance,
+                                                               estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
+                                                               routeImageUrl: url,
+                                                               address: address,
+                                                               estimatedCalorie: self.estimatedCalorie)
+                                                   )))
             }
         }
     }
