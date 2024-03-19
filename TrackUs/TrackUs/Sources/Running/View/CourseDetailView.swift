@@ -10,7 +10,9 @@ import MapboxMaps
 
 struct CourseDetailView: View {
     private let authViewModel = AuthenticationViewModel.shared
+    
     @State private var showingAlert = false
+    
     @EnvironmentObject var router: Router
     @StateObject var userSearchViewModel = UserSearchViewModel()
     @ObservedObject var courseViewModel: CourseViewModel
@@ -28,9 +30,11 @@ struct CourseDetailView: View {
                     RunningStats(estimatedTime: courseViewModel.course.estimatedTime, calories: courseViewModel.course.estimatedCalorie, distance: courseViewModel.course.coordinates.caculateTotalDistance())
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
+                    
                     courseDetailLabels
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
+                    
                     participantList
                         .padding(.top, 20)
                         .padding(.leading, 16)

@@ -103,7 +103,9 @@ extension RunningResultView {
     
     var body: some View {
         VStack {
-            PathPreviewMap(coordinates: trackingViewModel.coordinates)
+            PathPreviewMap(
+                coordinates: trackingViewModel.coordinates
+            )
             
             VStack {
                 VStack(spacing: 20) {

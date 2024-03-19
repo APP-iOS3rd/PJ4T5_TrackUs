@@ -7,30 +7,34 @@
 
 import SwiftUI
 
+/**
+  코스등록뷰
+ */
 struct CourseRegisterView: View {
     @EnvironmentObject var router: Router
     @ObservedObject var courseRegViewModel: CourseRegViewModel
-    @State var isDatePickerPresented = false
-    @State var isTimePickerPresented = false
-    @State var isTooltipDisplay = false
     
-    var isTimeSetting: Bool {
+    @State private var isDatePickerPresented = false
+    @State private var isTimePickerPresented = false
+    @State private var isTooltipDisplay = false
+    
+    private var isTimeSetting: Bool {
         courseRegViewModel.hours != 0 && courseRegViewModel.minutes != 0 && courseRegViewModel.seconds != 0
     }
     
-    var formattedHours: String {
+    private var formattedHours: String {
         String(format: "%02d", isTimeSetting ? courseRegViewModel.hours : courseRegViewModel.estimatedTime.secondsInHours)
     }
     
-    var formattedMinutess: String {
+    private var formattedMinutess: String {
         String(format: "%02d", isTimeSetting ? courseRegViewModel.minutes : courseRegViewModel.estimatedTime.secondsInMinutes)
     }
     
-    var formattedSeconds: String {
+    private var formattedSeconds: String {
         String(format: "%02d", isTimeSetting ? courseRegViewModel.seconds : courseRegViewModel.estimatedTime.seconds)
     }
     
-    var isTextFieldValid: Bool {
+    private var isTextFieldValid: Bool {
         courseRegViewModel.title.count > 0 && courseRegViewModel.content.count > 0
     }
 }
@@ -64,14 +68,18 @@ extension CourseRegisterView {
                                     .font(.caption)
                             }
                         }
-                        RunningStats(estimatedTime: Double(courseRegViewModel.estimatedTime), calories: courseRegViewModel.estimatedCalorie, distance: courseRegViewModel.coorinates.caculateTotalDistance())
+                        RunningStats(
+                            estimatedTime: courseRegViewModel.estimatedTime,
+                            calories: courseRegViewModel.estimatedCalorie,
+                            distance: courseRegViewModel.distance
+                        )
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
                         Text("러닝스타일")
                             .customFontStyle(.gray1_B16)
+                        // 러닝스타일 설정
                         selectRunningStyle
-                        
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
@@ -104,7 +112,7 @@ extension CourseRegisterView {
                         Text("인원 설정")
                             .customFontStyle(.gray1_B16)
                         Spacer()
-                        participantsPreview
+                        peoplePreview
                     }
                     
                 }.padding(.horizontal, 16)
@@ -222,7 +230,7 @@ extension CourseRegisterView {
         }
     }
     
-    var participantsPreview: some View {
+    var peoplePreview: some View {
         HStack {
             Spacer()
             Button(action: {
@@ -251,8 +259,3 @@ extension CourseRegisterView {
         )
     }
 }
-
-
-//#Preview {
-//    CourseRegisterView()
-//}

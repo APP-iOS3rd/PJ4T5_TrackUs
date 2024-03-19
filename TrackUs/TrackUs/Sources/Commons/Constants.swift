@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import MapboxMaps
+
 enum Constants {
     // 기본위치 상수, 광화문
     static let DEFAULT_LOCATION = CLLocationCoordinate2D(latitude: 37.570946308046466, longitude: 126.97893407434964)
@@ -26,6 +27,6 @@ enum Constants {
 
     enum FirebasePath {
         static let COLLECTION_UESRS = Firestore.firestore().collection("users")
-        static let COLLECTION_GROUP_RUNNING = Firestore.firestore().collection("groupRunning")
+        static let COLLECTION_GROUP_RUNNING = Firestore.firestore().collection("runnings")
     }
 }
