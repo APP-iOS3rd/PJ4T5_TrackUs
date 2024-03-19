@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-class HapticManager {
+/**
+    햅틱 피드백
+ */
+final class HapticManager {
     
     static let instance = HapticManager()
     

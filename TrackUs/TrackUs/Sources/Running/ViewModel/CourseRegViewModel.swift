@@ -17,7 +17,7 @@ final class CourseRegViewModel: ObservableObject {
     private let authViewModel = AuthenticationViewModel.shared
     private let chatVieModle = ChatListViewModel.shared
     private let locationManager = LocationManager.shared
-    private let MAXIMUM_NUMBER_OF_MARKERS: Int = 30
+    private let MAXIMUM_NUMBER_OF_MARKERS: Int = 50
     
     @Published var style: RunningStyle = .walking
     @Published var coorinates = [CLLocationCoordinate2D]()

@@ -12,6 +12,7 @@ struct TimePicker: View {
     @Binding var hours: Int
     @Binding var minutes: Int
     @Binding var seconds: Int
+    @Binding var pickerPresented: Bool
     
     var formattedHours: String {
         String(format: "%02d", hours)
@@ -44,6 +45,13 @@ struct TimePicker: View {
                 Text("초")
                     .customFontStyle(.gray1_M16)
                 Spacer()
+                
+                Button(action: {
+                    pickerPresented = false
+                }) {
+                    Text("확인")
+                        .customFontStyle(.gray1_B16)
+                }
             }
             
             HStack {
@@ -78,6 +86,6 @@ struct TimePicker: View {
     
 }
 
-#Preview {
-    TimePicker(hours: .constant(0), minutes: .constant(0), seconds: .constant(0))
-}
+//#Preview {
+//    TimePicker(hours: .constant(0), minutes: .constant(0), seconds: .constant(0))
+//}

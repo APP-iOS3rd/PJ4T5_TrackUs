@@ -62,7 +62,8 @@ struct RunningResultView: View {
     // 칼로리 비교
     var compareCaloriesLabel: String {
         let isGoalReached = trackingViewModel.calorie >= targetCalorie
-        let caloriesDifference = abs(trackingViewModel.distance - targetCalorie)
+        let caloriesBurned = ExerciseManager.calculatedCaloriesBurned(distance: trackingViewModel.distance)
+        let caloriesDifference = abs(caloriesBurned - targetCalorie)
         
         if isGoalReached {
             return "\(caloriesDifference.asString(unit: .calorie)) 더 소모했어요!"

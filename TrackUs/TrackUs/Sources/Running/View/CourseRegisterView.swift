@@ -132,7 +132,7 @@ extension CourseRegisterView {
         .sheet(isPresented: $isTimePickerPresented,onDismiss: {
             
         }, content: {
-            TimePicker(hours: $courseRegViewModel.hours, minutes: $courseRegViewModel.minutes, seconds: $courseRegViewModel.seconds)
+            TimePicker(hours: $courseRegViewModel.hours, minutes: $courseRegViewModel.minutes, seconds: $courseRegViewModel.seconds, pickerPresented: $isTimePickerPresented)
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.hidden)
                 .onChange(of: [courseRegViewModel.hours, courseRegViewModel.minutes, courseRegViewModel.seconds]) { _ in
@@ -179,7 +179,9 @@ extension CourseRegisterView {
                             .stroke(.gray3, lineWidth: isSelected ? 0 : 1)
                     )
                     .onTapGesture {
-                        courseRegViewModel.style = style
+                        withAnimation {
+                            courseRegViewModel.style = style
+                        }
                     }
             }
         }

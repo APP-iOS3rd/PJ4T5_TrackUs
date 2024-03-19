@@ -9,6 +9,9 @@ import Foundation
 import CoreLocation
 import MapboxMaps
 
+/**
+ 위치작업 관련 클래스
+ */
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     
@@ -35,6 +38,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         currentLocation = locationManager.location
     }
     
+    /// 위치정보 상태 확인
     func checkLocationServicesEnabled(_ completion: @escaping (CLAuthorizationStatus) -> Void) {
         switch self.locationManager.authorizationStatus {
         case .authorizedAlways:
@@ -47,10 +51,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             completion(.restricted)
         case .denied:
             completion(.denied)
+        @unknown default:
+            fatalError("Unable to check location permission information")
         }
     }
     
-    // 위도, 경도를 받아서 한글주소로 반환
+    /// 위도, 경도를 받아서 한글주소로 반환
     func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String) -> ()) {
         let geoCoder = CLGeocoder()
         

@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+ 거리와 러닝스타일 기반으로 운동정보를 반환해주는 클래스
+ */
 final class ExerciseManager {
     
     /// 거리(m) -> 칼로리
@@ -20,8 +23,7 @@ final class ExerciseManager {
     
     /// 시간(sec) -> 러닝 페이스
     static func calculatedPace(distance: Double, timeInSeconds: Double) -> Double {
-        let timeInMinutes = timeInSeconds / 60.0
-        let pace = timeInMinutes / distance
+        let pace = timeInSeconds / distance
         
         return pace
     }

@@ -12,7 +12,6 @@ import MapboxMaps
 import Firebase
 
 
-
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 final class TrackingViewModel: ObservableObject {
     enum NetworkError: Error {
@@ -21,6 +20,8 @@ final class TrackingViewModel: ObservableObject {
     }
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
+    private var countTimer: Timer = Timer()
+    private var recordTimer: Timer = Timer()
     
     var snapshot: UIImage?
     var groupID = ""
@@ -36,8 +37,8 @@ final class TrackingViewModel: ObservableObject {
     @Published var pace: Double = 0.0
     @Published var isGroup: Bool = false
     @Published var isLoading = false
-    private var countTimer: Timer = Timer()
-    private var recordTimer: Timer = Timer()
+    
+   
 }
 
 // MARK: - UI Update 🎨
