@@ -241,13 +241,11 @@ extension RunningResultView {
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
         .ignoresSafeArea(.keyboard)
-        .loadingWithNetwork(status: trackingViewModel.isLoading)
-        .preventGesture()
         .onChange(of: trackingViewModel.isLoading) { isLoading in
-            if !isLoading {
-                router.popToRoot()
-            }
+            !isLoading ? router.popToRoot() : nil
         }
+        .presentLoadingView(status: trackingViewModel.isLoading)
+        .preventGesture()
     }
 }
 

@@ -1,13 +1,13 @@
 //
-//  DataLoadingView.swift
+//  CircleLoadingView.swift
 //  TrackUs
 //
-//  Created by 석기권 on 2024/02/21.
+//  Created by 권석기 on 3/19/24.
 //
 
 import SwiftUI
 
-struct DataLoadingView: View {
+struct CircleLoadingView: View {
     @State var isAnimating: Bool = false
     @State var circleStart: CGFloat = 0.17
     @State var circleEnd: CGFloat = 0.325
@@ -79,5 +79,5 @@ struct DataLoadingView: View {
 }
 
 #Preview {
-    DataLoadingView()
+    CircleLoadingView()
 }

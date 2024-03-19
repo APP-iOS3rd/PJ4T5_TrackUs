@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    func loadingWithNetwork(status: Bool) -> some View {
+    func presentLoadingView(status: Bool) -> some View {
         modifier(LoadingModifier(loadingStatus: status))
     }
     

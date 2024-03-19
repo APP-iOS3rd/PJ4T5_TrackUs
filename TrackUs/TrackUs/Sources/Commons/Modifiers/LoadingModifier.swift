@@ -13,7 +13,7 @@ struct LoadingModifier: ViewModifier {
         switch loadingStatus {
         case true:
             content
-                .overlay (DataLoadingView())
+                .overlay (CircleLoadingView())
         case false:
             content
                 
