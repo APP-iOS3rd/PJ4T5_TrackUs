@@ -106,10 +106,13 @@ extension CourseRegViewModel {
     func uploadCourseData(completion: @escaping (Result<CourseViewModel, CourseRegViewModel.CustomError>) -> ()) {
         guard let image = self.image else {
             completion(.failure(.snapshotError))
+            print(#function + "Failed to save screenshot")
             return
         }
+        
         guard let startCoordinate = self.coorinates.first else {
             completion(.failure(.locationError))
+            print(#function + "Failed update location information")
             return
         }
         
@@ -137,30 +140,34 @@ extension CourseRegViewModel {
                     "distance": self.coorinates.caculateTotalDistance(),
                     "estimatedTime": self.estimatedTime,
                     "estimatedCalorie": self.estimatedCalorie,
-                    "courseRoutes": self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "courseRoutes": self.coorinates.toGeoPoint(),
                     "createdAt": Date()
                 ]
                 
                 Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { error in
-                    completion(.failure(.networkError))
+                    if error != nil {
+                        print(#function + "Firebase Error: \(error?.localizedDescription)")
+                        completion(.failure(.networkError))
+                        return
+                    }
+                    
+                    // 채팅방 생성
+                    self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
+                    
+                    // 완료 핸들러 -> 채팅방 이동
+                    completion(.success(CourseViewModel(course:
+                                                            Course(uid: documentID,
+                                                                   ownerUid: uid,
+                                                                   title: self.title,
+                                                                   content: self.content,
+                                                                   courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                                                                   distance: self.distance,
+                                                                   estimatedTime: self.estimatedTime, numberOfPeople: self.numberOfPeople, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
+                                                                   routeImageUrl: url,
+                                                                   address: address,
+                                                                   estimatedCalorie: self.estimatedCalorie)
+                                                       )))
                 }
-                
-                // 채팅방 생성
-                self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
-                
-                // 완료 핸들러 -> 채팅방 이동
-                completion(.success(CourseViewModel(course:
-                                                        Course(uid: documentID,
-                                                               ownerUid: uid,
-                                                               title: self.title,
-                                                               content: self.content,
-                                                               courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
-                                                               distance: self.distance,
-                                                               estimatedTime: self.estimatedTime, numberOfPeople: self.numberOfPeople, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
-                                                               routeImageUrl: url,
-                                                               address: address,
-                                                               estimatedCalorie: self.estimatedCalorie)
-                                                   )))
             }
         }
     }

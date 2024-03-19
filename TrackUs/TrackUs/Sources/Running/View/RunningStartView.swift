@@ -12,7 +12,10 @@ struct RunningStartView: View {
     @ObservedObject var trackingViewModel: TrackingViewModel
     
     var body: some View {
-        TrackingModeMapView(router: router, trackingViewModel: trackingViewModel)
+        TrackingModeMapView(
+            router: router,
+            trackingViewModel: trackingViewModel
+        )
         .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(true)
         .preventGesture()

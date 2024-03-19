@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Combine
 import SwiftUI
 import MapboxMaps
 import Firebase
@@ -24,7 +23,7 @@ final class TrackingViewModel: ObservableObject {
     private var recordTimer: Timer = Timer()
     
     var snapshot: UIImage?
-    var groupID = ""
+    var groupID: String?
     var goalDistance: Double = 0.0
     
     @Published var count: Int = 3
@@ -36,9 +35,13 @@ final class TrackingViewModel: ObservableObject {
     @Published var calorie: Double = 0.0
     @Published var pace: Double = 0.0
     @Published var isGroup: Bool = false
-    @Published var isLoading = false
+    @Published var isLoading: Bool = false
     
-   
+    init(goalDistance: Double, groupID: String? = nil, isGroup: Bool = false) {
+        self.goalDistance = goalDistance
+        self.groupID = groupID
+        self.isGroup = isGroup
+    }
 }
 
 // MARK: - UI Update 🎨
@@ -92,8 +95,7 @@ extension TrackingViewModel {
 
 // MARK: - Network Requests 🌐
 extension TrackingViewModel {
-    /// 데이터 추가(DB)
-    /// throw 함수를 만들면서 throw가 되씅때 네트워크상태를 에러로 만들어보기
+    
     @MainActor
     func uploadRunningData(targetDistance: Double, expectedTime: Double) throws {
         let uid = authViewModel.userInfo.uid
@@ -116,14 +118,14 @@ extension TrackingViewModel {
                     "pace": self.pace,
                     "calorie": self.calorie,
                     "elapsedTime": self.elapsedTime,
-                    "coordinates": self.coordinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                    "coordinates": self.coordinates.toGeoPoint(),
                     "routeImageUrl": url,
                     "address": address,
                     "targetDistance": targetDistance,
                     "exprectedTime": expectedTime,
                     "timestamp": Timestamp(date: Date()),
                     "isGroup": self.isGroup,
-                    "groupID": self.groupID
+                    "groupID": self.groupID ?? ""
                 ]
                 
                 Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in

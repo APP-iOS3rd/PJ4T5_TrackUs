@@ -6,6 +6,7 @@
 //
 
 import MapboxMaps
+import Firebase
 
 extension Array where Element == CLLocationCoordinate2D {
     /// 위도와 경도의 중간 좌표를 반환합니다.
@@ -21,6 +22,7 @@ extension Array where Element == CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
     
+    /// 좌표의 총거리를 반환(m)
     func caculateTotalDistance() -> Double {
         var distance: Double = 0.0
         for (offset, value) in self.enumerated() {
@@ -28,5 +30,10 @@ extension Array where Element == CLLocationCoordinate2D {
             distance += value.distance(to: self[offset + 1])
         }
         return distance
+    }
+    
+    /// [CLLocationCoordinate2D] -> [GeoPoint]
+    func toGeoPoint() -> [GeoPoint] {
+        return self.map { GeoPoint(latitude: $0.latitude, longitude: $0.longitude) }
     }
 }

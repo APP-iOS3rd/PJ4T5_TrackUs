@@ -16,7 +16,7 @@ struct RunningSelectView: View {
     @State private var showingPopup: Bool = false
     
     @EnvironmentObject var router: Router
-    @StateObject var trackingViewModel = TrackingViewModel()
+//    @StateObject var trackingViewModel = TrackingViewModel()
     @ObservedObject var courseListViewModel: CourseListViewModel
     @ObservedObject var userSearchViewModel: UserSearchViewModel
     
@@ -107,10 +107,14 @@ struct RunningSelectView: View {
                         showingPopup.toggle()
                     } else if !seletedGroupID.isEmpty {
                         if let seletedItem = courseListViewModel.findCourseWithUID(seletedGroupID) {
-                            trackingViewModel.isGroup = true
-                            trackingViewModel.groupID = seletedItem.uid
-                            trackingViewModel.goalDistance = seletedItem.distance
-                            router.push(.runningStart(trackingViewModel))
+                            
+                            router.push(.runningStart(
+                                TrackingViewModel(
+                                    goalDistance: seletedItem.distance,
+                                    groupID: seletedItem.uid,
+                                    isGroup: true
+                                )
+                            ))
                         }
                         
                     }

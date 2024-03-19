@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingPopup: View {
     @Binding var showingPopup: Bool
     @EnvironmentObject var router: Router
-    @StateObject var trackingViewModel = TrackingViewModel()
+    //    @StateObject var trackingViewModel = TrackingViewModel(go)
     @ObservedObject var settingVM: SettingPopupViewModel
     
     var body: some View {
@@ -77,7 +77,7 @@ struct SettingPopup: View {
                             ForEach(1..<240, id: \.self)  {
                                 Text("\($0) min")
                                     .customFontStyle(.gray1_R16)
-                            } 
+                            }
                         } label: {}
                             .padding(5)
                             .accentColor(.gray1)
@@ -111,7 +111,8 @@ struct SettingPopup: View {
     func startButtonTapped() {
         showingPopup = false
         settingVM.saveSettings()
-        trackingViewModel.goalDistance = settingVM.goalMinValue
-        router.push(.runningStart(trackingViewModel))
+        router.push(.runningStart(
+            TrackingViewModel(goalDistance: settingVM.goalMinValue)
+        ))
     }
 }

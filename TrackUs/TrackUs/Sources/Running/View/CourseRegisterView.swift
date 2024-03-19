@@ -14,6 +14,7 @@ struct CourseRegisterView: View {
     @EnvironmentObject var router: Router
     @ObservedObject var courseRegViewModel: CourseRegViewModel
     
+    @State private var errorMessage: String = ""
     @State private var isDatePickerPresented = false
     @State private var isTimePickerPresented = false
     @State private var isTooltipDisplay = false
@@ -128,7 +129,7 @@ extension CourseRegisterView {
                         router.popScreens(count: 2)
                         router.push(.courseDetail(course))
                     case .failure(let error):
-                        print(error)
+                        print(error.localizedDescription)
                     }
                 }
             }.padding(.horizontal, 16)

@@ -232,7 +232,6 @@ extension RunningResultView {
 //                } catch let error {
 //                    trackingViewModel.isLoading = false
 //                }
-                
             }
         } customize: {
             $0
