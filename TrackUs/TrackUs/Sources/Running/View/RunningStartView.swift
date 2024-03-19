@@ -10,6 +10,7 @@ import SwiftUI
 struct RunningStartView: View {
     @EnvironmentObject var router: Router
     @ObservedObject var trackingViewModel: TrackingViewModel
+    
     var body: some View {
         TrackingModeMapView(router: router, trackingViewModel: trackingViewModel)
         .edgesIgnoringSafeArea(.all)
@@ -17,7 +18,3 @@ struct RunningStartView: View {
         .preventGesture()
     }
 }
-
-//#Preview {
-//    RunningStartView()
-//}

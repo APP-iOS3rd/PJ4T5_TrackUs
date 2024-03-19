@@ -11,9 +11,11 @@ import Kingfisher
 
 struct RunningHomeView: View {
     @EnvironmentObject var router: Router
+    
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @StateObject var courseListViewModel = CourseListViewModel()
     @StateObject var userSearchViewModel = UserSearchViewModel()
+    
     @State private var viewport: Viewport = .followPuck(zoom: 13, bearing: .constant(0))
     @State private var isOpen: Bool = false
     @State private var showingPopup: Bool = false
@@ -110,9 +112,7 @@ extension RunningHomeView {
         .onAppear {
             courseListViewModel.fetchCourseData()
         }
-        
         .edgesIgnoringSafeArea(.top)
-
     }
 }
 
@@ -178,7 +178,7 @@ extension RunningHomeView {
     var runningAroundMe: some View {
         VStack(spacing: 16) {
             HStack {
-                Image("SmallFire")
+                Image(.smallFire)
                     .resizable()
                     .frame(width: 38, height: 38)
                 
@@ -192,7 +192,7 @@ extension RunningHomeView {
                 .padding(.leading, 8)
                 Spacer()
             }
-            .padding(.horizontal, Constants.ViewLayout.VIEW_STANDARD_HORIZONTAL_SPACING)
+            .padding(.horizontal, 16)
             
             // 가로 스크롤
             if !courseListViewModel.courseList.isEmpty, authViewModel.userInfo.uid != "" {
@@ -222,10 +222,7 @@ extension RunningHomeView {
             
         }
     }
-}
-
-// MARK: - Sub View's
-extension RunningHomeView {
+    
     var addCourseButton: some View {
         Button(action: {
             router.push(.courseDrawing)
@@ -260,7 +257,7 @@ extension RunningHomeView {
 
 // MARK: - Method's
 extension RunningHomeView {
-    func startButtonTapped() {
+   private func startButtonTapped() {
         LocationManager.shared.checkLocationServicesEnabled { authrionzationStatus in
             if authrionzationStatus == .authorizedWhenInUse {
                 router.push(.runningSelect(courseListViewModel, userSearchViewModel))

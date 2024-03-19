@@ -10,15 +10,17 @@ import Kingfisher
 import PopupView
 
 struct RunningSelectView: View {
-    var vGridItems = [GridItem()]
-    @State private var isPersonalRunning: Bool = false
-    @State private var showingPopup: Bool = false
     @State var isSelect: Int?
     @State var seletedGroupID: String = ""
+    @State private var isPersonalRunning: Bool = false
+    @State private var showingPopup: Bool = false
+    
     @EnvironmentObject var router: Router
     @StateObject var trackingViewModel = TrackingViewModel()
     @ObservedObject var courseListViewModel: CourseListViewModel
     @ObservedObject var userSearchViewModel: UserSearchViewModel
+    
+    var vGridItems = [GridItem()]
     
     var body: some View {
         VStack {
@@ -40,11 +42,11 @@ struct RunningSelectView: View {
             
             ZStack {
                 VStack {
-                    let filterdData = courseListViewModel.filterdCourseData()
-                    if !filterdData.isEmpty {
+                    let myCourse = courseListViewModel.myCourseData
+                    if !myCourse.isEmpty {
                         ScrollView(showsIndicators: false) {
                             LazyVGrid(columns: vGridItems, spacing: 8) {
-                                ForEach(filterdData, id: \.self) { course in
+                                ForEach(myCourse, id: \.self) { course in
                                     Button {
                                         let isSeletedSameItem = seletedGroupID == course.uid
                                         if isSeletedSameItem {
@@ -52,23 +54,24 @@ struct RunningSelectView: View {
                                         } else {
                                             seletedGroupID = course.uid
                                         }
-                                           
-                                    } label: {
-                                        let isSelectedNow = !seletedGroupID.isEmpty // 선택이 안되었을떄
-                                        let seleted = seletedGroupID == course.uid
                                         
-                                        selectedCell(isSelect: isSelectedNow ? seleted : false, course: course, user: userSearchViewModel.users.filter {$0.uid == course.ownerUid}[0])
+                                    } label: {
+                                        let isSelectedNow = !seletedGroupID.isEmpty
+                                        let seleted = seletedGroupID == course.uid
+                                        if let user = userSearchViewModel.findUserWithUID(course.ownerUid) {
+                                            selectedCell(isSelect: isSelectedNow ? seleted : false, course: course, user: user)
+                                        }
                                     }
                                 }
                             }
                             
                         }
                     } else {
-                      PlaceholderView(
-                        title: "참여중인 러닝이 존재하지 않습니다.",
-                        message: "러닝 메이트 모집 기능을 통해 직접 러닝 모임을 만들어보세요!",
-                        maxHeight: nil
-                      )
+                        PlaceholderView(
+                            title: "참여중인 러닝이 존재하지 않습니다.",
+                            message: "러닝 메이트 모집 기능을 통해 직접 러닝 모임을 만들어보세요!",
+                            maxHeight: nil
+                        )
                     }
                 }
                 .padding(.horizontal, 16)
@@ -103,11 +106,10 @@ struct RunningSelectView: View {
                     if isPersonalRunning {
                         showingPopup.toggle()
                     } else if !seletedGroupID.isEmpty {
-                        if let seletedItem = courseListViewModel.courseList.filter { $0.uid == seletedGroupID }.first {
+                        if let seletedItem = courseListViewModel.findCourseWithUID(seletedGroupID) {
                             trackingViewModel.isGroup = true
                             trackingViewModel.groupID = seletedItem.uid
                             trackingViewModel.goalDistance = seletedItem.distance
-                            
                             router.push(.runningStart(trackingViewModel))
                         }
                         
@@ -117,7 +119,10 @@ struct RunningSelectView: View {
             .padding(.horizontal, 16)
         }
         .popup(isPresented: $showingPopup) {
-            SettingPopup(showingPopup: $showingPopup, settingVM: SettingPopupViewModel())
+            SettingPopup(
+                showingPopup: $showingPopup,
+                settingVM: SettingPopupViewModel()
+            )
         } customize: {
             $0
                 .backgroundColor(.black.opacity(0.3))
@@ -208,7 +213,3 @@ struct selectedCell: View {
         
     }
 }
-
-//#Preview {
-//    RunningSelectView()
-//}
