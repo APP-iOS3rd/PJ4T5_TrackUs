@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SettingPopup: View {
-    @StateObject var trackingViewModel = TrackingViewModel()
     @Binding var showingPopup: Bool
-    @ObservedObject var settingVM: SettingPopupViewModel
     @EnvironmentObject var router: Router
+    @StateObject var trackingViewModel = TrackingViewModel()
+    @ObservedObject var settingVM: SettingPopupViewModel
     
     var body: some View {
         VStack {
@@ -89,12 +89,7 @@ struct SettingPopup: View {
                     }
                 }
                 
-                Button(action: {
-                    settingVM.saveSettings()
-                    showingPopup = false
-                    trackingViewModel.goalDistance = settingVM.goalMinValue
-                    router.push(.runningStart(trackingViewModel))
-                }) {
+                Button(action: startButtonTapped) {
                     Text("개인 러닝 시작")
                         .customFontStyle(.white_B16)
                         .padding(.horizontal, 24)
@@ -112,8 +107,11 @@ struct SettingPopup: View {
         .cornerRadius(12)
         .padding(.horizontal, 30)
     }
+    
+    func startButtonTapped() {
+        showingPopup = false
+        settingVM.saveSettings()
+        trackingViewModel.goalDistance = settingVM.goalMinValue
+        router.push(.runningStart(trackingViewModel))
+    }
 }
-
-//#Preview {
-//    SettingPopup(showingPopup: .constant(true), settingVM: SettingPopupViewModel())
-//}
