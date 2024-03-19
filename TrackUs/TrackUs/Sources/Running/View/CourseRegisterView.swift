@@ -244,7 +244,7 @@ extension CourseRegisterView {
                     .foregroundColor(.gray1)
             }
             Spacer()
-            Text("\(courseRegViewModel.participants)")
+            Text("\(courseRegViewModel.numberOfPeople)")
                 .customFontStyle(.gray1_M16)
             Spacer()
             Button(action: {

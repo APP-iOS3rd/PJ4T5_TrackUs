@@ -40,7 +40,7 @@ struct RunningCell: View {
                         Label(course.distance.asString(unit: .kilometer), image: "arrowBoth")
                             .customFontStyle(.gray2_L12)
                         Spacer()
-                        Label("\(course.members.count)/\(course.participants)", systemImage: "person.2.fill")
+                        Label("\(course.members.count)/\(course.numberOfPeople)", systemImage: "person.2.fill")
                             .customFontStyle(.gray2_L12)
                     }
                     

@@ -197,7 +197,7 @@ struct selectedCell: View {
                             .frame(width: 15, height: 12)
                             .foregroundColor(.gray1)
                         
-                        Text("\(course.members.count)/\(course.participants)")
+                        Text("\(course.members.count)/\(course.numberOfPeople)")
                             .customFontStyle(.gray1_M16)
                     }
                 }

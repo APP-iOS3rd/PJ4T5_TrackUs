@@ -18,7 +18,7 @@ struct Course: Decodable, Hashable {
     let courseRoutes: [GeoPoint]
     let distance: Double
     let estimatedTime: Double
-    let participants: Int
+    let numberOfPeople: Int
     let runningStyle: String
     let startDate: Date
     var members: [String]
@@ -26,7 +26,7 @@ struct Course: Decodable, Hashable {
     let address: String
     let estimatedCalorie: Double
     
-    var coordinates: [CLLocationCoordinate2D] {
+    var toCoordinates: [CLLocationCoordinate2D] {
         self.courseRoutes.map {CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)}
     }
 }

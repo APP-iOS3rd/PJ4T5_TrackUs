@@ -21,13 +21,17 @@ struct CourseDetailView: View {
         VStack {
             PathPreviewMap(
                 mapStyle: .numberd,
-                coordinates: courseViewModel.course.coordinates
+                coordinates: courseViewModel.course.toCoordinates
             )
             .frame(height: 230)
             
             ScrollView {
                 VStack(spacing: 0)   {
-                    RunningStats(estimatedTime: courseViewModel.course.estimatedTime, calories: courseViewModel.course.estimatedCalorie, distance: courseViewModel.course.coordinates.caculateTotalDistance())
+                    RunningStats(
+                        estimatedTime: courseViewModel.course.estimatedTime,
+                        calories: courseViewModel.course.estimatedCalorie,
+                        distance: courseViewModel.course.toCoordinates.caculateTotalDistance()
+                    )
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
                     
@@ -44,7 +48,7 @@ struct CourseDetailView: View {
             VStack {
                 let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
                 let isOwner = courseViewModel.course.ownerUid == authViewModel.userInfo.uid
-                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.participants
+                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.numberOfPeople
                 
                 if exceedsCapacity && !memberContains {
                     MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {

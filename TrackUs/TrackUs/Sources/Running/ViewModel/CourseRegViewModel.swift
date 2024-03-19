@@ -32,7 +32,7 @@ final class CourseRegViewModel: ObservableObject {
     @Published var selectedDate: Date?
     @Published var estimatedTime: Double = 0
     @Published var estimatedCalorie: Double = 0
-    @Published var participants: Int = 2
+    @Published var numberOfPeople: Int = 2
     @Published var image: UIImage?
     @Published var isLoading = false
     @Published var hours: Int = 0
@@ -73,14 +73,14 @@ extension CourseRegViewModel {
     /// 참여인원 설정
     @MainActor
     func addParticipants() {
-        guard participants < 10 else { return }
-        self.participants += 1
+        guard numberOfPeople < 10 else { return }
+        self.numberOfPeople += 1
     }
     
     @MainActor
     func removeParticipants() {
-        guard participants > 2 else { return }
-        self.participants -= 1
+        guard numberOfPeople > 2 else { return }
+        self.numberOfPeople -= 1
     }
     
     /// 운동정보 업데이트
@@ -132,7 +132,7 @@ extension CourseRegViewModel {
                     "members": [uid],
                     "routeImageUrl": url,
                     "address": address,
-                    "participants": self.participants,
+                    "numberOfPeople": self.numberOfPeople,
                     "startDate": self.selectedDate ?? Date(),
                     "distance": self.coorinates.caculateTotalDistance(),
                     "estimatedTime": self.estimatedTime,
@@ -156,7 +156,7 @@ extension CourseRegViewModel {
                                                                content: self.content,
                                                                courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
                                                                distance: self.distance,
-                                                               estimatedTime: self.estimatedTime, participants: self.participants, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
+                                                               estimatedTime: self.estimatedTime, numberOfPeople: self.numberOfPeople, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
                                                                routeImageUrl: url,
                                                                address: address,
                                                                estimatedCalorie: self.estimatedCalorie)
