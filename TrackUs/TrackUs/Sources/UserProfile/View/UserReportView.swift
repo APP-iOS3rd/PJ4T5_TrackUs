@@ -20,10 +20,7 @@ enum reportReason: String, CaseIterable, Identifiable {
 }
 
 struct UserReportView: View {
-    @EnvironmentObject var router: Router
     @ObservedObject var userProfileViewModel = UserProfileViewModel.shared
-    
-    @State private var image: Image?
     
     let userUid: String
     
@@ -53,8 +50,8 @@ struct userReportContent: View {
     @StateObject var authViewModel = AuthenticationViewModel.shared
     @EnvironmentObject var router: Router
     @ObservedObject var userProfileViewModel: UserProfileViewModel
-    @State var selectedReason : reportReason = .reason0
     
+    @State var selectedReason : reportReason = .reason0 // 신고메뉴
     @State private var reportText : String = "" // 신고내용
     
     @FocusState var isInputActive: Bool
@@ -66,7 +63,6 @@ struct userReportContent: View {
     
     var body: some View {
         VStack {
-            //                ScrollView {
             HStack {
                 Text("신고 대상")
                     .customFontStyle(.gray1_SB15)
@@ -128,7 +124,6 @@ struct userReportContent: View {
                         .stroke(lineWidth: 1)
                         .foregroundColor(.gray1)
                 }
-                
             }
             .padding(.bottom, 20)
             
@@ -152,11 +147,11 @@ struct userReportContent: View {
                                     isInputActive = false
                                 } label: {
                                     Text("확인")
-                                        .foregroundColor(.gray1)
+                                        .foregroundColor(.blue)
                                 }
                             }
                         }
-                        .frame(height: 114)
+                        .frame(height: 100)
                         .padding(9)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
@@ -167,7 +162,6 @@ struct userReportContent: View {
                             .padding()
                             .customFontStyle(.gray2_R16)
                     }
-                    
                 }
             }
             
@@ -206,7 +200,7 @@ struct userReportContent: View {
             Button("신고", role: .destructive) {
                 successReport.toggle()
                 // 파베에 올리는 부분
-                
+                userProfileViewModel.addReportData(report: ReportData(reportText: reportText, reportMenu: selectedReason.rawValue, fromUserName: userInfo.username, toUserName: authViewModel.userInfo.username))
             }
             Button("취소", role: .cancel) {}
         } message: {
@@ -222,6 +216,7 @@ struct userReportContent: View {
     }
 }
 
+//MARK: - 신고 메뉴 피커
 struct reportPicker: View {
     @Binding var selectedReason: reportReason
     @Binding var pickerPresented: Bool
@@ -235,7 +230,7 @@ struct reportPicker: View {
                     pickerPresented.toggle()
                 } label: {
                     Text("확인")
-                        .customFontStyle(.main_SB16)
+                        .foregroundColor(.blue)
                         .padding(25)
                 }
             }

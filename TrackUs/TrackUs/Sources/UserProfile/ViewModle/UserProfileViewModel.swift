@@ -11,6 +11,13 @@ import FirebaseStorage
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+struct ReportData: Hashable {
+    var reportText: String
+    var reportMenu: String
+    var fromUserName: String // 신고 당하는 사람
+    var toUserName : String // 신고하는 사람
+}
+
 class UserProfileViewModel: ObservableObject {
     enum LoadingState {
         case loading
@@ -114,6 +121,26 @@ class UserProfileViewModel: ObservableObject {
             
             completion()
         }
+    }
+    
+    //MARK: - 유저 신고
+    func addReportData(report: ReportData) {
+        let id = UUID().uuidString
+        
+        let reportData = ["uid" : id,
+                          "menu" : report.reportMenu,
+                          "text" : report.reportText,
+                          "fromUser" : report.fromUserName,
+                          "toUser" : report.toUserName,
+                          "timestamp" : Date()
+        ] as [String : Any]
+        FirebaseManger.shared.firestore.collection("report").document(id)
+            .setData(reportData) { error in
+                if error != nil {
+                    return
+                }
+                print("success")
+            }
     }
 
 }
