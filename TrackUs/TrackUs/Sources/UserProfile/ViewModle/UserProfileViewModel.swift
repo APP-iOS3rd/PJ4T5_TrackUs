@@ -14,8 +14,9 @@ import FirebaseFirestoreSwift
 struct ReportData: Hashable {
     var reportText: String
     var reportMenu: String
-    var fromUserName: String // 신고 당하는 사람
-    var toUserName : String // 신고하는 사람
+    var fromUserName: String // 신고 당하는 사람 이름
+    var fromUserUid: String // 신고 당하는 사람 uid
+    var toUserName : String // 신고하는 사람 이름
 }
 
 class UserProfileViewModel: ObservableObject {
@@ -131,6 +132,7 @@ class UserProfileViewModel: ObservableObject {
                           "menu" : report.reportMenu,
                           "text" : report.reportText,
                           "fromUser" : report.fromUserName,
+                          "fromUserUid" : report.fromUserUid,
                           "toUser" : report.toUserName,
                           "timestamp" : Date()
         ] as [String : Any]

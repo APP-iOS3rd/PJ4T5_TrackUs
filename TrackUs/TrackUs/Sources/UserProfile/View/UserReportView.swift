@@ -200,7 +200,7 @@ struct userReportContent: View {
             Button("신고", role: .destructive) {
                 successReport.toggle()
                 // 파베에 올리는 부분
-                userProfileViewModel.addReportData(report: ReportData(reportText: reportText, reportMenu: selectedReason.rawValue, fromUserName: userInfo.username, toUserName: authViewModel.userInfo.username))
+                userProfileViewModel.addReportData(report: ReportData(reportText: reportText, reportMenu: selectedReason.rawValue, fromUserName: userInfo.username, fromUserUid: userInfo.uid, toUserName: authViewModel.userInfo.username))
             }
             Button("취소", role: .cancel) {}
         } message: {
