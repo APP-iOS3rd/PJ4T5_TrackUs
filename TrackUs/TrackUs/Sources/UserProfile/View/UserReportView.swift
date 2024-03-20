@@ -55,9 +55,9 @@ struct userReportContent: View {
     @ObservedObject var userProfileViewModel: UserProfileViewModel
     @State var selectedReason : reportReason = .reason0
     
-    @State private var reportItem : String? // 신고사유
     @State private var reportText : String = "" // 신고내용
     
+    @FocusState var isInputActive: Bool
     @State private var pickerPresented: Bool = false
     @State private var isReport: Bool = false
     @State private var successReport: Bool = false
@@ -66,6 +66,7 @@ struct userReportContent: View {
     
     var body: some View {
         VStack {
+            //                ScrollView {
             HStack {
                 Text("신고 대상")
                     .customFontStyle(.gray1_SB15)
@@ -122,7 +123,6 @@ struct userReportContent: View {
                 }
                 .frame(height: 48)
                 .frame(maxWidth: .infinity)
-//                .padding(5)
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(lineWidth: 1)
@@ -143,6 +143,19 @@ struct userReportContent: View {
                 ZStack(alignment: .topLeading){
                     TextEditor(text: $reportText)
                         .customFontStyle(.gray1_R16)
+                        .autocorrectionDisabled()
+                        .focused($isInputActive)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                Button {
+                                    isInputActive = false
+                                } label: {
+                                    Text("확인")
+                                        .foregroundColor(.gray1)
+                                }
+                            }
+                        }
                         .frame(height: 114)
                         .padding(9)
                         .overlay(
@@ -154,7 +167,7 @@ struct userReportContent: View {
                             .padding()
                             .customFontStyle(.gray2_R16)
                     }
-                        
+                    
                 }
             }
             
@@ -175,11 +188,13 @@ struct userReportContent: View {
                     .customFontStyle(.white_B16)
                     .frame(height: 56)
                     .frame(maxWidth: .infinity)
-//                    .background(.caution)
                     .background(reportText.isEmpty || selectedReason == .reason0 ? .gray3 : .caution)
                     .cornerRadius(50)
             }
             .disabled(reportText.isEmpty || selectedReason == .reason0)
+        }
+        .onTapGesture {
+            isInputActive = false
         }
         .padding(.horizontal, 16)
         .sheet(isPresented: $pickerPresented, content: {
