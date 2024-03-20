@@ -175,9 +175,11 @@ struct userReportContent: View {
                     .customFontStyle(.white_B16)
                     .frame(height: 56)
                     .frame(maxWidth: .infinity)
-                    .background(.caution)
+//                    .background(.caution)
+                    .background(reportText.isEmpty || selectedReason == .reason0 ? .gray3 : .caution)
                     .cornerRadius(50)
             }
+            .disabled(reportText.isEmpty || selectedReason == .reason0)
         }
         .padding(.horizontal, 16)
         .sheet(isPresented: $pickerPresented, content: {
