@@ -109,7 +109,7 @@ struct CustomDatePicker: View {
                     Text("\(value.day)")
                         .font(.system(size: 16))
                         .fontWeight(.semibold)
-                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .black : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
+                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .gray1 : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
                         .frame(width: 30)
                         .frame(height: 20)
                 }
