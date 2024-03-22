@@ -15,19 +15,19 @@ struct ExerciseManager {
     let target: Double
     let elapsedTime: Double
     
-    /// 이동거리/목표
+    /// 이동거리 / 목표
     @MainActor
     var compareKilometers: String {
         "\(distance.asString(unit: .kilometer)) / \(target.asString(unit: .kilometer))"
     }
     
-    /// 칼로리/예상
+    /// 칼로리 / 예상
     @MainActor
     var compareCalories: String {
         "\(Self.calculatedCaloriesBurned(distance: distance).asString(unit: .calorie)) / \(Self.calculatedCaloriesBurned(distance: target).asString(unit: .calorie))"
     }
     
-    /// 시간/예상
+    /// 시간 / 예상
     @MainActor
     var compareEstimatedTime: String {
         "\(elapsedTime.asString(style: .positional)) / \(Self.calculateEstimatedTime(distance: self.target).asString(style: .positional))"
@@ -36,12 +36,15 @@ struct ExerciseManager {
     /// 이동거리(km) 비교 텍스트
     @MainActor
     var compareKilometersLabel: String {
-        let isGoalReached = distance >= target
+        let isGoalReached = distance > target
         let distanceDifference = abs(distance - target)
         
-        if isGoalReached {
+        if isGoalReached, distanceDifference == 0 {
+            return "목표하신 \(target.asString(unit: .kilometer)) 러닝을 완료했어요 🎉"
+        } else if isGoalReached {
             return "\(distanceDifference.asString(unit: .kilometer)) 만큼 더 뛰었습니다!"
-        } else {
+        }
+        else {
             return "\(distanceDifference.asString(unit: .kilometer)) 적게 뛰었어요."
         }
     }
@@ -54,7 +57,10 @@ struct ExerciseManager {
         let isGoalReached = calorieConsumed >= calorieExpected
         let caloriesDiffernce = abs(calorieConsumed - calorieExpected)
         
-        if isGoalReached {
+        if isGoalReached, caloriesDiffernce == 0 {
+            return "목표치인 \(calorieConsumed.asString(unit: .calorie)) 만큼 소모했어요 🔥"
+        }
+        else if isGoalReached {
             return "\(caloriesDiffernce.asString(unit: .calorie)) 더 소모했어요!"
         } else {
             return "\(caloriesDiffernce.asString(unit: .calorie)) 덜 소모했어요!"
@@ -68,7 +74,10 @@ struct ExerciseManager {
         let isGoalReached = elapsedTime < estimatedTime
         let timeDifference = abs(estimatedTime - elapsedTime)
         
-        if isGoalReached {
+        if isGoalReached, timeDifference == 0 {
+            return "목표하신 시간내에 러닝을 완료했어요! 🎉"
+        }
+        else if isGoalReached {
             return "\(timeDifference.asString(style: .positional)) 만큼 단축되었어요!"
         } else {
             return "\(timeDifference.asString(style: .positional)) 만큼 더 소요되었어요."
@@ -78,7 +87,7 @@ struct ExerciseManager {
     /// 피드백 메세지
     @MainActor
     var feedbackMessageLabel: String {
-        let isGoalDistanceReached = distance >= target
+        let isGoalDistanceReached = distance > target
         let estimatedTime = Self.calculateEstimatedTime(distance: target)
         let isTimeReduction = elapsedTime < estimatedTime
         
@@ -94,7 +103,7 @@ struct ExerciseManager {
     }
 }
 
-// MARK: - Type Method's
+// MARK: - 운동량 계산
 extension ExerciseManager {
     /// 거리(m) -> 칼로리
     static func calculatedCaloriesBurned(distance: Double) -> Double {
