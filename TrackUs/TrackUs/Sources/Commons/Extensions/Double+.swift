@@ -31,7 +31,7 @@ extension Double {
         return Int(self) % 60
     }
     
-    /// 시간(sec) -> MM:00
+    /// 시간(sec) -> MM:SS
     func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]

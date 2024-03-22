@@ -38,8 +38,7 @@ struct ExerciseManager {
     var compareKilometersLabel: String {
         let isGoalReached = distance >= target
         let distanceDifference = abs(distance - target)
-        print("측정거리: \(distance), 목표거리: \(target)")
-        print(distanceDifference, "만큼의 차이")
+        
         if isGoalReached, distanceDifference < 1 {
             return "목표하신 \(target.asString(unit: .kilometer)) 러닝을 완료했어요 🎉"
         } else if isGoalReached {
@@ -120,33 +119,31 @@ extension ExerciseManager {
         
         switch runningStyle {
         case .walking:
-            return distance * 0.9
+            return floor(distance * 0.9)
         case .jogging:
-            return distance * 0.45
+            return floor(distance * 0.45)
         case .running:
-            return distance * 0.3
+            return floor(distance * 0.3)
         case .interval:
-            return distance * 0.15
+            return floor(distance * 0.15)
         }
     }
     
     /// 거리(m) * 체중(kg) * 칼로리소모(m) -> 칼로리
     @MainActor
     static func calculatedCaloriesBurned(distance: Double) -> Double {
-        let userInfo = AuthenticationViewModel.shared.userInfo
-        let gender = userInfo.gender ?? true
         var caloriesPerMeters: Double
         
         switch myRunningStyle {
-           case .walking:
+        case .walking:
             caloriesPerMeters = 0.041 // 보행에 따른 칼로리 소모량
-           case .jogging:
+        case .jogging:
             caloriesPerMeters = 0.063 // 조깅에 따른 칼로리 소모량
-           case .running:
+        case .running:
             caloriesPerMeters = 0.080 // 러닝에 따른 칼로리 소모량
         case .interval:
             caloriesPerMeters = 0.1 // 스프린트에 따른 칼로리 소모량
-           }
+        }
         
         let caloriesBurned = distance * caloriesPerMeters
         
@@ -155,7 +152,8 @@ extension ExerciseManager {
     
     /// 시간(sec) -> 러닝 페이스
     static func calculatedPace(distance: Double, timeInSeconds: Double) -> Double {
-        let pace = timeInSeconds / distance
+        let timeInMinutes = timeInSeconds / 60.0
+        let pace = timeInMinutes / (distance / 1000.0)
         
         return pace
     }
