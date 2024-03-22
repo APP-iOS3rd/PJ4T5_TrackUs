@@ -318,14 +318,13 @@ extension TrackingModeMapViewController {
     
     // 뷰에 갱신될 값들을 바인딩
     private func bind() {
-        // 카운트다운 상태 바인딩
         self.trackingViewModel.$count.receive(on: DispatchQueue.main).sink { [weak self] count in
             guard let self = self else { return }
             self.countLabel.text = "\(count)"
             if count == 0 { updatedOnStart() }
         }.store(in: &cancellation)
         
-        // 중지상태 바인딩
+        
         self.trackingViewModel.$isPause.receive(on: DispatchQueue.main).sink { [weak self] isPause in
             guard let self = self else { return }
             isPause ? self.updatedOnPause() : self.updatedOnPlay()
