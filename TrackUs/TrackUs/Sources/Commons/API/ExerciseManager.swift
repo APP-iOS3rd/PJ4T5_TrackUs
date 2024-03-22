@@ -36,10 +36,11 @@ struct ExerciseManager {
     /// 이동거리(km) 비교 텍스트
     @MainActor
     var compareKilometersLabel: String {
-        let isGoalReached = distance > target
+        let isGoalReached = distance >= target
         let distanceDifference = abs(distance - target)
-        
-        if isGoalReached, distanceDifference == 0 {
+        print("측정거리: \(distance), 목표거리: \(target)")
+        print(distanceDifference, "만큼의 차이")
+        if isGoalReached, distanceDifference < 1 {
             return "목표하신 \(target.asString(unit: .kilometer)) 러닝을 완료했어요 🎉"
         } else if isGoalReached {
             return "\(distanceDifference.asString(unit: .kilometer)) 만큼 더 뛰었습니다!"
@@ -57,7 +58,7 @@ struct ExerciseManager {
         let isGoalReached = calorieConsumed >= calorieExpected
         let caloriesDiffernce = abs(calorieConsumed - calorieExpected)
         
-        if isGoalReached, caloriesDiffernce == 0 {
+        if isGoalReached, caloriesDiffernce < 1 {
             return "목표치인 \(calorieConsumed.asString(unit: .calorie)) 만큼 소모했어요 🔥"
         }
         else if isGoalReached {
@@ -71,10 +72,10 @@ struct ExerciseManager {
     @MainActor
     var compareEstimatedTimeLabel: String {
         let estimatedTime = Self.calculateEstimatedTime(distance: target)
-        let isGoalReached = elapsedTime < estimatedTime
+        let isGoalReached = elapsedTime <= estimatedTime
         let timeDifference = abs(estimatedTime - elapsedTime)
         
-        if isGoalReached, timeDifference == 0 {
+        if isGoalReached, timeDifference < 1 {
             return "목표하신 시간내에 러닝을 완료했어요! 🎉"
         }
         else if isGoalReached {
@@ -105,27 +106,17 @@ struct ExerciseManager {
 
 // MARK: - 운동량 계산
 extension ExerciseManager {
-    /// 거리(m) -> 칼로리
-    static func calculatedCaloriesBurned(distance: Double) -> Double {
-        let caloriesPerKilometer: Double = 0.00075
-        let weightInKilograms = 70.0
-        let caloriesBurned = weightInKilograms * distance * caloriesPerKilometer
-        
-        return caloriesBurned
-    }
     
-    /// 시간(sec) -> 러닝 페이스
-    static func calculatedPace(distance: Double, timeInSeconds: Double) -> Double {
-        let pace = timeInSeconds / distance
-        
-        return pace
+    @MainActor
+    static var myRunningStyle: RunningStyle {
+        AuthenticationViewModel.shared.userInfo.runningStyle ?? .jogging
     }
     
     /// 거리(m) + 러닝스타일 -> 예상시간(sec)
     /// 거리(m)  * m당 평균 소요시간(러닝스타일)
     @MainActor
     static func calculateEstimatedTime(distance: Double, style: RunningStyle? = nil) -> Double {
-        let runningStyle = style ?? (AuthenticationViewModel.shared.userInfo.runningStyle ?? .jogging)
+        let runningStyle = style ?? myRunningStyle
         
         switch runningStyle {
         case .walking:
@@ -137,6 +128,36 @@ extension ExerciseManager {
         case .interval:
             return distance * 0.15
         }
+    }
+    
+    /// 거리(m) * 체중(kg) * 칼로리소모(m) -> 칼로리
+    @MainActor
+    static func calculatedCaloriesBurned(distance: Double) -> Double {
+        let userInfo = AuthenticationViewModel.shared.userInfo
+        let gender = userInfo.gender ?? true
+        var caloriesPerMeters: Double
+        
+        switch myRunningStyle {
+           case .walking:
+            caloriesPerMeters = 0.041 // 보행에 따른 칼로리 소모량
+           case .jogging:
+            caloriesPerMeters = 0.063 // 조깅에 따른 칼로리 소모량
+           case .running:
+            caloriesPerMeters = 0.080 // 러닝에 따른 칼로리 소모량
+        case .interval:
+            caloriesPerMeters = 0.1 // 스프린트에 따른 칼로리 소모량
+           }
+        
+        let caloriesBurned = distance * caloriesPerMeters
+        
+        return caloriesBurned
+    }
+    
+    /// 시간(sec) -> 러닝 페이스
+    static func calculatedPace(distance: Double, timeInSeconds: Double) -> Double {
+        let pace = timeInSeconds / distance
+        
+        return pace
     }
 }
 
