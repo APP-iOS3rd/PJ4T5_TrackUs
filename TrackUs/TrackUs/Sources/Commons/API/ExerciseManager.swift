@@ -57,7 +57,7 @@ struct ExerciseManager {
         let isGoalReached = calorieConsumed >= calorieExpected
         let caloriesDiffernce = abs(calorieConsumed - calorieExpected)
         
-        if isGoalReached, caloriesDiffernce < 1 {
+        if isGoalReached, caloriesDiffernce == 0 {
             return "목표치인 \(calorieConsumed.asString(unit: .calorie)) 만큼 소모했어요 🔥"
         }
         else if isGoalReached {

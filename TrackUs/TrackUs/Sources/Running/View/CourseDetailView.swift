@@ -9,6 +9,13 @@ import SwiftUI
 import MapboxMaps
 
 struct CourseDetailView: View {
+    enum MenuValue: String, CaseIterable, Identifiable {
+        var id: Self { self }
+        
+        case edit = "수정"
+        case delete = "삭제"
+    }
+    
     private let authViewModel = AuthenticationViewModel.shared
     
     @State private var showingAlert = false
@@ -16,6 +23,10 @@ struct CourseDetailView: View {
     @EnvironmentObject var router: Router
     @StateObject var userSearchViewModel = UserSearchViewModel()
     @ObservedObject var courseViewModel: CourseViewModel
+    
+    var isOwner: Bool {
+        courseViewModel.course.ownerUid == authViewModel.userInfo.uid
+    }
     
     var body: some View {
         VStack {
@@ -59,12 +70,8 @@ struct CourseDetailView: View {
                         courseViewModel.addParticipant()
                     }
                 } else if memberContains {
-                    MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
-                        if isOwner {
-                            showingAlert = true
-                        } else {
+                    MainButton(active: !isOwner, buttonText: "러닝 참가취소", buttonColor: .Caution) {
                             courseViewModel.removeParticipant()
-                        }
                     }
                 }
                 
@@ -75,11 +82,36 @@ struct CourseDetailView: View {
             NavigationText(title: "모집글 상세보기")
         } left: {
             NavigationBackButton()
+        } right: {
+            VStack {
+               if isOwner {
+                    Menu {
+                        
+                        ForEach(MenuValue.allCases) { menu in
+                            let role: ButtonRole = menu == .delete ? .destructive : .cancel
+                            Button(role: role) {
+                                switch menu {
+                                case .delete:
+                                    deleteButtonTapped()
+                                case .edit:
+                                    editButtonTapped()
+                                }
+                           } label: {
+                               Text(menu.rawValue)
+                                   
+                           }
+                       }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(.black)
+                    }
+                }
+            }
         }
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("알림"),
-                message: Text("방장이 참가를 취소하는 경우 모집글이 삭제됩니다.\n계속 참가를 취소 하시겠습니까?"),
+                message: Text("모집글이 삭제됩니다.\n해당 모집글을 삭제 하시겠습니까?"),
                 primaryButton: .default (
                     Text("취소"),
                     action: { }
@@ -146,3 +178,12 @@ extension CourseDetailView {
     }
 }
 
+extension CourseDetailView {
+    func editButtonTapped() {
+        
+    }
+    
+    func deleteButtonTapped() {
+        showingAlert = true
+    }
+}

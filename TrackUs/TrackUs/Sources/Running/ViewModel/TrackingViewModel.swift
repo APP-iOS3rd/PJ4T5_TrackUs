@@ -95,9 +95,9 @@ extension TrackingViewModel {
 
 // MARK: - Network Requests 🌐
 extension TrackingViewModel {
-    
+    /// 러닝데이터 저장
     @MainActor
-    func uploadRunningData(targetDistance: Double, expectedTime: Double) throws {
+    func uploadRunningData() throws {
         let uid = authViewModel.userInfo.uid
         
         self.isLoading = true
@@ -107,6 +107,7 @@ extension TrackingViewModel {
         }
         
         ImageUploader.uploadImage(image: image, type: .map) { url in
+            
             let firstCoordinate = self.coordinates.first!
             let coordinate = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
             
@@ -119,16 +120,15 @@ extension TrackingViewModel {
                     "calorie": self.calorie,
                     "elapsedTime": self.elapsedTime,
                     "coordinates": self.coordinates.toGeoPoint(),
+                    "targetDistance": self.goalDistance,
+                    "isGroup": self.isGroup,
+                    "groupID": self.groupID ?? "",
                     "routeImageUrl": url,
                     "address": address,
-                    "targetDistance": targetDistance,
-                    "exprectedTime": expectedTime,
                     "timestamp": Timestamp(date: Date()),
-                    "isGroup": self.isGroup,
-                    "groupID": self.groupID ?? ""
                 ]
                 
-                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("runningRecords").addDocument(data: data) { error in
+                Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("records").addDocument(data: data) { error in
                     self.isLoading = false
                 }
             }

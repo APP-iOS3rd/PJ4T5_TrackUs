@@ -157,13 +157,13 @@ extension RunningResultView {
         }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
-//                do {
-//                   try trackingViewModel.uploadRunningData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
-//                    self.hideKeyboard()
-//                    self.showingPopup = false
-//                } catch let error {
-//                    trackingViewModel.isLoading = false
-//                }
+                do {
+                    self.hideKeyboard()
+                    self.showingPopup = false
+                    try trackingViewModel.uploadRunningData()
+                } catch let error {
+                    print(error.localizedDescription)
+                }
             }
         } customize: {
             $0
@@ -176,7 +176,7 @@ extension RunningResultView {
         .edgesIgnoringSafeArea(.top)
         .ignoresSafeArea(.keyboard)
         .onChange(of: trackingViewModel.isLoading) { isLoading in
-            !isLoading ? router.popToRoot() : nil
+            if !isLoading { router.popToRoot() }
         }
         .presentLoadingView(status: trackingViewModel.isLoading)
         .preventGesture()
