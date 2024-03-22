@@ -16,11 +16,14 @@ struct RunningSelectView: View {
     @State private var showingPopup: Bool = false
     
     @EnvironmentObject var router: Router
-//    @StateObject var trackingViewModel = TrackingViewModel()
     @ObservedObject var courseListViewModel: CourseListViewModel
     @ObservedObject var userSearchViewModel: UserSearchViewModel
     
     var vGridItems = [GridItem()]
+    
+    var buttonEnabled: Bool {
+        isPersonalRunning || !seletedGroupID.isEmpty
+    }
     
     var body: some View {
         VStack {
@@ -102,7 +105,7 @@ struct RunningSelectView: View {
                 }
                 .padding(.vertical, 8)
                 
-                MainButton(buttonText: "러닝 시작") {
+                MainButton(active: buttonEnabled, buttonText: "러닝 시작") {
                     if isPersonalRunning {
                         showingPopup.toggle()
                     } else if !seletedGroupID.isEmpty {
