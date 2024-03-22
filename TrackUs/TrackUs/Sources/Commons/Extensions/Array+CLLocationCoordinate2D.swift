@@ -37,3 +37,9 @@ extension Array where Element == CLLocationCoordinate2D {
         return self.map { GeoPoint(latitude: $0.latitude, longitude: $0.longitude) }
     }
 }
+
+extension Array where Element == GeoPoint {
+    func toCLLocationCoordinate2D() -> [CLLocationCoordinate2D] {
+        return self.map { $0.toCLLocationCoordinate2D() }
+    }
+}
