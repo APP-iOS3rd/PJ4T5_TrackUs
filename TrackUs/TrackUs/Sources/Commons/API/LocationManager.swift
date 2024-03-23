@@ -12,25 +12,26 @@ import MapboxMaps
 /**
  위치작업 관련 클래스
  */
-final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+final class LocationManager: NSObject, ObservableObject {
     static let shared = LocationManager()
     
-    private let locationManager = CLLocationManager()
+    let locationManager = CLLocationManager()
     
     @Published var currentLocation: CLLocation?
     @Published var isUpdatingLocation: Bool = false
     
     
-    override init() {
+    override private init() {
         super.init()
-        locationManager.delegate = self
-        
-        // 위치 정확도 최고 설정
+        setLocationSettings()
+        getCurrentLocation()
+    }
+    
+    func setLocationSettings() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingHeading()
-        
-        getCurrentLocation()
+        locationManager.allowsBackgroundLocationUpdates = true
     }
     
     func getCurrentLocation() {
@@ -84,3 +85,4 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 }
+

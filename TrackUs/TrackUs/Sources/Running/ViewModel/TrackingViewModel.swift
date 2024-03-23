@@ -62,7 +62,7 @@ extension TrackingViewModel {
     
     /// 경로데이터 업데이트 함수
     @MainActor
-    func updateCoordinates(with coordinate: CLLocationCoordinate2D) {
+    func addPath(with coordinate: CLLocationCoordinate2D) {
             self.coordinates.append(coordinate)
             
             guard self.coordinates.count > 1 else { return }

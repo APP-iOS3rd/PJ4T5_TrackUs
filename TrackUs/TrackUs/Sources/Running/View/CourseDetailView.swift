@@ -84,28 +84,7 @@ struct CourseDetailView: View {
             NavigationBackButton()
         } right: {
             VStack {
-               if isOwner {
-                    Menu {
-                        
-                        ForEach(MenuValue.allCases) { menu in
-                            let role: ButtonRole = menu == .delete ? .destructive : .cancel
-                            Button(role: role) {
-                                switch menu {
-                                case .delete:
-                                    deleteButtonTapped()
-                                case .edit:
-                                    editButtonTapped()
-                                }
-                           } label: {
-                               Text(menu.rawValue)
-                                   
-                           }
-                       }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundStyle(.black)
-                    }
-                }
+               if isOwner { editMenu }
             }
         }
         .alert(isPresented: $showingAlert) {
@@ -172,15 +151,51 @@ extension CourseDetailView {
     
     var participantList: some View {
         VStack(alignment: .leading) {
-            UserList(users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members), ownerUid: courseViewModel.course.ownerUid)
+            UserList(
+                users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members),
+                ownerUid: courseViewModel.course.ownerUid
+            )
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    var editMenu: some View {
+        Menu {
+            ForEach(MenuValue.allCases) { menu in
+                let role: ButtonRole = menu == .delete ? .destructive : .cancel
+                Button(role: role) {
+                    switch menu {
+                    case .delete:
+                        deleteButtonTapped()
+                    case .edit:
+                        editButtonTapped()
+                    }
+               } label: {
+                   Text(menu.rawValue)
+                       
+               }
+           }
+        } label: {
+            Image(systemName: "ellipsis")
+                .foregroundStyle(.black)
+        }
     }
 }
 
 extension CourseDetailView {
     func editButtonTapped() {
-        
+        router.push(.courseRegister(CourseRegViewModel(
+            docID: courseViewModel.course.uid,
+            style: RunningStyle(rawValue: courseViewModel.course.runningStyle)!,
+            coorinates: courseViewModel.course.toCoordinates,
+            title: courseViewModel.course.title,
+            content: courseViewModel.course.content,
+            selectedDate: courseViewModel.course.startDate,
+            estimatedTime: courseViewModel.course.estimatedTime,
+            estimatedCalorie: courseViewModel.course.estimatedCalorie,
+            numberOfPeople: courseViewModel.course.numberOfPeople,
+            image: UIImage()
+        )))
     }
     
     func deleteButtonTapped() {

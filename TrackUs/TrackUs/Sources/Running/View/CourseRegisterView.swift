@@ -14,7 +14,6 @@ struct CourseRegisterView: View {
     @EnvironmentObject var router: Router
     @ObservedObject var courseRegViewModel: CourseRegViewModel
     
-    @State private var errorMessage: String = ""
     @State private var isDatePickerPresented = false
     @State private var isTimePickerPresented = false
     @State private var isTooltipDisplay = false
@@ -37,6 +36,10 @@ struct CourseRegisterView: View {
     
     private var isTextFieldValid: Bool {
         courseRegViewModel.title.count > 0 && courseRegViewModel.content.count > 0
+    }
+    
+    private var buttonEnabled: Bool {
+        isTextFieldValid && !courseRegViewModel.isLoading
     }
 }
 
@@ -122,7 +125,7 @@ extension CourseRegisterView {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
-            MainButton(active: isTextFieldValid && !courseRegViewModel.isLoading ,buttonText: "코스 등록하기") {
+            MainButton(active: buttonEnabled ,buttonText: "코스 등록하기") {
                 courseRegViewModel.uploadCourseData { result in
                     switch result {
                     case .success(let course):
@@ -138,20 +141,29 @@ extension CourseRegisterView {
         .sheet(isPresented: $isDatePickerPresented,onDismiss: {
             
         }, content: {
-            CustomDatePicker(selectedDate: $courseRegViewModel.selectedDate, isPickerPresented: $isDatePickerPresented)
+            CustomDatePicker(
+                selectedDate: $courseRegViewModel.selectedDate,
+                isPickerPresented: $isDatePickerPresented
+            )
                 .presentationDetents([.height(400)])
                 .presentationDragIndicator(.hidden)
         })
         .sheet(isPresented: $isTimePickerPresented,onDismiss: {
             
         }, content: {
-            TimePicker(hours: $courseRegViewModel.hours, minutes: $courseRegViewModel.minutes, seconds: $courseRegViewModel.seconds, pickerPresented: $isTimePickerPresented)
+            TimePicker(
+                hours: $courseRegViewModel.hours,
+                minutes: $courseRegViewModel.minutes,
+                seconds: $courseRegViewModel.seconds,
+                pickerPresented: $isTimePickerPresented
+            )
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.hidden)
                 .onChange(of: [courseRegViewModel.hours, courseRegViewModel.minutes, courseRegViewModel.seconds]) { _ in
                     let hoursInSeconds = courseRegViewModel.hours * 3600
                     let minutesInSeconds = courseRegViewModel.minutes * 60
                     let seconds = courseRegViewModel.seconds
+                    
                     courseRegViewModel.estimatedTime = Double(hoursInSeconds) + Double(minutesInSeconds) + Double(seconds)
                 }
                 .onChange(of: courseRegViewModel.estimatedTime) { _ in

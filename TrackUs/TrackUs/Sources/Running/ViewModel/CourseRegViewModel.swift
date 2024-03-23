@@ -19,12 +19,12 @@ final class CourseRegViewModel: ObservableObject {
     }
     
     let id = UUID()
-    
     private let authViewModel = AuthenticationViewModel.shared
     private let chatVieModle = ChatListViewModel.shared
     private let locationManager = LocationManager.shared
     private let MAXIMUM_NUMBER_OF_MARKERS: Int = 50
     
+    var docID = UUID().uuidString
     @Published var style: RunningStyle = .walking
     @Published var coorinates = [CLLocationCoordinate2D]()
     @Published var title: String = ""
@@ -38,6 +38,22 @@ final class CourseRegViewModel: ObservableObject {
     @Published var hours: Int = 0
     @Published var minutes: Int = 0
     @Published var seconds: Int = 0
+    
+    
+    init(docID: String, style: RunningStyle, coorinates: [CLLocationCoordinate2D] = [CLLocationCoordinate2D](), title: String, content: String, selectedDate: Date? = nil, estimatedTime: Double, estimatedCalorie: Double, numberOfPeople: Int, image: UIImage? = nil) {
+        self.style = style
+        self.coorinates = coorinates
+        self.title = title
+        self.content = content
+        self.selectedDate = selectedDate
+        self.estimatedTime = estimatedTime
+        self.estimatedCalorie = estimatedCalorie
+        self.numberOfPeople = numberOfPeople
+        self.image = image
+        self.docID = docID
+    }
+    
+    init() {}
 }
 
 // MARK: - UI Update 🎨
@@ -118,7 +134,7 @@ extension CourseRegViewModel {
         
         self.isLoading = true
         let uid = authViewModel.userInfo.uid
-        let documentID = UUID().uuidString
+        
         
         locationManager.convertToAddressWith(coordinate: startCoordinate.asCLLocation()) { address in
             
@@ -126,25 +142,26 @@ extension CourseRegViewModel {
                 defer {
                     self.isLoading = false
                 }
+                
                 let data: [String: Any] = [
-                    "uid": documentID,
+                    "uid": self.docID,
                     "ownerUid": uid,
-                    "title": self.title,
-                    "content": self.content,
-                    "runningStyle": self.style.rawValue,
                     "members": [uid],
                     "routeImageUrl": url,
                     "address": address,
+                    "title": self.title,
+                    "content": self.content,
+                    "runningStyle": self.style.rawValue,
                     "numberOfPeople": self.numberOfPeople,
-                    "startDate": self.selectedDate ?? Date(),
                     "distance": self.coorinates.caculateTotalDistance(),
                     "estimatedTime": self.estimatedTime,
                     "estimatedCalorie": self.estimatedCalorie,
                     "courseRoutes": self.coorinates.toGeoPoint(),
+                    "startDate": self.selectedDate ?? Date(),
                     "createdAt": Date()
                 ]
                 
-                Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(documentID).setData(data) { error in
+                Constants.FirebasePath.COLLECTION_GROUP_RUNNING.document(self.docID).setData(data) { error in
                     if error != nil {
                         print(#function + "Firebase Error: \(error?.localizedDescription)")
                         completion(.failure(.networkError))
@@ -152,17 +169,22 @@ extension CourseRegViewModel {
                     }
                     
                     // 채팅방 생성
-                    self.chatVieModle.createGroupChatRoom(trackId: documentID, title: self.title, uid: uid)
+                    self.chatVieModle.createGroupChatRoom(trackId: self.docID, title: self.title, uid: uid)
                     
                     // 완료 핸들러 -> 채팅방 이동
                     completion(.success(CourseViewModel(course:
-                                                            Course(uid: documentID,
+                                                            Course(
+                                                                uid: self.docID,
                                                                    ownerUid: uid,
                                                                    title: self.title,
                                                                    content: self.content,
-                                                                   courseRoutes: self.coorinates.map {GeoPoint(latitude: $0.latitude, longitude: $0.longitude)},
+                                                                   courseRoutes: self.coorinates.toGeoPoint(),
                                                                    distance: self.distance,
-                                                                   estimatedTime: self.estimatedTime, numberOfPeople: self.numberOfPeople, runningStyle: self.style.rawValue, startDate: self.selectedDate ?? Date(), members: [uid],
+                                                                   estimatedTime: self.estimatedTime, 
+                                                                   numberOfPeople: self.numberOfPeople,
+                                                                   runningStyle: self.style.rawValue,
+                                                                   startDate: self.selectedDate ?? Date(),
+                                                                   members: [uid],
                                                                    routeImageUrl: url,
                                                                    address: address,
                                                                    estimatedCalorie: self.estimatedCalorie)

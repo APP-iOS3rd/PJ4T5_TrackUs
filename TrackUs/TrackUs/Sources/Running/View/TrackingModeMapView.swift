@@ -4,6 +4,13 @@
 //
 //  Created by 석기권 on 2024/02/20.
 //
+// TODO: - 백그라운드 모드에서 위치데이터 추가
+// Flow
+// 1. 백그라운드진입 감지
+// 2. LocationManage의 delegate를 현재뷰로 설정
+// 3. 백그라운드에서 위치를 업데이트
+// 4. 포그라운드진입 감지
+// 5. LocationManage의 delegate를 nil로 설정(업데이트 중지)
 
 import SwiftUI
 import MapboxMaps
@@ -41,11 +48,8 @@ final class TrackingModeMapViewController: UIViewController, GestureManagerDeleg
     private let trackingViewModel: TrackingViewModel
     private var locationTrackingCancellation: AnyCancelable?
     private var cancellation = Set<AnyCancelable>()
-    private var lineAnnotation: PolylineAnnotation!
-    private var lineAnnotationManager: PolylineAnnotationManager!
     private var puckConfiguration = Puck2DConfiguration.makeDefault(showBearing: true)
     private var snapshotter: Snapshotter!
-    
     
     // UI
     private let buttonWidth = 86.0
@@ -191,8 +195,51 @@ final class TrackingModeMapViewController: UIViewController, GestureManagerDeleg
         bind()
         trackingViewModel.initTimer()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        // 백그라운드 진입
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.addObserver(self, selector: #selector(enterBackground), name: UIScene.willDeactivateNotification, object: nil)
+        } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(enterBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        }
+        
+        // 포어그라운드 진입
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: UIScene.willEnterForegroundNotification, object: nil)
+        } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+           super.viewWillDisappear(true)
+           
+           NotificationCenter.default.removeObserver(self)
+       }
 }
 
+// MARK: - BackgroundTask 관련
+extension TrackingModeMapViewController: CLLocationManagerDelegate {
+    // 위치업데이트
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { 
+            return
+        }
+        
+        self.trackingViewModel.addPath(with: location.asCLLocationCoordinate2D())
+    }
+    
+    @objc func enterBackground() {
+        locationManager.locationManager.delegate = self
+    }
+    
+    @objc func enterForeground() {
+        locationManager.locationManager.delegate = nil
+    }
+}
 
 // MARK: - Setup UI
 extension TrackingModeMapViewController {
@@ -301,11 +348,6 @@ extension TrackingModeMapViewController {
         self.puckConfiguration.topImage = UIImage(named: "Puck")
         self.mapView.location.options.puckType = .puck2D(puckConfiguration)
         
-        /// 경로선
-        self.lineAnnotation = PolylineAnnotation(lineCoordinates: [])
-        self.lineAnnotationManager = self.mapView.annotations.makePolylineAnnotationManager()
-        self.lineAnnotationManager.annotations = [self.lineAnnotation]
-        
         /// 스냅셔터
         let snapshotterOption = MapSnapshotOptions(size: CGSize(width: self.view.bounds.width, height: self.view.bounds.height) , pixelRatio: UIScreen.main.scale)
         let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.mapboxMap.cameraState)
@@ -387,7 +429,7 @@ extension TrackingModeMapViewController {
             // 새로받아온 위치
             guard let location = newLocation.last, let mapView else { return }
             
-            self.trackingViewModel.updateCoordinates(with: location.coordinate)
+            self.trackingViewModel.addPath(with: location.coordinate)
             mapView.camera.ease(
                 to: CameraOptions(center: location.coordinate, zoom: 15),
                 duration: 1.3)

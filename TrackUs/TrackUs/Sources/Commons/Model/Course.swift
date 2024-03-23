@@ -30,3 +30,5 @@ struct Course: Decodable, Hashable {
         self.courseRoutes.map {CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)}
     }
 }
+
+
