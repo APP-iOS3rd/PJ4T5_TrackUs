@@ -4,6 +4,9 @@
 //
 //  Created by 석기권 on 2024/02/22.
 //
+// TODO: - 수정하기 기능구현
+// - 현재 코스정보를 수정화면으로 넘기기
+// - 수정하기 화면에서 데이터를 새롭게 덮어쓰기
 
 import SwiftUI
 import MapboxMaps
@@ -184,18 +187,7 @@ extension CourseDetailView {
 
 extension CourseDetailView {
     func editButtonTapped() {
-        router.push(.courseRegister(CourseRegViewModel(
-            docID: courseViewModel.course.uid,
-            style: RunningStyle(rawValue: courseViewModel.course.runningStyle)!,
-            coorinates: courseViewModel.course.toCoordinates,
-            title: courseViewModel.course.title,
-            content: courseViewModel.course.content,
-            selectedDate: courseViewModel.course.startDate,
-            estimatedTime: courseViewModel.course.estimatedTime,
-            estimatedCalorie: courseViewModel.course.estimatedCalorie,
-            numberOfPeople: courseViewModel.course.numberOfPeople,
-            image: UIImage()
-        )))
+       
     }
     
     func deleteButtonTapped() {
