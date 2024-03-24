@@ -14,25 +14,29 @@ import MapboxMaps
 
 // MARK: - UIViewController Hosting
 struct CourseDrawingMapView: UIViewControllerRepresentable {
-    @ObservedObject var courseRegViewModel: CourseRegViewModel
+    @ObservedObject var courseViewModel: CourseViewModel
     @ObservedObject var router: Router
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return CourseDrawingMapViewController(courseRegViewMoel: courseRegViewModel, router: router)
+        return CourseDrawingMapViewController(
+            courseViewModel: courseViewModel,
+            router: router)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
     
     func makeCoordinator() -> CourseDrawingMapViewController {
-        return CourseDrawingMapViewController(courseRegViewMoel: courseRegViewModel, router: router)
+        return CourseDrawingMapViewController(
+            courseViewModel: courseViewModel,
+            router: router)
     }
 }
 
 // MARK: - Init ViewController
 final class CourseDrawingMapViewController: UIViewController, GestureManagerDelegate {
     internal var mapView: MapView!
-    private let courseRegViewModel: CourseRegViewModel
+    private let courseViewModel: CourseViewModel
     private let router: Router
     private var cancellation = Set<AnyCancelable>()
     private var lineAnnotation: PolylineAnnotation!
@@ -75,9 +79,9 @@ final class CourseDrawingMapViewController: UIViewController, GestureManagerDele
         return button
     }()
     
-    init(courseRegViewMoel: CourseRegViewModel, router: Router) {
+    init(courseViewModel: CourseViewModel, router: Router) {
         self.router = router
-        self.courseRegViewModel = courseRegViewMoel
+        self.courseViewModel = courseViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -152,27 +156,30 @@ extension CourseDrawingMapViewController {
     // 데이터 바인딩
     private func bind() {
         // 좌표탭 핸들러
-        self.mapView.gestures.onMapTap.observe { context in
-            self.courseRegViewModel.addPath(with: context.coordinate)
+        mapView.gestures.onMapTap.observe { context in
+            self.courseViewModel.addPath(with: context.coordinate)
         }.store(in: &cancellation)
         
-        // 코스추가
-        self.courseRegViewModel.$coorinates.sink { [weak self] coordinate in
+        courseViewModel.$course.sink { [weak self] newValue in
             guard let self = self else { return }
-            // 데이터소스 초기화
+            
+            // 데이터 초기화
             cleanUpDataSource()
             
+            let coordinates = newValue.courseRoutes.toCLLocationCoordinate2D()
+            
             // 마커찍기
-            coordinate.enumerated().forEach { (offset, value) in
+            coordinates.enumerated().forEach { (offset, value) in
                 self.addMarker(coordinate: value, number: offset)
             }
             
             // 경로 그리기
-            self.lineAnnotation = PolylineAnnotation(lineCoordinates: coordinate)
+            self.lineAnnotation = PolylineAnnotation(lineCoordinates: coordinates)
             self.lineAnnotation.lineColor = StyleColor(UIColor.main)
             self.lineAnnotation.lineWidth = 5
             self.lineAnnotation.lineJoin = .round
             self.lineAnnotationManager.annotations = [self.lineAnnotation]
+            
         }.store(in: &cancellation)
     }
     
@@ -190,7 +197,7 @@ extension CourseDrawingMapViewController {
     
     private func cameraMoveBeforeCapture(completion: (() -> ())? = nil) {
         let camera = try? self.mapView.mapboxMap.camera(
-            for: self.courseRegViewModel.coorinates,
+            for: [],
             camera: self.mapView.mapboxMap.styleDefaultCamera,
             coordinatesPadding: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
             maxZoom: nil,
@@ -209,28 +216,21 @@ extension CourseDrawingMapViewController {
 // MARK: - Objc-C Methods
 extension CourseDrawingMapViewController {
     @objc func completeButtonTapped() {
-        guard courseRegViewModel.coorinates.count >= 2 else {
-            let alert = UIAlertController(title: "알림", message: "경로를 2개 이상 생성해주세요.", preferredStyle: .alert)
-            let confirmAction = UIAlertAction(title: "확인", style: .default)
-            alert.addAction(confirmAction)
-            present(alert, animated: true, completion: nil)
-            return
-        }
+        
         
         cameraMoveBeforeCapture {
             if let image = UIImage.imageFromView(view: self.mapView) {
-                self.courseRegViewModel.image = image
-                self.router.push(.courseRegister(self.courseRegViewModel))
+                
             }
             
         }
     }
     
     @objc func deleteButtonTapped() {
-        courseRegViewModel.removePath()
+        
     }
     
     @objc func revertButtonTapped() {
-        courseRegViewModel.revertPath()
+        
     }
 }

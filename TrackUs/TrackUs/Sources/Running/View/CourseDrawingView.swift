@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct CourseDrawingView: View {
-    @StateObject var courseRegViewModel = CourseRegViewModel()
+    @StateObject var courseViewModel = CourseViewModel(course: Course.createObject())
     @EnvironmentObject var router: Router
     var body: some View {
         CourseDrawingMapView(
-            courseRegViewModel: courseRegViewModel,
+            courseViewModel: courseViewModel,
             router: router)
                 .edgesIgnoringSafeArea(.all)
     }
-}
-
-#Preview {
-    CourseDrawingView()
 }

@@ -118,6 +118,7 @@ extension CourseRegViewModel {
 // MARK: - Network Requests 🌐
 extension CourseRegViewModel {
     
+    /// 코스 업로드
     @MainActor
     func uploadCourseData(completion: @escaping (Result<CourseViewModel, CourseRegViewModel.CustomError>) -> ()) {
         guard let image = self.image else {
@@ -192,6 +193,11 @@ extension CourseRegViewModel {
                 }
             }
         }
+    }
+    
+    /// 코스 수정하기
+    func updateCourse(_ course: Course) {
+        
     }
 }
 

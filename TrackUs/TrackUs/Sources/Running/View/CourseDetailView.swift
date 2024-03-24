@@ -70,11 +70,11 @@ struct CourseDetailView: View {
                 }
                 else if !memberContains {
                     MainButton(buttonText: "러닝 참가하기") {
-                        courseViewModel.addParticipant()
+                        courseViewModel.addMember()
                     }
                 } else if memberContains {
                     MainButton(active: !isOwner, buttonText: "러닝 참가취소", buttonColor: .Caution) {
-                            courseViewModel.removeParticipant()
+                            courseViewModel.removeMember()
                     }
                 }
                 
@@ -187,7 +187,8 @@ extension CourseDetailView {
 
 extension CourseDetailView {
     func editButtonTapped() {
-       
+       // 뷰모델을 넘기면서 수정화면으로 이동
+        
     }
     
     func deleteButtonTapped() {
