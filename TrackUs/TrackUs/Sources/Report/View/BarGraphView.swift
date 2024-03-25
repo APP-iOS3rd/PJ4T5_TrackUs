@@ -281,7 +281,7 @@ struct BarView: View {
                     .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 0.0))
                 Capsule()
 //                    .frame(maxWidth: 12, minHeight: 0, maxHeight: (100 * (value / 20)) / 1000)
-                    .frame(maxWidth: 12, minHeight: 0, maxHeight: (100 * (value / 5)))
+                    .frame(maxWidth: 12, minHeight: 0, maxHeight: (100 * (value / 5)) / 1000)
                     .foregroundColor(isSelected ? .main : .gray1)
                 
             }

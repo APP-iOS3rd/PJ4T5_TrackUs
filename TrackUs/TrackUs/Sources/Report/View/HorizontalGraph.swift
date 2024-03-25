@@ -69,10 +69,10 @@ struct HorizontalGraph: View {
                             .customFontStyle(.gray1_SB15)
                         
                         VStack {
-                            DistanceBar(value: totalDistanceForSelectedDate, distanceValue: totalDistanceForSelectedDate) // 사용자 일일 러닝 거리
+                            DistanceBar(value: totalDistanceForSelectedDate / 1000.0, distanceValue: totalDistanceForSelectedDate) // 사용자 일일 러닝 거리
                                 .foregroundColor(.gray2)
                                 .padding(.bottom, 10)
-                            DistanceBar(value: allUserAverageDistanceForSelectedDate, distanceValue: allUserAverageDistanceForSelectedDate) // 연령대 일일 러닝 거리 평균
+                            DistanceBar(value: allUserAverageDistanceForSelectedDate / 1000.0, distanceValue: allUserAverageDistanceForSelectedDate) // 연령대 일일 러닝 거리 평균
                                 .foregroundColor(.main)
                         }
                     }
@@ -97,10 +97,10 @@ struct HorizontalGraph: View {
                             .customFontStyle(.gray1_SB15)
                         
                         VStack {
-                            DistanceBar(value: averageDistanceForSelectedMonth, distanceValue: averageDistanceForSelectedMonth) // 사용자 월 평균 러닝 거리
+                            DistanceBar(value: averageDistanceForSelectedMonth / 1000.0, distanceValue: averageDistanceForSelectedMonth) // 사용자 월 평균 러닝 거리
                                 .foregroundColor(.gray2)
                                 .padding(.bottom, 10)
-                            DistanceBar(value: allUserAverageDistanceForSelectedMonth, distanceValue: allUserAverageDistanceForSelectedMonth) // 연령대 일일 러닝 거리 평균
+                            DistanceBar(value: allUserAverageDistanceForSelectedMonth / 1000.0, distanceValue: allUserAverageDistanceForSelectedMonth) // 연령대 일일 러닝 거리 평균
                                 .foregroundColor(.main)
                         }
                     }

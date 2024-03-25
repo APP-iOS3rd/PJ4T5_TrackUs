@@ -81,7 +81,8 @@ class UserProfileViewModel: ObservableObject {
         runningLog = []
         
         let db = Firestore.firestore()
-        db.collection("users").document(userId).collection("runningRecords").getDocuments() { (snapshot, error) in
+//        db.collection("users").document(userId).collection("runningRecords").getDocuments() { (snapshot, error) in
+        db.collection("users").document(userId).collection("records").getDocuments() { (snapshot, error) in
             if let error = error {
                 print("error fetching runningRecords: \(error.localizedDescription)")
                 return
