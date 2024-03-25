@@ -1,5 +1,5 @@
 {
-  "originHash" : "32b2c42e7f800184c927bcbe89c873872d8b184821aae0da4309639bd88e38b4",
+  "originHash" : "5ce162c9a8cce20486401ea3ca191dfc583a904b4cba0ffbead5f8a665ffc7cd",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
       "state" : {
-        "revision" : "819d0a2173aff699fb8c364b6fb906f7cdb1a692",
-        "version" : "2.30909.0"
+        "revision" : "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
+        "version" : "2.30910.0"
       }
     },
     {
