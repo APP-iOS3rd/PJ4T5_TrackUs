@@ -116,6 +116,7 @@ class AuthenticationViewModel: NSObject, ObservableObject {
         do {
             try Auth.auth().signOut()
             userInfo = UserInfo()
+            
         }
         catch {
             print(error)
@@ -133,6 +134,8 @@ class AuthenticationViewModel: NSObject, ObservableObject {
                 }
                 try await user?.delete()
                 try await Firestore.firestore().collection("users").document(uid).delete()
+//                Firestore.firestore().collection("users")
+//                    .whereField("members", isEqualTo: uid).delet
                 print("Document successfully removed!")
                 // 탈퇴 사유를 Firestore에 저장
                 if !reason.isEmpty {
