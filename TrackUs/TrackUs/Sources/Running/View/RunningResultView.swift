@@ -9,89 +9,25 @@ import SwiftUI
 
 struct RunningResultView: View {
     @EnvironmentObject var router: Router
+    
+    @ObservedObject var trackingViewModel: TrackingViewModel
+    @ObservedObject private var settingViewModel = SettingPopupViewModel()
+    private let exerciseManager: ExerciseManager!
+    
     @State private var showingPopup = false
     @State private var showingAlert = false
-    let settingViewModel = SettingPopupViewModel()
-    @ObservedObject var trackingViewModel: TrackingViewModel
     
-    // 목표거리
-    var targetDistance: Double {
-        trackingViewModel.isGroup ? trackingViewModel.goalDistance : settingViewModel.goalMinValue
-    }
-    
-    // 목표 칼로리
-    var targetCalorie: Double {
-        return ExerciseManager.calculatedCaloriesBurned(distance: targetDistance)
-    }
-    
-    // 예상시간
-    var estimatedTime: Int {
-        return ExerciseManager.calculateEstimatedTime(distance: targetDistance * 60)
-    }
-    
-    // 킬로미터 비교 -> 실제 뛴 거리 / 예상 거리
-    var compareKilometers: String {
-        return "\(trackingViewModel.distance.asString(unit: .kilometer)) / \(targetDistance.asString(unit: .kilometer))"
-    }
-    
-    // 소모 칼로리 비교 -> 실제 소모 칼로리 / 예상 소모 칼로리
-    var compareCalories: String {
-        return "\(trackingViewModel.calorie.asString(unit: .calorie)) / \(targetCalorie.asString(unit: .calorie))"
-    }
-    
-    // 소요시간 비교 -> 소요시간 / 예상 소요시간
-    var compareEstimatedTime: String {
-        return "\(trackingViewModel.elapsedTime.asString(style: .positional)) / \(Double(estimatedTime).asString(style: .positional))"
-    }
-    
-    // 킬로미터 비교
-    var compareKilometersLabel: String {
-        let isGoalReached = trackingViewModel.distance >= targetDistance
-        let distanceDifference = abs(trackingViewModel.distance - targetDistance)
+    init(trackingViewModel: TrackingViewModel, settingViewModel: SettingPopupViewModel = SettingPopupViewModel(), showingPopup: Bool = false, showingAlert: Bool = false) {
         
-        if isGoalReached {
-            return "\(distanceDifference.asString(unit: .kilometer)) 만큼 더 뛰었습니다!"
-        } else {
-            return "\(distanceDifference.asString(unit: .kilometer)) 적게 뛰었어요."
-        }
-    }
-    
-    // 칼로리 비교
-    var compareCaloriesLabel: String {
-        let isGoalReached = trackingViewModel.calorie >= targetCalorie
-        let caloriesDifference = abs(trackingViewModel.distance - targetCalorie)
-        
-        if isGoalReached {
-            return "\(caloriesDifference.asString(unit: .calorie)) 더 소모했어요!"
-        } else {
-            return "\(caloriesDifference.asString(unit: .calorie)) 덜 소모했어요."
-        }
-    }
-    
-    // 소요시간 비교
-    var compareEstimatedTimeLabel: String {
-        let isGoalReached = trackingViewModel.elapsedTime < Double(estimatedTime)
-        let estimatedTimeDifference = abs(trackingViewModel.elapsedTime - Double(estimatedTime))
-        if isGoalReached {
-            return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 단축되었어요!"
-        } else {
-            return "\(estimatedTimeDifference.asString(style: .positional)) 만큼 더 소요됬어요."
-        }
-    }
-    
-    var feedbackMessageLabel: String {
-        let isGoalDistanceReached = trackingViewModel.distance >= targetDistance
-        let isTimeReduction = trackingViewModel.elapsedTime < Double(estimatedTime)
-        
-        if isGoalDistanceReached, isTimeReduction {
-            return "대단해요! 목표를 달성하고 도전 시간을 단축했어요. 지속적인 노력이 효과를 나타내고 있습니다. 계속해서 도전해보세요!"
-        } else if !isGoalDistanceReached, isTimeReduction {
-            return "목표에는 도달하지 못했지만, 러닝 시간을 단축했어요! 훌륭한 노력입니다. 계속해서 노력하면 목표에 더 가까워질 거에요!"
-        } else if isGoalDistanceReached, !isTimeReduction {
-            return "목표에 도달했어요! 비록 러닝 시간을 단축하지 못했지만, 목표를 이루다니 정말 멋져요. 지속적인 노력으로 시간을 줄여가는 모습을 기대해봅니다!"
-        } else {
-            return "목표에 도달하지 못했어도 괜찮아요. 중요한 건 노력한 자체입니다. 목표와 거리를 조금 낮춰서 차근차근 도전해보세요!"
-        }
+        self.trackingViewModel = trackingViewModel
+        self.settingViewModel = settingViewModel
+        self.showingPopup = showingPopup
+        self.showingAlert = showingAlert
+        self.exerciseManager = ExerciseManager(
+            distance: trackingViewModel.distance,
+            target: trackingViewModel.goalDistance,
+            elapsedTime: trackingViewModel.elapsedTime
+        )
     }
 }
 
@@ -99,7 +35,9 @@ extension RunningResultView {
     
     var body: some View {
         VStack {
-            PathPreviewMap(coordinates: trackingViewModel.coordinates)
+            PathPreviewMap(
+                coordinates: trackingViewModel.coordinates
+            )
             
             VStack {
                 VStack(spacing: 20) {
@@ -122,11 +60,11 @@ extension RunningResultView {
                             Image(.distance)
                             VStack(alignment: .leading) {
                                 Text("킬로미터")
-                                Text(compareKilometers)
+                                Text(exerciseManager.compareKilometers)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(compareKilometersLabel)
+                            Text(exerciseManager.compareKilometersLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -134,11 +72,11 @@ extension RunningResultView {
                             Image(.fire)
                             VStack(alignment: .leading) {
                                 Text("소모 칼로리")
-                                Text(compareCalories)
+                                Text(exerciseManager.compareCalories)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(compareCaloriesLabel)
+                            Text(exerciseManager.compareCaloriesLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -146,11 +84,11 @@ extension RunningResultView {
                             Image(.time)
                             VStack(alignment: .leading) {
                                 Text("러닝 타임")
-                                Text(compareEstimatedTime)
+                                Text(exerciseManager.compareEstimatedTime)
                                     .customFontStyle(.gray1_R14)
                             }
                             Spacer()
-                            Text(compareEstimatedTimeLabel)
+                            Text(exerciseManager.compareEstimatedTimeLabel)
                                 .customFontStyle(.gray1_R12)
                         }
                         
@@ -168,7 +106,7 @@ extension RunningResultView {
                     }
                     
                     HStack {
-                        Text(feedbackMessageLabel)
+                        Text(exerciseManager.feedbackMessageLabel)
                             .customFontStyle(.gray1_R14)
                             .multilineTextAlignment(.leading)
                             .lineLimit(3)
@@ -219,9 +157,13 @@ extension RunningResultView {
         }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
-                trackingViewModel.uploadRecordedData(targetDistance: settingViewModel.goalMinValue, expectedTime: Double(settingViewModel.estimatedTime))
-                self.hideKeyboard()
-                self.showingPopup = false
+                do {
+                    self.hideKeyboard()
+                    self.showingPopup = false
+                    try trackingViewModel.uploadRunningData()
+                } catch let error {
+                    print(error.localizedDescription)
+                }
             }
         } customize: {
             $0
@@ -233,14 +175,11 @@ extension RunningResultView {
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
         .ignoresSafeArea(.keyboard)
-        .loadingWithNetwork(status: trackingViewModel.newtworkStatus)
-        .preventGesture()
-        .onChange(of: trackingViewModel.newtworkStatus) { status in
-            print(status)
-            if status == .success {
-                router.popToRoot()
-            }
+        .onChange(of: trackingViewModel.isLoading) { isLoading in
+            if !isLoading { router.popToRoot() }
         }
+        .presentLoadingView(status: trackingViewModel.isLoading)
+        .preventGesture()
     }
 }
 
