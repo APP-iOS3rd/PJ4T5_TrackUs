@@ -13,10 +13,17 @@ import Firebase
 
 // 위치변화 감지 -> 위치값 저장 -> 저장된 위치값을 경로에 그려주기(뷰컨에서 구독)
 final class TrackingViewModel: ObservableObject {
-    enum NetworkError: Error {
-        case snapshotError
+    enum ErrorType: Error {
         case fetchError
+        
+        var errorMessage: String {
+            switch self {
+            case .fetchError:
+                "러닝기록을 저장중에 문제가 발생했습니다."
+            }
+        }
     }
+    
     private let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     private var countTimer: Timer = Timer()
@@ -44,8 +51,9 @@ final class TrackingViewModel: ObservableObject {
     }
 }
 
-// MARK: - UI Update 🎨
+// MARK: - UI관련 작업
 extension TrackingViewModel {
+    
     /// 카운트다운
     @MainActor
     func initTimer() {
@@ -93,17 +101,17 @@ extension TrackingViewModel {
     }
 }
 
-// MARK: - Network Requests 🌐
+// MARK: - 네트워크관련 작업
 extension TrackingViewModel {
     /// 러닝데이터 저장
     @MainActor
-    func uploadRunningData() throws {
+    func addRecord(_ completion: @escaping (Result<Bool, ErrorType>) -> ())  {
+        isLoading = true
         let uid = authViewModel.userInfo.uid
         
-        self.isLoading = true
-        
         guard let image = snapshot else {
-            throw TrackingViewModel.NetworkError.snapshotError
+            isLoading = false
+            return
         }
         
         ImageUploader.uploadImage(image: image, type: .map) { url in
@@ -130,6 +138,7 @@ extension TrackingViewModel {
                 
                 Constants.FirebasePath.COLLECTION_UESRS.document(uid).collection("records").addDocument(data: data) { error in
                     self.isLoading = false
+                    completion(.success(true))
                 }
             }
         }

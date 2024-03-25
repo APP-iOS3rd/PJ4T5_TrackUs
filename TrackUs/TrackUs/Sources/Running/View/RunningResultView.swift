@@ -110,7 +110,6 @@ extension RunningResultView {
                             .customFontStyle(.gray1_R14)
                             .multilineTextAlignment(.leading)
                             .lineLimit(3)
-                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     
@@ -157,13 +156,17 @@ extension RunningResultView {
         }
         .popup(isPresented: $showingPopup) {
             SaveDataPopup(showingPopup: $showingPopup, title: $trackingViewModel.title) {
-                do {
                     self.hideKeyboard()
                     self.showingPopup = false
-                    try trackingViewModel.uploadRunningData()
-                } catch let error {
-                    print(error.localizedDescription)
-                }
+                    trackingViewModel.addRecord { result in
+                        switch result {
+                        case .success(let _):
+                            router.popToRoot()
+                        case .failure(let error):
+                            print(error.errorMessage)
+                        }
+                    }
+                
             }
         } customize: {
             $0
@@ -175,9 +178,6 @@ extension RunningResultView {
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
         .ignoresSafeArea(.keyboard)
-        .onChange(of: trackingViewModel.isLoading) { isLoading in
-            if !isLoading { router.popToRoot() }
-        }
         .presentLoadingView(status: trackingViewModel.isLoading)
         .preventGesture()
     }

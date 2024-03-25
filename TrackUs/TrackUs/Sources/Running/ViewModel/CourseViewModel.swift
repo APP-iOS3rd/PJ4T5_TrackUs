@@ -111,6 +111,7 @@ extension CourseViewModel {
     /// 러닝추가
     @MainActor
     func addCourse(_ completion: @escaping (Result<Course, ErrorType>) -> ()) {
+        isLoading = true
         guard let startLocation = course.courseRoutes.first?.asCLLocation else { return }
         guard let image = uiImage else { return }
         
@@ -124,14 +125,20 @@ extension CourseViewModel {
                 self.course.address = address
                 self.course.createdAt = Date()
                 self.course.isEdit = true
-    
+                
+                self.chatViewModel.createGroupChatRoom(
+                    trackId: self.course.uid,
+                    title: self.course.title,
+                    uid: user)
+                
                 do {
                    try Constants.FirebasePath.COLLECTION_RUNNING.document(self.course.uid).setData(from: self.course)
-                    completion(.success(self.course))
+                       completion(.success(self.course))
                 } catch {
                     print(#function + "Failed upload data")
                     completion(.failure(.fetchError))
                 }
+                self.isLoading = false
             }
         }
     }
