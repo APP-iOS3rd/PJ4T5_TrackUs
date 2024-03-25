@@ -118,7 +118,8 @@ class ReportViewModel : ObservableObject {
         }
         
 //        let db = Firestore.firestore()
-        db.collection("users").document(uid).collection("runningRecords").getDocuments() { (snapshot, error) in
+//        db.collection("users").document(uid).collection("runningRecords").getDocuments() { (snapshot, error) in
+        db.collection("users").document(uid).collection("records").getDocuments() { (snapshot, error) in
             if let error = error {
                 print("error fetching runningRecords: \(error.localizedDescription)")
                 return
@@ -179,7 +180,8 @@ class ReportViewModel : ObservableObject {
             
             for document in snapshot!.documents {
                 let userID = document.documentID
-                db.collection("users").document(userID).collection("runningRecords").getDocuments() { (snapshot, error) in
+//                db.collection("users").document(userID).collection("runningRecords").getDocuments() { (snapshot, error) in
+                db.collection("users").document(userID).collection("records").getDocuments() { (snapshot, error) in
                     if let error = error {
                         print("Error fetching SameAgeUser Running Log")
                         return
@@ -229,7 +231,8 @@ class ReportViewModel : ObservableObject {
             return
         }
         
-        let docRef = db.collection("users").document(uid).collection("runningRecords").document(documentID)
+//        let docRef = db.collection("users").document(uid).collection("runningRecords").document(documentID)
+        let docRef = db.collection("users").document(uid).collection("records").document(documentID)
         docRef.delete() { error in
             if let error = error {
                 print("삭제 실패:", error.localizedDescription)
