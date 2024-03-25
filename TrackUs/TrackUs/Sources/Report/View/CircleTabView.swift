@@ -178,10 +178,10 @@ struct DailyCircleView: View {
                     HStack(spacing: 4) {
                         Text("목표 거리량")
                             .customFontStyle(.blue1_B12)
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 13, height: 13)
-                            .foregroundColor(.blue1)
+//                        Image(systemName: "questionmark.circle")
+//                            .resizable()
+//                            .frame(width: 13, height: 13)
+//                            .foregroundColor(.blue1)
                     }
                     Text("\(String(format: "%.1f", totalDistanceForSelectedDate / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 1.0) + "km")")
                         .customFontStyle(.gray1_H17)
@@ -364,10 +364,10 @@ struct MonthlyCircleView: View {
                     HStack(spacing: 4) {
                         Text("목표 거리량")
                             .customFontStyle(.blue1_B12)
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 13, height: 13)
-                            .foregroundColor(.blue1)
+//                        Image(systemName: "questionmark.circle")
+//                            .resizable()
+//                            .frame(width: 13, height: 13)
+//                            .foregroundColor(.blue1)
                     }
                     Text("\(String(format: "%.1f", averageDistanceForSelectedMonth / 1000.0) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 1.0) + "km")")
                         .customFontStyle(.gray1_H17)
