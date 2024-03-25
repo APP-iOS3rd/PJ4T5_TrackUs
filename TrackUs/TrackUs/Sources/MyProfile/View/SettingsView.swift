@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
+    @State private var showingLogoutAlert = false
     
     
     
@@ -54,6 +55,10 @@ struct SettingsView: View {
         } left: {
             NavigationBackButton()
         }
+        .alert(isPresented: $showingLogoutAlert) {
+                    Alert(title: Text("로그아웃 완료"), message: Text("로그아웃이 완료되었습니다."), dismissButton: .default(Text("확인")))
+                }
+        
         
     }
     
@@ -61,6 +66,7 @@ struct SettingsView: View {
         // 테스트용
         authViewModel.logOut()
         //viewModel.authenticationState = .unauthenticated
+        showingLogoutAlert = true
         router.popToRoot()
     }
     

@@ -111,24 +111,24 @@ struct MyProfileView: View {
                     }
                 }
                 
-                Divider()
-                    .background(.divider)
-                
-                // MARK: - 프리미엄 결제
-                MenuItems {
-                    HStack(spacing: 6) {
-                        Text("트랙어스 응원하기")
-                            .customFontStyle(.gray1_SB16)
-                        Image(.star)
-                    }
-                } content: {
-                    Button {
-                        router.present(fullScreenCover: .payment)
-                    } label: {
-                        MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
-                    }
-                }
-                .padding(.bottom, 60)
+//                Divider()
+//                    .background(.divider)
+//
+//                // MARK: - 프리미엄 결제
+//                MenuItems {
+//                    HStack(spacing: 6) {
+//                        Text("트랙어스 응원하기")
+//                            .customFontStyle(.gray1_SB16)
+//                        Image(.star)
+//                    }
+//                } content: {
+//                    Button {
+//                        router.present(fullScreenCover: .payment)
+//                    } label: {
+//                        MenuItem(title: "프리미엄 결제하기", image: .init(.chevronRight))
+//                    }
+//                }
+//                .padding(.bottom, 60)
             }
         }
         .customNavigation {
@@ -189,4 +189,8 @@ class ImageLoader: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: \.image, on: self)
     }
+}
+
+#Preview {
+    MyProfileView()
 }
