@@ -15,6 +15,8 @@ struct MainButton: View {
     private let buttonColor: Color
     private let action: () -> Void
     
+    @State private var isLoading = false
+    
     
     // MARK: - 기본 버튼
     // 사용 예시
@@ -42,17 +44,29 @@ struct MainButton: View {
     }
     
     var body: some View {
-        Button(action: action) {
-            HStack (spacing: 0) {
-                Text(text)
-                    .customFontStyle(active ? .white_B16 : .gray1_B16)
-                    .frame(maxWidth: .infinity, minHeight: minHeight)
+        Button(action:  {
+            isLoading = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                action()
+                isLoading = false
             }
+        }) {
+            HStack (spacing: 0) {
+                if isLoading {
+                    ProgressView()
+                        .foregroundStyle(.white)
+                }
+                else{
+                    Text(text)
+                }
+            }
+            .customFontStyle(active ? .white_B16 : .gray1_B16)
+            .frame(maxWidth: .infinity, minHeight: minHeight)
             .background(active ? buttonColor : .gray3)
             .clipShape(Capsule())
         }
         .animation(.easeInOut(duration: 0.1), value: active)
-        .disabled(!active)
+        .disabled(!active || isLoading)
     }
 }
 

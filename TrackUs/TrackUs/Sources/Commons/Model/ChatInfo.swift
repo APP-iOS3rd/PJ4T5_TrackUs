@@ -70,12 +70,12 @@ public struct Member: Codable, Hashable {
     }
 }
 
-struct Message: Codable, Identifiable, Hashable {
-    @DocumentID var id: String?
+struct Message: Identifiable, Hashable {
+    var id: String
     
-    static func == (lhs: Message, rhs: Message) -> Bool {
-        lhs.sendMember.uid == rhs.sendMember.uid
-    }
+//    static func == (lhs: Message, rhs: Message) -> Bool {
+//        lhs.sendMember.uid == rhs.sendMember.uid
+//    }
     
     var timestamp: Date
     var imageUrl: String?
@@ -90,9 +90,9 @@ struct Message: Codable, Identifiable, Hashable {
         self.text = text
         self.sendMember = sendMember
     }
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(id)
-//    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 

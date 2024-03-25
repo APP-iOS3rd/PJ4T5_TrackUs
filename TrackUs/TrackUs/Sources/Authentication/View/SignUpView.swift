@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum SignUpFlow {
+    case terms
     case nickname
     case profile
     case physical
@@ -19,13 +20,15 @@ enum SignUpFlow {
 struct SignUpView: View {
     @EnvironmentObject var router: Router
     @StateObject var authViewModel = AuthenticationViewModel.shared
-    @State private var signUpFlow: SignUpFlow = .nickname
+    @State private var signUpFlow: SignUpFlow = .terms
     
     var body: some View {
         VStack(spacing: 30){
             ProgressBar(value: updateProgressValue())
                 .frame(height: 12)
             switch signUpFlow {
+            case .terms:
+                TermsOfServiceView(signUpFlow: $signUpFlow)
             case .nickname:
                 NickNameView(signUpFlow: $signUpFlow)
             case .profile:
@@ -48,7 +51,7 @@ struct SignUpView: View {
             Button(action: {
                     backButton()
             }) {
-                if signUpFlow != .nickname{
+                if signUpFlow != .terms{
                     Image(systemName: "chevron.left")
                         .foregroundColor(.gray1)
                 }
@@ -57,16 +60,20 @@ struct SignUpView: View {
             Button(action: {
                 skipButton()
             }) {
-                Text(signUpFlow != .nickname ? "건너뛰기" : "")
-                    .customFontStyle(.gray1_R12)
+                if signUpFlow != .terms && signUpFlow != .nickname{
+//                    Text(signUpFlow != .nickname ? "건너뛰기" : "")
+                    Text("건너뛰기")
+                        .customFontStyle(.gray1_R12)
+                }
             }
         }
     }
     func backButton(){
         switch signUpFlow {
-        case .nickname:
-            // 테스트용
+        case .terms:
             authViewModel.authenticationState = .unauthenticated
+        case .nickname:
+            signUpFlow = .terms
         case .profile:
             signUpFlow = .nickname
         case .physical:
@@ -83,8 +90,8 @@ struct SignUpView: View {
     
     func skipButton(){
         switch signUpFlow {
-        case .nickname:
-            signUpFlow = .profile
+//        case .nickname:
+//            signUpFlow = .profile
         case .profile:
             signUpFlow = .physical
         case .physical:
@@ -100,24 +107,28 @@ struct SignUpView: View {
                 authViewModel.storeUserInfoInFirebase()
             }
             authViewModel.authenticationState = .authenticated
+        default:
+            return
         }
     }
     
     // ProgressValue 값 주는 함수
     func updateProgressValue() -> Float{
         switch signUpFlow {
+        case .terms:
+            return 1/7
         case .nickname:
-            return 1/6
+            return 2/7
         case .profile:
-            return 2/6
+            return 3/7
         case .physical:
-            return 3/6
+            return 4/7
         case .ageGender:
-            return 4/6
+            return 5/7
         case .runningStyle:
-            return 5/6
+            return 6/7
         case .daily:
-            return 6/6
+            return 1
         }
     }
 }
@@ -144,6 +155,6 @@ struct ProgressBar: View {
     }
 }
 //
-//#Preview {
-//    SignUpView()
-//}
+#Preview {
+    SignUpView()
+}
