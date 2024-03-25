@@ -77,13 +77,13 @@ struct SelectButton: View {
                     .customFontStyle(selected ? .main_B16 : .gray2_L16)
                     .padding(.trailing, 8)
             }
+            .frame(maxWidth: widthSize)
+            .frame(height: 36)
+            .overlay(
+                Capsule()
+                    .stroke(selected ? .main : .gray2, lineWidth: 1 )
+            )
         })
-        .frame(maxWidth: widthSize)
-        .frame(height: 36)
-        .overlay(
-            Capsule()
-                .stroke(selected ? .main : .gray2, lineWidth: 1 )
-        )
     }
 }
 

@@ -15,14 +15,16 @@ class ChatViewModel: ObservableObject {
     
     @Published var currentChatID: String
     @Published var members: [String : Member] = [:]
-    @Published var messages: [Message] = []
+    //@Published var messages: [Message] = []
     //@Published var chatRoom: ChatRoom
+    
+    @Published var messageMap: [MessageMap] = []
     
     var chatRoom: ChatRoom {
         if let chatRoom = chatListViewModel.chatRooms.first(where: { $0.id == currentChatID }){
             return chatRoom
         }
-        var member = members.values.map { $0.uid }
+        let member = members.values.map { $0.uid }
         
         return ChatRoom(id: UUID().uuidString,
                         title: "",
@@ -41,7 +43,7 @@ class ChatViewModel: ObservableObject {
     init(currentChatID: String, members: [String : Member], messages: [Message], chatRoom: ChatRoom) {
         self.currentChatID = currentChatID
         self.members = members
-        self.messages = messages
+        //self.messages = messages
         //self.chatRoom = chatRoom
     }
     
@@ -160,8 +162,9 @@ class ChatViewModel: ObservableObject {
                         )
                     } ?? []
                 self.lock.withLock {
-                    self.messages = messages
+                    let messages: [Message] = messages
                         .sorted { $0.timestamp < $1.timestamp }
+                    self.messageMap = self.messageMapping(messages)
                 }
                 
             }
@@ -246,3 +249,38 @@ class ChatViewModel: ObservableObject {
     // 마지막 메세지 변경
     
 }
+
+// =========================
+
+extension ChatViewModel {
+    func messageMapping(_ messages: [Message]) -> [MessageMap] {
+        //var result: [MessageMap] = []
+        
+        messages
+            .enumerated()
+            .map{
+                //let nextMessageExists = messages[$0.offset + 1] != nil
+                let prevMessageIsSameUser = $0.offset != 0 ? messages[$0.offset - 1].sendMember.uid == $0.element.sendMember.uid : false
+                let sameDate = $0.offset != 0 ? messages[$0.offset - 1].date == $0.element.date : false
+                
+                return MessageMap(message: $0.element, sameUser: prevMessageIsSameUser, sameDate: sameDate)
+            }
+    }
+}
+
+struct MessageMap: Hashable {
+    let message: Message
+    let sameUser: Bool
+    let sameDate: Bool
+    
+    init(message: Message, sameUser: Bool, sameDate: Bool) {
+        self.message = message
+        self.sameUser = sameUser
+        self.sameDate = sameDate
+    }
+    
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(message)
+//    }
+}
+

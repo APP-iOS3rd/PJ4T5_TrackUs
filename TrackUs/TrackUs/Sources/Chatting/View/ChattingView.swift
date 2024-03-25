@@ -42,19 +42,24 @@ struct ChattingView: View {
                 ScrollViewReader{ proxy in
                     ScrollView{
                         VStack(spacing: 6) {
-                            ForEach(chatViewModel.messages, id: \.self.id) { message in
-                                ChatMessageView(message: message,
-                                                mymessge: message.sendMember.uid == authViewModel.userInfo.uid)
-                                .id(message)
+                            ForEach(chatViewModel.messageMap, id: \.message) { messageMap in
+                                ChatMessageView(messageMap: messageMap,
+                                                myUid: authViewModel.userInfo.uid)
                                 .padding(.horizontal, 16)
                             }
+//                            ForEach(chatViewModel.messageMap, id: \.self.id) { messageMap in
+//                                ChatMessageView(messageMap: messageMap,
+//                                                myUid: authViewModel.userInfo.uid)
+//                                //.id(messageMap)
+//                                .padding(.horizontal, 16)
+//                            }
                         }
                     }
-                    .onChange(of: chatViewModel.messages.count) { _ in // 새 메시지가 추가될 때마다 호출
-                        proxy.scrollTo(chatViewModel.messages.last?.id, anchor: .bottom)
+                    .onChange(of: chatViewModel.messageMap.count) { _ in // 새 메시지가 추가될 때마다 호출
+                        proxy.scrollTo(chatViewModel.messageMap.last!.message, anchor: .bottom)
                     }
                     .onAppear {
-                        proxy.scrollTo(chatViewModel.messages.last?.id, anchor: .bottom)
+                        proxy.scrollTo(chatViewModel.messageMap.last?.message.id, anchor: .bottom)
                     }
                 }
                 Spacer()
@@ -202,11 +207,17 @@ struct ChattingView: View {
                     .customFontStyle(.gray1_R12)
                 // 참여 중인 사용자 프로필 정보
                 ForEach(chatViewModel.chatRoom.members, id: \.self) { uid in
-                    HStack{
-                        ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
-                        Text("\(chatViewModel.members[uid]?.userName ?? "")")
-                            .customFontStyle(.gray1_R14)
+                    Button {
+                        router.push(.userProfile(uid))
+                    } label: {
+                        HStack{
+                            ProfileImage(ImageUrl: chatViewModel.members[uid]?.profileImageUrl, size: 40)
+                            Text("\(chatViewModel.members[uid]?.userName ?? "")")
+                                .customFontStyle(.gray1_R14)
+                        }
                     }
+
+                    
                 }
             }
             .padding(16)
@@ -236,43 +247,64 @@ struct ChattingView: View {
 }
 
 struct ChatMessageView: View {
+    @EnvironmentObject var router: Router
     //@Binding var previousUser: String
     
-    let message: Message
-    let mymessge: Bool
-    @State private var previousUser: Bool = false
+    private let messageMap: MessageMap
+    private let mymessge: Bool
+    
+    //@State private var previousUser: Bool = false
     @State private var previousdate: Bool = false
+    
+    init(messageMap: MessageMap, myUid: String) {
+        self.messageMap = messageMap
+        self.mymessge = messageMap.message.sendMember.uid == myUid
+    }
     
     var body: some View {
 //        if previousdate {
 //            Text(message.date)
 //                .customFontStyle(.gray1_R12)
 //        }
+        HStack{
+            if !messageMap.sameDate{
+                Text(messageMap.message.date)
+                    .customFontStyle(.gray2_R12)
+                    .padding(8)
+            }
+        }
+        
         HStack(alignment: .top) {
-            if !mymessge && previousUser {
-                ProfileImage(ImageUrl: message.sendMember.profileImageUrl, size: 40)
+            if !mymessge && (!messageMap.sameUser || !messageMap.sameDate) {
+                Button {
+                    router.push(.userProfile(messageMap.message.sendMember.uid))
+                } label: {
+                    HStack{
+                        ProfileImage(ImageUrl: messageMap.message.sendMember.profileImageUrl, size: 40)
+                    }
+                }
             }else{
                 Spacer(minLength: 47)
             }
             
             VStack(alignment: .leading) {
-                if !mymessge && previousUser {
-                    Text(message.sendMember.userName) // 상대방 이름
+                if !mymessge && (!messageMap.sameUser || !messageMap.sameDate) {
+                    Text(messageMap.message.sendMember.userName) // 상대방 이름
                         .customFontStyle(.gray1_R12)
                 }
                 HStack(alignment: .bottom){
                     if mymessge {
                         Spacer()
-                        Text(message.time) // 메시지 작성 시간
+                        Text(messageMap.message.time) // 메시지 작성 시간
                             .customFontStyle(.gray1_R12)
                     }
-                    Text(message.text!) // 메시지 내용
+                    Text(messageMap.message.text!) // 메시지 내용
                         .customFontStyle(mymessge ? .white_M14 : .gray1_R14)
                         .padding(8)
                         .background(mymessge ? .main : .gray3)
                         .cornerRadius(10)
                     if !mymessge {
-                        Text(message.time) // 메시지 작성 시간
+                        Text(messageMap.message.time) // 메시지 작성 시간
                             .customFontStyle(.gray1_R12)
                         Spacer()
                     }
@@ -282,12 +314,12 @@ struct ChatMessageView: View {
             
             
         }
-        .onAppear {
-            previousUser = previoosUser1 == message.sendMember.uid ? false : true
-            previousdate = previousdate1 == message.date ? false : true
-            previoosUser1 = message.sendMember.uid
-            previousdate1 = message.date
-        }
+//        .onAppear {
+//            previousUser = previoosUser1 == message.sendMember.uid ? false : true
+//            previousdate = previousdate1 == message.date ? false : true
+//            previoosUser1 = message.sendMember.uid
+//            previousdate1 = message.date
+//        }
     }
 }
 
