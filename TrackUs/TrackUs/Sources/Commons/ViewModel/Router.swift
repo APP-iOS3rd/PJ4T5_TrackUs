@@ -33,6 +33,7 @@ enum Page: Hashable, Identifiable {
     case recordDetail(Runninglog)
     // UserProfileView
     case userProfile(String)
+    case userReport(String)
 }
 
 extension Page {
@@ -155,6 +156,8 @@ final class Router: ObservableObject {
             UserProfileView(userUid: userId)
         case .chatting(let chatViewModel):
             ChattingView(chatViewModel: chatViewModel)
+        case .userReport(let userId):
+            UserReportView(userUid: userId)
         }
     }
     
