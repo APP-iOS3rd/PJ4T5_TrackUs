@@ -21,7 +21,7 @@ struct UserProfileView: View {
     
     var body: some View {
         VStack {
-            UserProfileContent(userInfo: userViewModel.otherUserInfo, selectedDate: $selectedDate, userProfileViewModel: userViewModel)
+            UserProfileContent(userInfo: userViewModel.otherUserInfo, selectedDate: $selectedDate, userProfileViewModel: userViewModel, userUid: userUid)
         }
         .onAppear {
             userViewModel.getOtherUserInfo(for: userUid)
@@ -43,6 +43,7 @@ struct UserProfileContent: View {
     let userInfo: UserInfo
     @Binding var selectedDate: Date?
     @ObservedObject var userProfileViewModel: UserProfileViewModel
+    let userUid : String
     
     var body: some View {
         VStack {
@@ -102,6 +103,7 @@ struct UserProfileContent: View {
                         
                         Button(action: {
                             // 신고하기 화면으로 이동해야함!
+                            router.push(.userReport(userUid))
                         }) {
                             Text("신고하기")
                                 .frame(width: 113, height: 28)

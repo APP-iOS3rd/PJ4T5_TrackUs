@@ -21,13 +21,13 @@ struct MyReportView: View {
             VStack (alignment: .leading){
                 
                 //MARK: - TrackUs Pro
-                Button {
-                    router.present(fullScreenCover: .payment)
-                } label: {
-                    GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
-                        .modifier(BorderLineModifier())
-                        .multilineTextAlignment(.leading)
-                }
+//                Button {
+//                    router.present(fullScreenCover: .payment)
+//                } label: {
+//                    GraphicTextCard(title: "TrackUs Pro", subTitle: "상세한 러닝 리포트를 통해 효율적인 러닝을 즐겨보세요.", resource: .iconTrackUsPro2)
+//                        .modifier(BorderLineModifier())
+//                        .multilineTextAlignment(.leading)
+//                }
                 //MARK: - 기간별 운동 정보
                 
                 Text("기간별 운동 정보")

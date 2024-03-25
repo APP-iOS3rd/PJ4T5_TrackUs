@@ -112,7 +112,8 @@ struct OtherUserRecordView: View {
             
         }, content: {
             OtherUserCustomDateFilter(selectedDate: $selectedDate, isPickerPresented: $calendarButton)
-                .presentationDetents([.height(450)])
+//                .presentationDetents([.height(450)])
+                .presentationDetents([.height(390)])
                 .presentationDragIndicator(.hidden)
         })
     }
@@ -261,11 +262,12 @@ struct OtherUserCustomDateFilter: View {
                     Spacer()
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth -= 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.left.fill")
+//                        Image(systemName: "arrowtriangle.left.fill")
+                        Image(systemName: "chevron.left")
                             .foregroundColor(.white)
                     }
                     
@@ -276,11 +278,12 @@ struct OtherUserCustomDateFilter: View {
                     }
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth += 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.right.fill")
+//                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "chevron.right")
                             .foregroundColor(.white)
                     }
                     
@@ -320,6 +323,7 @@ struct OtherUserCustomDateFilter: View {
                         }
                 }
             }
+            .frame(height: 230)
             
             Spacer()
         }

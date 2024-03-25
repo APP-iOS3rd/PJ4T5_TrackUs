@@ -20,6 +20,7 @@
 		6149B6622B8B48F900549591 /* OtherUserRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6149B6612B8B48F900549591 /* OtherUserRecordView.swift */; };
 		6187E4262B8112B6007DED5C /* ReportLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6187E4252B8112B6007DED5C /* ReportLoadingView.swift */; };
 		61A3ADB42B82F276008249AA /* RecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A3ADB32B82F276008249AA /* RecordViewModel.swift */; };
+		61A6A3A22BA98CA50065EB48 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A6A3A12BA98CA50065EB48 /* UserReportView.swift */; };
 		61B914C32B89A506008CAC92 /* RunningSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B914C22B89A506008CAC92 /* RunningSelectView.swift */; };
 		820330D82B70127800CB97F7 /* SettingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820330D72B70127800CB97F7 /* SettingPopup.swift */; };
 		82135D892BAD3635009F2978 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82135D882BAD3635009F2978 /* GoogleService-Info.plist */; };
@@ -175,6 +176,7 @@
 		6184278E2B6B7AE100C10E99 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		6187E4252B8112B6007DED5C /* ReportLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportLoadingView.swift; sourceTree = "<group>"; };
 		61A3ADB32B82F276008249AA /* RecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewModel.swift; sourceTree = "<group>"; };
+		61A6A3A12BA98CA50065EB48 /* UserReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportView.swift; sourceTree = "<group>"; };
 		61B914C22B89A506008CAC92 /* RunningSelectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningSelectView.swift; sourceTree = "<group>"; };
 		820330D72B70127800CB97F7 /* SettingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPopup.swift; sourceTree = "<group>"; };
 		82135D882BAD3635009F2978 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -722,6 +724,7 @@
 				FEEAEA102B8289C8001F1888 /* UserExample.swift */,
 				FE9DEA8C2B851645006C77A8 /* PrivateUserView.swift */,
 				6149B6612B8B48F900549591 /* OtherUserRecordView.swift */,
+				61A6A3A12BA98CA50065EB48 /* UserReportView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -898,6 +901,7 @@
 				610F88302B77BD6300FB12A1 /* BarGraphView.swift in Sources */,
 				825A49D22B8670F60090D27E /* UserProfileCell.swift in Sources */,
 				FE9DEA8D2B851645006C77A8 /* PrivateUserView.swift in Sources */,
+				61A6A3A22BA98CA50065EB48 /* UserReportView.swift in Sources */,
 				FE1CD5502B7DFDEA00F8A8BE /* SettingPopupViewModel.swift in Sources */,
 				82B434BF2B8BC20100E96FEA /* CourseListViewModel.swift in Sources */,
 				82CB5FAC2B87CD4500406FBF /* CourseRegisterView.swift in Sources */,
