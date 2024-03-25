@@ -369,7 +369,7 @@ struct MonthlyCircleView: View {
                             .frame(width: 13, height: 13)
                             .foregroundColor(.blue1)
                     }
-                    Text("\(String(format: "%.1f", averageDistanceForSelectedMonth) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 0) + "km")")
+                    Text("\(String(format: "%.1f", averageDistanceForSelectedMonth) + "km") / \(String(format: "%.1f", authViewModel.userInfo.setDailyGoal ?? 1) + "km")")
                         .customFontStyle(.gray1_H17)
                         .italic()
                 }
