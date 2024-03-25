@@ -20,8 +20,8 @@ fileprivate enum BottomSheetConstants {
 struct BottomSheet<Content: View>: View {
     @Binding var isOpen: Bool
     @GestureState private var translation: CGFloat = 0
-    let onChanged: (DragGesture.Value) -> ()
-    let onEnded: (DragGesture.Value) -> ()
+    let onChanged: ((DragGesture.Value) -> ())?
+    let onEnded: ((DragGesture.Value) -> ())?
     
     let maxHeight: CGFloat
     let minHeight: CGFloat
@@ -72,12 +72,14 @@ struct BottomSheet<Content: View>: View {
                     state = value.translation.height
                 }
                     .onChanged({ value in
-                        onChanged(value)
+                        if let onChanged = onChanged {
+                            onChanged(value)
+                        }
                     })
                 
                     .onEnded { value in
+                        guard let onEnded = onEnded else { return }
                         let snapDistance = self.maxHeight * BottomSheetConstants.snapRatio
-                        
                         guard abs(value.translation.height) > snapDistance else {
                             onEnded(value)
                             return

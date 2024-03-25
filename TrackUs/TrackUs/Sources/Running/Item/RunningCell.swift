@@ -1,14 +1,16 @@
 //
-//  RunningRecruitmentCell.swift
+//  RunningCell.swift
 //  TrackUs
 //
-//  Created by 석기권 on 2024/02/05.
+//  Created by 권석기 on 3/19/24.
 //
+
+import SwiftUI
 
 import SwiftUI
 import Kingfisher
 
-struct RunningRecruitmentCell: View {
+struct RunningCell: View {
     let course: Course
     let user: UserInfo
     
@@ -31,14 +33,14 @@ struct RunningRecruitmentCell: View {
                     Label(course.address, image: "Pin")
                         .customFontStyle(.gray2_L12)
                     
-                    Label(course.startDate.formattedString(), systemImage: "calendar")
+                    Label(course.startDate?.formattedString() ?? Date().formatted(), systemImage: "calendar")
                         .customFontStyle(.gray2_L12)
                     
                     HStack {
                         Label(course.distance.asString(unit: .kilometer), image: "arrowBoth")
                             .customFontStyle(.gray2_L12)
                         Spacer()
-                        Label("\(course.members.count)/\(course.participants)", systemImage: "person.2.fill")
+                        Label("\(course.members.count)/\(course.numberOfPeople)", systemImage: "person.2.fill")
                             .customFontStyle(.gray2_L12)
                     }
                     
@@ -68,7 +70,3 @@ struct RunningRecruitmentCell: View {
         .frame(width: 176)
     }
 }
-
-//#Preview {
-//    RunningRecruitmentCell()
-//}

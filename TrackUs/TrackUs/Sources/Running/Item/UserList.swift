@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/**
+    user목록 뷰 -> 유저프로필 이동
+ */
 struct UserList: View {
     @EnvironmentObject var router: Router
     let users: [UserInfo]
@@ -23,7 +26,7 @@ struct UserList: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
                     Button(action: {}, label: {
-                        if let owner = users.first  {$0.uid == ownerUid} {
+                        if let owner = users.first  { $0.uid == ownerUid} {
                             Button(action: {
                                 router.push(.userProfile(owner.uid))
                             }, label: {
@@ -58,6 +61,3 @@ struct UserList: View {
     }
 }
 
-//#Preview {
-//    UserList()
-//}

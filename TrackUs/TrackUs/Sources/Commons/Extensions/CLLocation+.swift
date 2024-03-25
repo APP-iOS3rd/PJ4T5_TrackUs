@@ -6,6 +6,7 @@
 //
 
 import MapboxMaps
+import Firebase
 
 extension CLLocation {
     func asCLLocationCoordinate2D() -> CLLocationCoordinate2D {
@@ -16,5 +17,9 @@ extension CLLocation {
 extension CLLocationCoordinate2D {
     func asCLLocation() -> CLLocation {
         CLLocation(latitude: self.latitude, longitude: self.longitude)
+    }
+    
+    func toGeoPoint() -> GeoPoint {
+        GeoPoint(latitude: self.latitude, longitude: self.longitude)
     }
 }

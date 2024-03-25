@@ -1,5 +1,5 @@
 {
-  "originHash" : "89e37b2d717771a2deee3ec78deee17730da12d12f7f4650fb438ed44263643e",
+  "originHash" : "b74a2d334a5f1cf29ee032628c226f56c6acaeba386464cbdc283cbbd623d936",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -112,7 +112,7 @@
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "location" : "https://github.com/onevcat/Kingfisher",
       "state" : {
         "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
         "version" : "7.11.0"
@@ -148,7 +148,7 @@
     {
       "identity" : "mapbox-maps-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mapbox/mapbox-maps-ios/",
+      "location" : "https://github.com/mapbox/mapbox-maps-ios",
       "state" : {
         "branch" : "main",
         "revision" : "29db5634dbcc5aa82afca600c6fc98d2d394c642"

@@ -36,6 +36,11 @@ class UserSearchViewModel: ObservableObject {
     func filterdUserData(uid: [String]) -> [UserInfo] {
         return users.filter {uid.contains($0.uid)}
     }
+    
+    /// 특정 유저 찾기
+    func findUserWithUID(_ uid: String) -> UserInfo? {
+        return users.filter { $0.uid == uid }.first
+    }
 }
 
 extension UserSearchViewModel: Hashable {

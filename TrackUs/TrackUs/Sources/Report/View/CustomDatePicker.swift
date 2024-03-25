@@ -28,11 +28,12 @@ struct CustomDatePicker: View {
                     Spacer()
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth -= 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.left.fill")
+//                        Image(systemName: "arrowtriangle.left.fill")
+                        Image(systemName: "chevron.left")
                             .foregroundColor(.white)
                     }
                     
@@ -43,11 +44,12 @@ struct CustomDatePicker: View {
                     }
                     
                     Button {
-                        withAnimation{
+//                        withAnimation{
                             currentMonth += 1
-                        }
+//                        }
                     } label: {
-                        Image(systemName: "arrowtriangle.right.fill")
+//                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "chevron.right")
                             .foregroundColor(.white)
                     }
                     
@@ -87,6 +89,7 @@ struct CustomDatePicker: View {
                         }
                 }
             }
+            .frame(height: 170)
             
             Spacer()
         }
@@ -106,7 +109,7 @@ struct CustomDatePicker: View {
                     Text("\(value.day)")
                         .font(.system(size: 16))
                         .fontWeight(.semibold)
-                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .black : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
+                        .foregroundStyle(isSelected ? .white : isSameDay(date1: value.date, date2: currentDate) ? .gray1 : (isSameMonth(date1: value.date, date2: currentDate) && value.date > Date() ? .gray1 : .gray1))
                         .frame(width: 30)
                         .frame(height: 20)
                 }
@@ -223,7 +226,8 @@ struct MonthPicker: View {
                     Button {
                         adjustYear(by: -1)
                     } label: {
-                        Image(systemName: "arrowtriangle.left.fill")
+//                        Image(systemName: "arrowtriangle.left.fill")
+                        Image(systemName: "chevron.left")
                             .foregroundColor(.white)
                     }
                     
@@ -236,7 +240,8 @@ struct MonthPicker: View {
                     Button {
                         adjustYear(by: 1)
                     } label: {
-                        Image(systemName: "arrowtriangle.right.fill")
+//                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "chevron.right")
                             .foregroundColor(.white)
                     }
                     

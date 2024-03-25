@@ -104,9 +104,21 @@ struct BarGraphView: View {
         .id(selectedDate)
     }
     
-    func calculatePercentageIncreaseMonth(selectedMonth: AgeMonthAvg) -> Double {
-        guard selectedMonth.data != 0 && selectedAge.intValue != 0 else { return 0 }
-        return ((selectedMonth.data - Double(selectedAge.intValue)) / Double(selectedAge.intValue)) * 100
+    // 월별 백분률
+    private func calculatePercentageIncreaseMonth(selectedMonth: AgeMonthAvg) -> Double {
+
+        let nonZeroDataCountMyAvg = viewModel.monthMyAvgData.reduce(0) { $1.data != 0 ? $0 + 1 : $0 }
+        let nonZeroDataCountAgeAvg = viewModel.monthAgeAvgData.reduce(0) { $1.data != 0 ? $0 + 1 : $0 }
+        
+        guard nonZeroDataCountMyAvg > 0 && nonZeroDataCountAgeAvg > 0 else { return 0 }
+        
+        let sumMyAvg = viewModel.monthMyAvgData.reduce(0.0) { $1.data != 0 ? $0 + $1.data : $0 }
+        let sumAgeAvg = viewModel.monthAgeAvgData.reduce(0.0) { $1.data != 0 ? $0 + $1.data : $0 }
+        
+        let avgMyAvg = sumMyAvg / Double(nonZeroDataCountMyAvg)
+        let avgAgeAvg = sumAgeAvg / Double(nonZeroDataCountAgeAvg)
+        
+        return ((selectedMonth.data - avgAgeAvg) / avgAgeAvg) * 100
     }
     
     func getExerciseCount(for month: String) -> Int {
