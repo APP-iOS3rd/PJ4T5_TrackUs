@@ -4,16 +4,32 @@
 //
 //  Created by 석기권 on 2024/02/22.
 //
+// TODO: - 수정하기 기능구현
+// - 현재 코스정보를 수정화면으로 넘기기
+// - 수정하기 화면에서 데이터를 새롭게 덮어쓰기
 
 import SwiftUI
 import MapboxMaps
 
 struct CourseDetailView: View {
+    enum MenuValue: String, CaseIterable, Identifiable {
+        var id: Self { self }
+        
+        case edit = "수정"
+        case delete = "삭제"
+    }
+    
     private let authViewModel = AuthenticationViewModel.shared
+    
     @State private var showingAlert = false
+    
     @EnvironmentObject var router: Router
     @StateObject var userSearchViewModel = UserSearchViewModel()
     @ObservedObject var courseViewModel: CourseViewModel
+    
+    var isOwner: Bool {
+        courseViewModel.course.ownerUid == authViewModel.userInfo.uid
+    }
     
     var body: some View {
         VStack {
@@ -25,12 +41,18 @@ struct CourseDetailView: View {
             
             ScrollView {
                 VStack(spacing: 0)   {
-                    RunningStatsView(estimatedTime: Double(courseViewModel.course.estimatedTime), calories: courseViewModel.course.estimatedCalorie, distance: courseViewModel.course.coordinates.caculateTotalDistance() / 1000.0)
+                    RunningStats(
+                        estimatedTime: courseViewModel.course.estimatedTime,
+                        calories: courseViewModel.course.estimatedCalorie,
+                        distance: courseViewModel.course.coordinates.caculateTotalDistance()
+                    )
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
+                    
                     courseDetailLabels
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
+                    
                     participantList
                         .padding(.top, 20)
                         .padding(.leading, 16)
@@ -40,7 +62,7 @@ struct CourseDetailView: View {
             VStack {
                 let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
                 let isOwner = courseViewModel.course.ownerUid == authViewModel.userInfo.uid
-                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.participants
+                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.numberOfPeople
                 
                 if exceedsCapacity && !memberContains {
                     MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
@@ -48,15 +70,11 @@ struct CourseDetailView: View {
                 }
                 else if !memberContains {
                     MainButton(buttonText: "러닝 참가하기") {
-                        courseViewModel.addParticipant()
+                        courseViewModel.addMember()
                     }
                 } else if memberContains {
-                    MainButton(active: true, buttonText: "러닝 참가취소 ", buttonColor: .Caution) {
-                        if isOwner {
-                            showingAlert = true
-                        } else {
-                            courseViewModel.removeParticipant()
-                        }
+                    MainButton(active: !isOwner, buttonText: "러닝 참가취소", buttonColor: .Caution) {
+                            courseViewModel.removeMember()
                     }
                 }
                 
@@ -67,11 +85,15 @@ struct CourseDetailView: View {
             NavigationText(title: "모집글 상세보기")
         } left: {
             NavigationBackButton()
+        } right: {
+            VStack {
+               if isOwner { editMenu }
+            }
         }
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("알림"),
-                message: Text("방장이 참가를 취소하는 경우 모집글이 삭제됩니다.\n계속 참가를 취소 하시겠습니까?"),
+                message: Text("모집글이 삭제됩니다.\n해당 모집글을 삭제 하시겠습니까?"),
                 primaryButton: .default (
                     Text("취소"),
                     action: { }
@@ -95,7 +117,7 @@ extension CourseDetailView {
     var courseDetailLabels: some View {
         VStack {
             HStack {
-                Text(courseViewModel.course.startDate.formattedString())
+                Text(courseViewModel.course.startDate?.formattedString() ?? Date().formatted())
                     .customFontStyle(.gray2_R12)
                 Spacer()
                 RunningStyleBadge(style: .init(rawValue: courseViewModel.course.runningStyle) ?? .running)
@@ -132,9 +154,43 @@ extension CourseDetailView {
     
     var participantList: some View {
         VStack(alignment: .leading) {
-            UserList(users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members), ownerUid: courseViewModel.course.ownerUid)
+            UserList(
+                users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members),
+                ownerUid: courseViewModel.course.ownerUid
+            )
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
+    var editMenu: some View {
+        Menu {
+            ForEach(MenuValue.allCases) { menu in
+                let role: ButtonRole = menu == .delete ? .destructive : .cancel
+                Button(role: role) {
+                    switch menu {
+                    case .delete:
+                        deleteButtonTapped()
+                    case .edit:
+                        editButtonTapped()
+                    }
+               } label: {
+                   Text(menu.rawValue)
+                       
+               }
+           }
+        } label: {
+            Image(systemName: "ellipsis")
+                .foregroundStyle(.black)
+        }
+    }
 }
 
+extension CourseDetailView {
+    func editButtonTapped() {
+        router.push(.courseRegister(courseViewModel))
+    }
+    
+    func deleteButtonTapped() {
+        showingAlert = true
+    }
+}

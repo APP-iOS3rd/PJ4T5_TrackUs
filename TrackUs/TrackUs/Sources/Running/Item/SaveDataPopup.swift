@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct SaveDataPopup: View {
-    @EnvironmentObject var router: Router
     @Binding var showingPopup: Bool
     @Binding var title: String
+    @EnvironmentObject var router: Router
     @FocusState private var titleTextFieldFocused: Bool
+    
     let confirmAction: () -> ()
     
     var body: some View {

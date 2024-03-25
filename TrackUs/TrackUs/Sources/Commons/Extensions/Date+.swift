@@ -8,9 +8,22 @@
 import Foundation
 
 extension Date {
-    func formattedString() -> String {
+    enum Format {
+        case full // yyyy.mm.dd
+        case time // hh:mm
+    }
+    
+    /// Date -> String
+    func formattedString(style: Date.Format = .full) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+        switch style {
+        case .full:
+            dateFormatter.dateFormat = "yyyy.MM.dd"
+        case .time:
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            dateFormatter.amSymbol = "AM"
+            dateFormatter.pmSymbol = "PM"
+        }
         return dateFormatter.string(from: self)
     }
 }

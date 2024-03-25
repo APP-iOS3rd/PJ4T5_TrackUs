@@ -9,8 +9,15 @@ import Foundation
 
 class CourseListViewModel: ObservableObject {
     let id = UUID()
-    @Published var courseList = [Course]()
     private let authViewModel = AuthenticationViewModel.shared
+    
+    @Published var courseList = [Course]()
+    
+    @MainActor
+    var myCourseData: [Course] {
+        let uid = authViewModel.userInfo.uid
+        return courseList.filter { $0.members.contains(uid) }
+    }
     
     init() {
         fetchCourseData()
@@ -18,17 +25,16 @@ class CourseListViewModel: ObservableObject {
     
     /// 모집글 데이터 가져오기
     func fetchCourseData() {
-        Constants.FirebasePath.COLLECTION_GROUP_RUNNING.limit(to: 10).order(by: "createdAt", descending: true).getDocuments { snapShot, error in
+        Constants.FirebasePath.COLLECTION_RUNNING.limit(to: 10).order(by: "createdAt", descending: true).getDocuments { snapShot, error in
             guard let documents = snapShot?.documents else { return }
             self.courseList = documents.compactMap  {(try? $0.data(as: Course.self))}
         }
     }
     
-    /// 참여중인 러닝목록 가져오기
-    @MainActor
-    func filterdCourseData() -> [Course] {
-        let uid = authViewModel.userInfo.uid
-        return courseList.filter { $0.members.contains(uid) }
+    
+    /// 코스데이터 찾기
+    func findCourseWithUID(_ uid: String) -> Course? {
+        return courseList.filter { $0.uid == uid }.first
     }
 }
 

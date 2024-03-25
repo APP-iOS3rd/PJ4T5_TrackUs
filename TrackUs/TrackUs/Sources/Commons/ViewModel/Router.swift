@@ -26,13 +26,14 @@ enum Page: Hashable, Identifiable {
     case runningResult(TrackingViewModel)
     case courseDrawing
     case courseDetail(CourseViewModel)
-    case courseRegister(CourseRegViewModel)
+    case courseRegister(CourseViewModel)
     // Chat
     case chatting(ChatViewModel)
     // Report
     case recordDetail(Runninglog)
     // UserProfileView
     case userProfile(String)
+    case userReport(String)
 }
 
 extension Page {
@@ -82,16 +83,17 @@ final class Router: ObservableObject {
     func push(_ page: Page) {
         path.append(page)
     }
+
+    @MainActor
+    func pushOverRootView(_ page: Page) {
+        path = NavigationPath()
+        path.append(page)
+    }
     
     func pop() {
         if path.count != 0 {
             path.removeLast()
         }
-    }
-    
-    func popScreens(count: Int) {
-        guard path.count >= count else { return }
-        path.removeLast(count)
     }
     
     func popToRoot() {
@@ -134,8 +136,8 @@ final class Router: ObservableObject {
             CourseDetailView(courseViewModel: courseViewModel)
         case .courseDrawing:
             CourseDrawingView()
-        case .courseRegister(let courseRegViewModel):
-            CourseRegisterView(courseRegViewModel: courseRegViewModel)
+        case .courseRegister(let courseViewModel):
+            CourseRegisterView(courseViewModel: courseViewModel)
         case .faq:
             FAQView()
         case .setting:
@@ -154,6 +156,8 @@ final class Router: ObservableObject {
             UserProfileView(userUid: userId)
         case .chatting(let chatViewModel):
             ChattingView(chatViewModel: chatViewModel)
+        case .userReport(let userId):
+            UserReportView(userUid: userId)
         }
     }
     

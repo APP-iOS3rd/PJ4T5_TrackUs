@@ -9,24 +9,29 @@ import Foundation
 import CoreLocation
 import MapboxMaps
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+/**
+ 위치작업 관련 클래스
+ */
+final class LocationManager: NSObject, ObservableObject {
     static let shared = LocationManager()
     
     let locationManager = CLLocationManager()
+    
     @Published var currentLocation: CLLocation?
     @Published var isUpdatingLocation: Bool = false
     
     
-    override init() {
+    override private init() {
         super.init()
-        locationManager.delegate = self
-        
-        // 위치 정확도 최고 설정
+        setLocationSettings()
+        getCurrentLocation()
+    }
+    
+    func setLocationSettings() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingHeading()
-        
-        getCurrentLocation()
+        locationManager.allowsBackgroundLocationUpdates = true
     }
     
     func getCurrentLocation() {
@@ -34,6 +39,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         currentLocation = locationManager.location
     }
     
+    /// 위치정보 상태 확인
     func checkLocationServicesEnabled(_ completion: @escaping (CLAuthorizationStatus) -> Void) {
         switch self.locationManager.authorizationStatus {
         case .authorizedAlways:
@@ -46,26 +52,37 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             completion(.restricted)
         case .denied:
             completion(.denied)
+        @unknown default:
+            fatalError("Unable to check location permission information")
         }
     }
     
-    // 위도, 경도를 받아서 한글주소로 반환
-    func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String?) -> ()) {
+    /// 위도, 경도를 받아서 한글주소로 반환
+    func convertToAddressWith(coordinate: CLLocation, completion: @escaping (String) -> ()) {
         let geoCoder = CLGeocoder()
-        let local: Locale = Locale(identifier: "Ko-kr")
-        geoCoder.reverseGeocodeLocation(coordinate, preferredLocale: local) { placemarks, error in
+        
+        geoCoder.reverseGeocodeLocation(coordinate) { placemarks, error in
             if error != nil {
-                completion(nil)
+                completion("위치정보 없음")
                 return
             }
             
             if let address: [CLPlacemark] = placemarks {
-                guard let city = address.last?.administrativeArea, let state = address.last?.subLocality else {
-                    completion(nil)
-                    return
+                let city = address.last?.administrativeArea
+                let state = address.last?.subLocality
+                
+                if let city = city, let state = state {
+                    completion("\(city) \(state)")
+                } else if let city = city {
+                    completion("\(city)")
+                } else if let state = state {
+                    completion("\(state)")
+                } else {
+                    completion("위치정보 없음")
                 }
-                completion("\(city) \(state)")
+                
             }
         }
     }
 }
+

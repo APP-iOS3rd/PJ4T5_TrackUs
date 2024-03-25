@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SettingPopup: View {
-    @StateObject var trackingViewModel = TrackingViewModel()
     @Binding var showingPopup: Bool
-    @ObservedObject var settingVM: SettingPopupViewModel
     @EnvironmentObject var router: Router
+    //    @StateObject var trackingViewModel = TrackingViewModel(go)
+    @ObservedObject var settingVM: SettingPopupViewModel
     
     var body: some View {
         VStack {
@@ -43,9 +43,9 @@ struct SettingPopup: View {
                             .foregroundStyle(.gray1)
                         
                         Picker(selection: Binding<Double>(
-                            get: { settingVM.goalMinValue },
+                            get: { settingVM.goalMinValue / 1000.0 },
                             set: { newValue in
-                                settingVM.goalMinValue = newValue
+                                settingVM.goalMinValue = newValue * 1000.0
                                 settingVM.updateEstimatedTime()
                             }
                         )) {
@@ -68,8 +68,13 @@ struct SettingPopup: View {
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.gray1)
                         
-                        Picker(selection: $settingVM.estimatedTime) {
-                            ForEach(1..<240, id: \.self) {
+                        Picker(selection: Binding<Int>(
+                            get: { Int(settingVM.estimatedTime / 60.0) },
+                            set: { newValue in
+                                settingVM.estimatedTime = Double(newValue) * 60.0
+                            }
+                        ))  {
+                            ForEach(1..<240, id: \.self)  {
                                 Text("\($0) min")
                                     .customFontStyle(.gray1_R16)
                             }
@@ -84,12 +89,7 @@ struct SettingPopup: View {
                     }
                 }
                 
-                Button(action: {
-                    settingVM.saveSettings()
-                    showingPopup = false
-                    trackingViewModel.goalDistance = settingVM.goalMinValue
-                    router.push(.runningStart(trackingViewModel))
-                }) {
+                Button(action: startButtonTapped) {
                     Text("개인 러닝 시작")
                         .customFontStyle(.white_B16)
                         .padding(.horizontal, 24)
@@ -107,8 +107,12 @@ struct SettingPopup: View {
         .cornerRadius(12)
         .padding(.horizontal, 30)
     }
-}
-
-#Preview {
-    SettingPopup(showingPopup: .constant(true), settingVM: SettingPopupViewModel())
+    
+    func startButtonTapped() {
+        showingPopup = false
+        settingVM.saveSettings()
+        router.push(.runningStart(
+            TrackingViewModel(goalDistance: settingVM.goalMinValue)
+        ))
+    }
 }
