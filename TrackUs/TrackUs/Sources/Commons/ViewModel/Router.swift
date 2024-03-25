@@ -82,16 +82,17 @@ final class Router: ObservableObject {
     func push(_ page: Page) {
         path.append(page)
     }
+
+    @MainActor
+    func pushOverRootView(_ page: Page) {
+        path = NavigationPath()
+        path.append(page)
+    }
     
     func pop() {
         if path.count != 0 {
             path.removeLast()
         }
-    }
-    
-    func popScreens(count: Int) {
-        guard path.count >= count else { return }
-        path.removeLast(count)
     }
     
     func popToRoot() {

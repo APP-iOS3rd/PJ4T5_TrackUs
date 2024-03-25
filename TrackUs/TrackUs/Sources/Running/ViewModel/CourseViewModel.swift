@@ -11,6 +11,9 @@ import MapboxMaps
   코스데이터에 대한 개별적인 뷰모델
  */
 class CourseViewModel: ObservableObject {
+    enum ErrorType: Error {
+        case fetchError
+    }
     let id = UUID()
     private let authViewModel = AuthenticationViewModel.shared
     private let chatViewModel = ChatListViewModel.shared
@@ -107,7 +110,7 @@ extension CourseViewModel {
     
     /// 러닝추가
     @MainActor
-    func addCourse() {
+    func addCourse(_ completion: @escaping (Result<Course, ErrorType>) -> ()) {
         guard let startLocation = course.courseRoutes.first?.asCLLocation else { return }
         guard let image = uiImage else { return }
         
@@ -124,8 +127,10 @@ extension CourseViewModel {
     
                 do {
                    try Constants.FirebasePath.COLLECTION_RUNNING.document(self.course.uid).setData(from: self.course)
+                    completion(.success(self.course))
                 } catch {
                     print(#function + "Failed upload data")
+                    completion(.failure(.fetchError))
                 }
             }
         }
@@ -142,11 +147,13 @@ extension CourseViewModel {
     }
     
     /// 러닝 수정
-    func editCourse() {
+    func editCourse(_ completion: @escaping (Result<Course, ErrorType>) -> ()) {
         do {
            try Constants.FirebasePath.COLLECTION_RUNNING.document(self.course.uid).setData(from: self.course)
+            completion(.success(self.course))
         } catch {
             print(#function + "Failed upload data")
+            completion(.failure(.fetchError))
         }
     }
 }

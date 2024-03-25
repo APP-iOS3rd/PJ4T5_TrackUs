@@ -133,7 +133,25 @@ extension CourseRegisterView {
             }
             
             MainButton(active: buttonEnabled ,buttonText: isEditMode ? "코스 수정하기" : "코스 등록하기") {
-                isEditMode ?  courseViewModel.editCourse() : courseViewModel.addCourse()
+                if isEditMode {
+                    courseViewModel.editCourse { result in
+                        switch result {
+                        case .success(let course):
+                            router.pushOverRootView(.courseDetail(CourseViewModel(course: course)))
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    }
+                } else {
+                    courseViewModel.addCourse { result in
+                        switch result {
+                        case .success(let course):
+                            router.pushOverRootView(.courseDetail(CourseViewModel(course: course)))
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
             }.padding(.horizontal, 16)
             
         }
