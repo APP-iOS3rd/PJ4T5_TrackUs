@@ -33,7 +33,7 @@ struct RunningCell: View {
                     Label(course.address, image: "Pin")
                         .customFontStyle(.gray2_L12)
                     
-                    Label(course.startDate.formattedString(), systemImage: "calendar")
+                    Label(course.startDate?.formattedString() ?? Date().formatted(), systemImage: "calendar")
                         .customFontStyle(.gray2_L12)
                     
                     HStack {

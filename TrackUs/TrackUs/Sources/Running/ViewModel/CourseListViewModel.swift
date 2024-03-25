@@ -25,7 +25,7 @@ class CourseListViewModel: ObservableObject {
     
     /// 모집글 데이터 가져오기
     func fetchCourseData() {
-        Constants.FirebasePath.COLLECTION_GROUP_RUNNING.limit(to: 10).order(by: "createdAt", descending: true).getDocuments { snapShot, error in
+        Constants.FirebasePath.COLLECTION_RUNNING.limit(to: 10).order(by: "createdAt", descending: true).getDocuments { snapShot, error in
             guard let documents = snapShot?.documents else { return }
             self.courseList = documents.compactMap  {(try? $0.data(as: Course.self))}
         }

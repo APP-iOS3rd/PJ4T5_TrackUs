@@ -43,3 +43,9 @@ extension Array where Element == GeoPoint {
         return self.map { $0.toCLLocationCoordinate2D() }
     }
 }
+
+extension GeoPoint {
+    var asCLLocation: CLLocation {
+        CLLocation(latitude: self.latitude, longitude: self.longitude)
+    }
+}

@@ -35,7 +35,7 @@ struct CourseDetailView: View {
         VStack {
             PathPreviewMap(
                 mapStyle: .numberd,
-                coordinates: courseViewModel.course.toCoordinates
+                coordinates: courseViewModel.course.coordinates
             )
             .frame(height: 230)
             
@@ -44,7 +44,7 @@ struct CourseDetailView: View {
                     RunningStats(
                         estimatedTime: courseViewModel.course.estimatedTime,
                         calories: courseViewModel.course.estimatedCalorie,
-                        distance: courseViewModel.course.toCoordinates.caculateTotalDistance()
+                        distance: courseViewModel.course.coordinates.caculateTotalDistance()
                     )
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
@@ -117,7 +117,7 @@ extension CourseDetailView {
     var courseDetailLabels: some View {
         VStack {
             HStack {
-                Text(courseViewModel.course.startDate.formattedString())
+                Text(courseViewModel.course.startDate?.formattedString() ?? Date().formatted())
                     .customFontStyle(.gray2_R12)
                 Spacer()
                 RunningStyleBadge(style: .init(rawValue: courseViewModel.course.runningStyle) ?? .running)
@@ -187,8 +187,7 @@ extension CourseDetailView {
 
 extension CourseDetailView {
     func editButtonTapped() {
-       // 뷰모델을 넘기면서 수정화면으로 이동
-        
+        router.push(.courseRegister(courseViewModel))
     }
     
     func deleteButtonTapped() {

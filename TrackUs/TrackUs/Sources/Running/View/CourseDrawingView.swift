@@ -10,6 +10,7 @@ import SwiftUI
 struct CourseDrawingView: View {
     @StateObject var courseViewModel = CourseViewModel(course: Course.createObject())
     @EnvironmentObject var router: Router
+    
     var body: some View {
         CourseDrawingMapView(
             courseViewModel: courseViewModel,

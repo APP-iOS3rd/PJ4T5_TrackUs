@@ -197,7 +197,7 @@ extension CourseDrawingMapViewController {
     
     private func cameraMoveBeforeCapture(completion: (() -> ())? = nil) {
         let camera = try? self.mapView.mapboxMap.camera(
-            for: [],
+            for: courseViewModel.course.coordinates,
             camera: self.mapView.mapboxMap.styleDefaultCamera,
             coordinatesPadding: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20),
             maxZoom: nil,
@@ -215,22 +215,30 @@ extension CourseDrawingMapViewController {
 
 // MARK: - Objc-C Methods
 extension CourseDrawingMapViewController {
+    
     @objc func completeButtonTapped() {
+        guard courseViewModel.course.coordinates.count >= 2 else {
+                       let alert = UIAlertController(title: "알림", message: "경로를 2개 이상 생성해주세요.", preferredStyle: .alert)
+                       let confirmAction = UIAlertAction(title: "확인", style: .default)
+                       alert.addAction(confirmAction)
+                       present(alert, animated: true, completion: nil)
+                       return
+                   }
         
-        
-        cameraMoveBeforeCapture {
+        cameraMoveBeforeCapture {  [self] in
             if let image = UIImage.imageFromView(view: self.mapView) {
-                
+                courseViewModel.uiImage = image
+                router.push(.courseRegister(courseViewModel))
             }
             
         }
     }
     
     @objc func deleteButtonTapped() {
-        
+        courseViewModel.removePath()
     }
     
     @objc func revertButtonTapped() {
-        
+        courseViewModel.revertPath()
     }
 }

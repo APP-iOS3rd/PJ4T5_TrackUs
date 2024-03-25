@@ -12,34 +12,41 @@ import SwiftUI
  */
 struct CourseRegisterView: View {
     @EnvironmentObject var router: Router
-    @ObservedObject var courseRegViewModel: CourseRegViewModel
+    @ObservedObject var courseViewModel: CourseViewModel
     
     @State private var isDatePickerPresented = false
     @State private var isTimePickerPresented = false
     @State private var isTooltipDisplay = false
+    @State private var hours = 0
+    @State private var minutes = 0
+    @State private var seconds = 0
     
     private var isTimeSetting: Bool {
-        courseRegViewModel.hours != 0 && courseRegViewModel.minutes != 0 && courseRegViewModel.seconds != 0
+        hours != 0 && minutes != 0 && seconds != 0
     }
     
     private var formattedHours: String {
-        String(format: "%02d", isTimeSetting ? courseRegViewModel.hours : courseRegViewModel.estimatedTime.secondsInHours)
+        String(format: "%02d", isTimeSetting ? hours : courseViewModel.course.estimatedTime.secondsInHours)
     }
     
     private var formattedMinutess: String {
-        String(format: "%02d", isTimeSetting ? courseRegViewModel.minutes : courseRegViewModel.estimatedTime.secondsInMinutes)
+        String(format: "%02d", isTimeSetting ? minutes : courseViewModel.course.estimatedTime.secondsInMinutes)
     }
     
     private var formattedSeconds: String {
-        String(format: "%02d", isTimeSetting ? courseRegViewModel.seconds : courseRegViewModel.estimatedTime.seconds)
+        String(format: "%02d", isTimeSetting ? seconds : courseViewModel.course.estimatedTime.seconds)
     }
     
     private var isTextFieldValid: Bool {
-        courseRegViewModel.title.count > 0 && courseRegViewModel.content.count > 0
+        courseViewModel.course.title.count > 0 && courseViewModel.course.content.count > 0
     }
     
     private var buttonEnabled: Bool {
-        isTextFieldValid && !courseRegViewModel.isLoading
+        isTextFieldValid && !courseViewModel.isLoading
+    }
+    
+    private var isEditMode: Bool {
+        courseViewModel.course.isEdit
     }
 }
 
@@ -51,7 +58,7 @@ extension CourseRegisterView {
                 PathPreviewMap(
                     mapStyle: .numberd,
                     isUserInteractionEnabled: false,
-                    coordinates: courseRegViewModel.coorinates
+                    coordinates: courseViewModel.course.coordinates
                 )
                 .frame(height: 250)
                 .cornerRadius(12)
@@ -73,9 +80,9 @@ extension CourseRegisterView {
                             }
                         }
                         RunningStats(
-                            estimatedTime: courseRegViewModel.estimatedTime,
-                            calories: courseRegViewModel.estimatedCalorie,
-                            distance: courseRegViewModel.distance
+                            estimatedTime: courseViewModel.course.estimatedTime,
+                            calories: courseViewModel.course.estimatedCalorie,
+                            distance: courseViewModel.course.distance
                         )
                     }
                     
@@ -89,13 +96,13 @@ extension CourseRegisterView {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("코스제목")
                             .customFontStyle(.gray1_B16)
-                        RoundedTextField(text: $courseRegViewModel.title, placeholder: "저장할 러닝 이름을 입력하세요.")
+                        RoundedTextField(text: $courseViewModel.course.title, placeholder: "저장할 러닝 이름을 입력하세요.")
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {
                         Text("코스 소개글")
                             .customFontStyle(.gray1_B16)
-                        RoundedTextEditor(text: $courseRegViewModel.content)
+                        RoundedTextEditor(text: $courseViewModel.course.content)
                     }
                     
                     HStack {
@@ -125,16 +132,8 @@ extension CourseRegisterView {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
-            MainButton(active: buttonEnabled ,buttonText: "코스 등록하기") {
-                courseRegViewModel.uploadCourseData { result in
-                    switch result {
-                    case .success(let course):
-                        router.popScreens(count: 2)
-                        router.push(.courseDetail(course))
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
+            MainButton(active: buttonEnabled ,buttonText: isEditMode ? "코스 수정하기" : "코스 등록하기") {
+                isEditMode ?  courseViewModel.editCourse() : courseViewModel.addCourse()
             }.padding(.horizontal, 16)
             
         }
@@ -142,7 +141,7 @@ extension CourseRegisterView {
             
         }, content: {
             CustomDatePicker(
-                selectedDate: $courseRegViewModel.selectedDate,
+                selectedDate: $courseViewModel.course.startDate,
                 isPickerPresented: $isDatePickerPresented
             )
                 .presentationDetents([.height(400)])
@@ -152,22 +151,22 @@ extension CourseRegisterView {
             
         }, content: {
             TimePicker(
-                hours: $courseRegViewModel.hours,
-                minutes: $courseRegViewModel.minutes,
-                seconds: $courseRegViewModel.seconds,
+                hours: $hours,
+                minutes: $minutes,
+                seconds: $seconds,
                 pickerPresented: $isTimePickerPresented
             )
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.hidden)
-                .onChange(of: [courseRegViewModel.hours, courseRegViewModel.minutes, courseRegViewModel.seconds]) { _ in
-                    let hoursInSeconds = courseRegViewModel.hours * 3600
-                    let minutesInSeconds = courseRegViewModel.minutes * 60
-                    let seconds = courseRegViewModel.seconds
+                .onChange(of: [hours, minutes, seconds]) { _ in
+                    let hoursInSeconds = hours * 3600
+                    let minutesInSeconds = minutes * 60
+                    let seconds = seconds
                     
-                    courseRegViewModel.estimatedTime = Double(hoursInSeconds) + Double(minutesInSeconds) + Double(seconds)
+                    courseViewModel.course.estimatedTime = Double(hoursInSeconds) + Double(minutesInSeconds) + Double(seconds)
                 }
-                .onChange(of: courseRegViewModel.estimatedTime) { _ in
-                    courseRegViewModel.matchTimeFormat()
+                .onChange(of: courseViewModel.course.estimatedTime) { _ in
+                    
                 }
         })
         .customNavigation {
@@ -188,7 +187,7 @@ extension CourseRegisterView {
     var selectRunningStyle: some View {
         HStack {
             ForEach(RunningStyle.allCases, id: \.self) { style in
-                let isSelected = courseRegViewModel.style == style
+                let isSelected = courseViewModel.course.runningStyle == style.rawValue
                 Text(style.description)
                     .font(.system(size: 15))
                     .fontWeight(.semibold)
@@ -205,19 +204,19 @@ extension CourseRegisterView {
                     )
                     .onTapGesture {
                         withAnimation {
-                            courseRegViewModel.style = style
+                            courseViewModel.course.runningStyle = style.rawValue
                         }
                     }
             }
         }
-        .onChange(of: courseRegViewModel.style) { _ in
-            courseRegViewModel.updateCourseInfo()
+        .onChange(of: courseViewModel.course.runningStyle) { _ in
+            courseViewModel.updateInfoWithPath()
         }
     }
     
     var datePreview: some View {
         HStack {
-            Text(courseRegViewModel.selectedDate?.formattedString() ?? Date().formattedString())
+            Text(courseViewModel.course.startDate?.formattedString() ?? Date().formattedString())
                 .customFontStyle(.gray1_M16)
         }
         .padding(.vertical, 8)
@@ -251,17 +250,17 @@ extension CourseRegisterView {
         HStack {
             Spacer()
             Button(action: {
-                courseRegViewModel.removeParticipants()
+                courseViewModel.decreasePeople()
             }) {
                 Image(systemName: "minus")
                     .foregroundColor(.gray1)
             }
             Spacer()
-            Text("\(courseRegViewModel.numberOfPeople)")
+            Text("\(courseViewModel.course.numberOfPeople)")
                 .customFontStyle(.gray1_M16)
             Spacer()
             Button(action: {
-                courseRegViewModel.addParticipants()
+                courseViewModel.increasePeople()
             }) {
                 Image(systemName: "plus")
                     .foregroundColor(.gray1)

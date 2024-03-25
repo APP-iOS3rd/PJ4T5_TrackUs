@@ -5,6 +5,7 @@
 //  Created by 석기권 on 2024/02/23.
 //
 
+import UIKit
 import FirebaseFirestoreSwift
 import Firebase
 import MapboxMaps
@@ -26,43 +27,48 @@ import MapboxMaps
  address: 주소 텍스트
  */
 
-struct Course: Decodable, Hashable {
+struct Course: Codable, Hashable {
     @DocumentID var id: String?
     let uid: String
-    let ownerUid: String
-    let title: String
-    let content: String
+    var ownerUid: String
+    var title: String
+    var content: String
     var courseRoutes: [GeoPoint]
-    let distance: Double
-    let estimatedTime: Double
-    let numberOfPeople: Int
-    let runningStyle: String
-    let startDate: Date
+    var distance: Double
+    var estimatedTime: Double
+    var numberOfPeople: Int
+    var runningStyle: String
+    var startDate: Date?
     var members: [String]
-    let routeImageUrl: String
-    let address: String
-    let estimatedCalorie: Double
+    var routeImageUrl: String
+    var address: String
+    var estimatedCalorie: Double
+    var createdAt: Date?
+    var isEdit = false
     
     /// 데이터생성(데이터전송용)
     static func createObject() -> Course {
         Course(
-            uid: "",
+            uid: UUID().uuidString,
             ownerUid: "",
             title: "",
             content: "",
             courseRoutes: [],
             distance: 0,
             estimatedTime: 0,
-            numberOfPeople: 0,
-            runningStyle: "",
+            numberOfPeople: 2,
+            runningStyle: RunningStyle.walking.rawValue,
             startDate: Date(),
             members: [],
             routeImageUrl: "",
             address: "",
-            estimatedCalorie: 0)
+            estimatedCalorie: 0,
+            createdAt: nil,
+            isEdit: false
+        )
     }
     
-    var toCoordinates: [CLLocationCoordinate2D] {
+    var coordinates: [CLLocationCoordinate2D] {
         self.courseRoutes.map {CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)}
     }
 }
