@@ -114,6 +114,8 @@ class ChatViewModel: ObservableObject {
                                                         nonSelfMembers: firestoreChatRoom.members.filter { $0 != myInfo.uid },
                                                         usersUnreadCountInfo: firestoreChatRoom.usersUnreadCountInfo,
                                                         group: false,
+                                        
+                                                        
                                                         latestMessage: message)
                     }catch {
                         print(error)

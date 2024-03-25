@@ -48,6 +48,10 @@ struct CourseRegisterView: View {
     private var isEditMode: Bool {
         courseViewModel.course.isEdit
     }
+    
+    private var buttonText: String {
+        isEditMode ? "코스 수정하기" : "코스 등록하기"
+    }
 }
 
 // MARK: - Main View
@@ -132,7 +136,7 @@ extension CourseRegisterView {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
-            MainButton(active: buttonEnabled ,buttonText: isEditMode ? "코스 수정하기" : "코스 등록하기") {
+            MainButton(active: buttonEnabled ,buttonText: buttonText) {
                 if isEditMode {
                     courseViewModel.editCourse { result in
                         switch result {

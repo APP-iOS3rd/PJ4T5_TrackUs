@@ -225,7 +225,7 @@ final class TrackingModeMapViewController: UIViewController, GestureManagerDeleg
 extension TrackingModeMapViewController: CLLocationManagerDelegate {
     // 위치업데이트
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { 
+        guard let location = locations.last else {
             return
         }
         

@@ -16,6 +16,7 @@ struct ChatRoom: Codable, Identifiable {
     var group: Bool
     var members: [String]
     var nonSelfMembers: [String]    // 사용자 제외 member
+
     //var messages: [Message]?
     var usersUnreadCountInfo: [String: Int]     // 신규 메세지 갯수
     public let latestMessage: LatestMessageInChat?  // 최근 메세지

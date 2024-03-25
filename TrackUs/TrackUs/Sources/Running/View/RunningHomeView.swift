@@ -65,7 +65,7 @@ extension RunningHomeView {
                 .animation(.interactiveSpring(), value: offset)
             
             // MARK: - Sheet
-            BottomSheet(isOpen: $isOpen, maxHeight: 580, minHeight: 100) {
+            BottomSheet(isOpen: $isOpen, maxHeight: 510, minHeight: 100) {
                 VStack(spacing: 20) {
                     
                     // 프로필 & 러닝시작
@@ -75,10 +75,10 @@ extension RunningHomeView {
                     // 내주변 러닝메이트
                     runningAroundMe
                     
-                    // 러닝 리포트 확인하기
-                    GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
-                        .modifier(BorderLineModifier())
-                        .padding(.horizontal, 16)
+//                    // 러닝 리포트 확인하기
+//                    GraphicTextCard(title: "러닝 리포트 확인하기", subTitle: "러닝 거리, 통계, 달성 기록을 확인할 수 있습니다.", resource: .clipboard)
+//                        .modifier(BorderLineModifier())
+//                        .padding(.horizontal, 16)
                 }
             } onChanged: { gestureValue in
                 let newDeltaY = gestureValue.translation.height

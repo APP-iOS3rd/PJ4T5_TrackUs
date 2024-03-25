@@ -31,6 +31,14 @@ struct CourseDetailView: View {
         courseViewModel.course.ownerUid == authViewModel.userInfo.uid
     }
     
+    var isMember: Bool {
+        courseViewModel.course.members.contains(authViewModel.userInfo.uid)
+    }
+    
+    var isFullMember: Bool {
+        courseViewModel.course.members.count >= courseViewModel.course.numberOfPeople
+    }
+    
     var body: some View {
         VStack {
             PathPreviewMap(
@@ -53,28 +61,25 @@ struct CourseDetailView: View {
                         .padding(.top, 20)
                         .padding(.horizontal, 16)
                     
-                    participantList
+                    memberList
                         .padding(.top, 20)
                         .padding(.leading, 16)
                 }
                 .padding(.bottom, 30)
             }
             VStack {
-                let memberContains = courseViewModel.course.members.contains(authViewModel.userInfo.uid)
-                let isOwner = courseViewModel.course.ownerUid == authViewModel.userInfo.uid
-                let exceedsCapacity = courseViewModel.course.members.count >= courseViewModel.course.numberOfPeople
-                
-                if exceedsCapacity && !memberContains {
-                    MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {
-                    }
+                if isFullMember && !isMember {
+                    MainButton(active: false, buttonText: "해당 러닝은 마감되었습니다.") {}
                 }
-                else if !memberContains {
+                else if !isMember {
                     MainButton(buttonText: "러닝 참가하기") {
                         courseViewModel.addMember()
                     }
-                } else if memberContains {
-                    MainButton(active: !isOwner, buttonText: "러닝 참가취소", buttonColor: .Caution) {
-                            courseViewModel.removeMember()
+                } else if isMember {
+                    HStack {
+                        MainButton(active: !isOwner, buttonText: "러닝 참가취소", buttonColor: .Caution) {
+                                courseViewModel.removeMember()
+                        }
                     }
                 }
                 
@@ -152,7 +157,7 @@ extension CourseDetailView {
     
     // 참여자 리스트
     
-    var participantList: some View {
+    var memberList: some View {
         VStack(alignment: .leading) {
             UserList(
                 users: userSearchViewModel.filterdUserData(uid: courseViewModel.course.members),
