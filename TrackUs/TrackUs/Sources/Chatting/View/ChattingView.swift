@@ -270,6 +270,7 @@ struct ChatMessageView: View {
             if !messageMap.sameDate{
                 Text(messageMap.message.date)
                     .customFontStyle(.gray2_R12)
+                    .padding(8)
             }
         }
         
