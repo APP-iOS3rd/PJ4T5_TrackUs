@@ -14,9 +14,9 @@ import FirebaseFirestoreSwift
 struct ReportData: Hashable {
     var reportText: String
     var reportMenu: String
-    var fromUserName: String // 신고 당하는 사람 이름
-    var fromUserUid: String // 신고 당하는 사람 uid
-    var toUserName : String // 신고하는 사람 이름
+    var toUserName: String // 신고 당하는 사람 이름
+    var toUserUid: String // 신고 당하는 사람 uid
+    var fromUserName : String // 신고하는 사람 이름
 }
 
 class UserProfileViewModel: ObservableObject {
@@ -131,9 +131,9 @@ class UserProfileViewModel: ObservableObject {
         let reportData = ["uid" : id,
                           "menu" : report.reportMenu,
                           "text" : report.reportText,
-                          "fromUser" : report.fromUserName,
-                          "fromUserUid" : report.fromUserUid,
                           "toUser" : report.toUserName,
+                          "toUserUid" : report.toUserUid,
+                          "fromUser" : report.fromUserName,
                           "timestamp" : Date()
         ] as [String : Any]
         FirebaseManger.shared.firestore.collection("report").document(id)

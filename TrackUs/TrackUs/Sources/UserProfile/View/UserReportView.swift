@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-enum reportReason: String, CaseIterable, Identifiable {
-    case reason0 = "커뮤니티 위반사례"
+enum ReportReason: String, CaseIterable, Identifiable {
     case reason1 = "욕설, 비방, 혐오표현을 해요"
     case reason2 = "연애 목적의 대화를 시도해요"
     case reason3 = "불쾌감을 주는 이름을 사용해요"
     case reason4 = "갈등 조장 및 허위 사실을 유포해요"
     case reason5 = "채팅방 도배 및 광고를 해요"
-    case reason6 = "다른 문제가 있어요"
+    case reason6 = "성적 수치심이나 혐오감을 일으켜요"
+    case reason7 = "다른 문제가 있어요"
     
     var id: Self { self }
 }
@@ -51,7 +51,7 @@ struct userReportContent: View {
     @EnvironmentObject var router: Router
     @ObservedObject var userProfileViewModel: UserProfileViewModel
     
-    @State var selectedReason : reportReason = .reason0 // 신고메뉴
+    @State var selectedReason : ReportReason? = nil // 신고메뉴
     @State private var reportText : String = "" // 신고내용
     
     @FocusState var isInputActive: Bool
@@ -105,8 +105,8 @@ struct userReportContent: View {
                     pickerPresented.toggle()
                 } label: {
                     HStack {
-                        Text(selectedReason.rawValue)
-                            .customFontStyle(selectedReason == .reason0 ? .gray2_R16 : .gray1_R16)
+                        Text(selectedReason?.rawValue ?? "커뮤니티 위반사례")
+                            .customFontStyle(selectedReason == nil ? .gray2_R16 : .gray1_R16)
                         
                         Spacer()
                         
@@ -182,10 +182,10 @@ struct userReportContent: View {
                     .customFontStyle(.white_B16)
                     .frame(height: 56)
                     .frame(maxWidth: .infinity)
-                    .background(reportText.isEmpty || selectedReason == .reason0 ? .gray3 : .caution)
+                    .background(reportText.isEmpty || selectedReason == nil ? .gray3 : .caution)
                     .cornerRadius(50)
             }
-            .disabled(reportText.isEmpty || selectedReason == .reason0)
+            .disabled(reportText.isEmpty || selectedReason == nil)
         }
         .onTapGesture {
             isInputActive = false
@@ -193,14 +193,14 @@ struct userReportContent: View {
         .padding(.horizontal, 16)
         .sheet(isPresented: $pickerPresented, content: {
             reportPicker(selectedReason: $selectedReason, pickerPresented: $pickerPresented)
-                .presentationDetents([.height(250)])
-                .presentationDragIndicator(.hidden)
+                .presentationDetents([.height(450)])
+                .presentationDragIndicator(.visible)
         })
         .alert("\(userInfo.username)님", isPresented: $isReport) {
             Button("신고", role: .destructive) {
                 successReport.toggle()
                 // 파베에 올리는 부분
-                userProfileViewModel.addReportData(report: ReportData(reportText: reportText, reportMenu: selectedReason.rawValue, fromUserName: userInfo.username, fromUserUid: userInfo.uid, toUserName: authViewModel.userInfo.username))
+                userProfileViewModel.addReportData(report: ReportData(reportText: reportText, reportMenu: selectedReason?.rawValue ?? "", toUserName: userInfo.username, toUserUid: userInfo.uid, fromUserName: authViewModel.userInfo.username))
             }
             Button("취소", role: .cancel) {}
         } message: {
@@ -216,34 +216,48 @@ struct userReportContent: View {
     }
 }
 
-//MARK: - 신고 메뉴 피커
+//MARK: - 신고 메뉴
 struct reportPicker: View {
-    @Binding var selectedReason: reportReason
+    @Binding var selectedReason: ReportReason?
     @Binding var pickerPresented: Bool
+    
+    let columns = [
+        GridItem(.flexible())
+    ]
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                
-                Button {
-                    pickerPresented.toggle()
-                } label: {
-                    Text("확인")
-                        .foregroundColor(.blue)
-                        .padding(25)
-                }
-            }
+                Text("신고 사유")
+                    .customFontStyle(.gray1_B16)
+                    .padding(.bottom)
             
-            Picker("", selection: $selectedReason) {
-                ForEach(reportReason.allCases, id: \.self) { reason in
-                    Text(reason.rawValue)
-                        .font(.system(size: 16))
-                        .tag(reason)
+            Divider()
+                .foregroundColor(.gray2)
+                .padding(.bottom, 10)
+            
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(ReportReason.allCases, id: \.self) { reason in
+                    Button {
+                        selectedReason = reason
+                        pickerPresented.toggle()
+                    } label: {
+                        VStack(spacing: 16) {
+                            HStack {
+                                Text(reason.rawValue)
+                                    .customFontStyle(.gray1_SB15)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray1)
+                            }
+                            .padding(.horizontal, 16)
+                            
+                            Divider()
+                        }
+                    }
                 }
             }
-            .pickerStyle(WheelPickerStyle())
-            .padding(.horizontal, 50)
         }
     }
 }
